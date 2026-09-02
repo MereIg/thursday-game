@@ -136,4 +136,48 @@ test("new game, travel and loading clear temporary attachment and path state",()
     reset();assert.equal(game.poseGallery,false);assert.equal(game.poseAudit,null);assert.equal(game.sceneActors,null);assert.equal(game.attachment,null);assert.equal(game.pointerTarget,null);assert.equal(game.navigationPath.length,0);
   }
 });
+test("E opens every door through the real interaction dispatch and play keeps updating",()=>{
+  let doors=0;
+  for(const [mapId,map] of Object.entries(data.MAPS))for(const exit of map.exits){
+    game.state=newState();game.state.map=mapId;game.state.player={...exit.interactionAnchor,facing:"up"};
+    if(exit.requires)game.state.flags[exit.requires]=true;
+    game.detachActor();game.poseAudit=null;game.poseGallery=false;game.geometryDebug=true;
+    game.mode="play";game.nearby=null;game.pointerTarget=null;game.navigationPath=[];
+    game.keys.clear();game.pressed.clear();game.mouse.clicked=false;game.clockAcc=0;
+    game.pressed.add("KeyE");
+    assert.doesNotThrow(()=>game.updatePlay(1/60),`${mapId} -> ${exit.to}`);
+    assert.equal(game.state.map,exit.to,`${mapId} -> ${exit.to}`);
+    assert.ok(geometry.canStand(data.MAPS[exit.to],game.state.player));
+    const seconds=game.state.playSeconds;game.pressed.clear();
+    assert.doesNotThrow(()=>game.updatePlay(1/60));assert.ok(game.state.playSeconds>seconds);
+    doors++;
+  }
+  game.geometryDebug=false;assert.ok(doors>=30);console.log(`  ${doors} directed doors checked with E`);
+});
+
+test("clicking the interaction prompt opens every door without a dead frame",()=>{
+  for(const [mapId,map] of Object.entries(data.MAPS))for(const exit of map.exits){
+    game.state=newState();game.state.map=mapId;game.state.player={...exit.interactionAnchor,facing:"up"};
+    if(exit.requires)game.state.flags[exit.requires]=true;
+    game.detachActor();game.poseAudit=null;game.geometryDebug=true;game.mode="play";
+    game.keys.clear();game.pressed.clear();game.pointerTarget=null;game.navigationPath=[];
+    game.nearby=game.findNearby();game.mouse={x:480,y:487,clicked:true};
+    assert.doesNotThrow(()=>game.updatePlay(1/60),`${mapId} -> ${exit.to}`);
+    assert.equal(game.state.map,exit.to);
+    game.mouse.clicked=false;assert.doesNotThrow(()=>game.updatePlay(1/60));
+  }
+  game.geometryDebug=false;
+});
+
+test("interaction dispatches once even when a handler clears the interaction",()=>{
+  game.state=newState();game.state.map="bedroom";game.mode="play";
+  const originalTalk=game.talkTo,originalProp=game.useProp;let calls=0;
+  try{
+    game.talkTo=()=>{calls++;game.nearby=null;};
+    game.nearby={type:"npc",data:{id:"mara"}};assert.doesNotThrow(()=>game.interact());
+    game.useProp=()=>{calls++;game.nearby=null;};
+    game.nearby={type:"prop",data:{id:"bed",action:"sleep"}};assert.doesNotThrow(()=>game.interact());
+    game.nearby=null;assert.doesNotThrow(()=>game.interact());assert.equal(calls,2);
+  }finally{game.talkTo=originalTalk;game.useProp=originalProp;}
+});
 console.log(`${tests} logic regression checks passed. Visual and audio inspection remain separate.`);

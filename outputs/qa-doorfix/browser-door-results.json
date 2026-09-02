@@ -1,0 +1,224 @@
+[
+  {
+    "map": "bedroom",
+    "to": "landing",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "landing",
+    "to": "bedroom",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "landing",
+    "to": "street",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "street",
+    "to": "landing",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "street",
+    "to": "highstreet",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "street",
+    "to": "park",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "highstreet",
+    "to": "street",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "highstreet",
+    "to": "cafe",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "highstreet",
+    "to": "arcade",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "highstreet",
+    "to": "station",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "highstreet",
+    "to": "college",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "college",
+    "to": "highstreet",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "college",
+    "to": "hall",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "college",
+    "to": "library",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "college",
+    "to": "musicroom",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "hall",
+    "to": "college",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "hall",
+    "to": "classroom",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "hall",
+    "to": "cafeteria",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "hall",
+    "to": "archive",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "classroom",
+    "to": "hall",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "cafeteria",
+    "to": "hall",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "library",
+    "to": "college",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "musicroom",
+    "to": "college",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "cafe",
+    "to": "highstreet",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "arcade",
+    "to": "highstreet",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "park",
+    "to": "street",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "station",
+    "to": "highstreet",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "station",
+    "to": "annex",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "archive",
+    "to": "hall",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "annex",
+    "to": "station",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "geometrylab",
+    "to": "bedroom",
+    "input": "E",
+    "pass": true
+  },
+  {
+    "map": "bedroom",
+    "to": "landing",
+    "input": "prompt click",
+    "pass": true
+  },
+  {
+    "map": "landing",
+    "to": "street",
+    "input": "prompt click",
+    "pass": true
+  },
+  {
+    "map": "street",
+    "to": "highstreet",
+    "input": "prompt click",
+    "pass": true
+  },
+  {
+    "map": "highstreet",
+    "to": "college",
+    "input": "prompt click",
+    "pass": true
+  },
+  {
+    "map": "college",
+    "to": "hall",
+    "input": "prompt click",
+    "pass": true
+  },
+  {
+    "map": "station",
+    "to": "annex",
+    "input": "prompt click",
+    "pass": true
+  }
+]

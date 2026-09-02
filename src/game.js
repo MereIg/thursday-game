@@ -384,13 +384,16 @@ class Game {
   }
 
   interact(){
-    if(!this.nearby)return;
+    // A handler can clear nearby (doors do this while changing maps). Capture
+    // the interaction once and return after dispatching exactly one handler.
+    const target=this.nearby;
+    if(!target)return;
     music.sfx("choice");
-    if(this.nearby.type==="exit")this.changeMap(this.nearby.data);
-    if(this.nearby.type==="npc")this.talkTo(this.nearby.data.id);
-    if(this.nearby.type==="prop"){
-      if(this.nearby.data.action==="geometry_attach")return this.testAttachment(this.nearby.data.id);
-      this.useProp(this.nearby.data.action);
+    if(target.type==="exit")return this.changeMap(target.data);
+    if(target.type==="npc")return this.talkTo(target.data.id);
+    if(target.type==="prop"){
+      if(target.data.action==="geometry_attach")return this.testAttachment(target.data.id);
+      return this.useProp(target.data.action);
     }
   }
 

@@ -1,5 +1,42 @@
 # MARA — geometry hardening v4 QA
 
+## Critical door-freeze hotfix — 2 September 2026
+
+The published geometry build had a confirmed release-blocking interaction bug.
+Pressing E at the bedroom door threw `TypeError: Cannot read properties of null
+(reading 'type')` in `Game.interact` and stopped the animation loop. This was a
+code defect, not a slow asset download or a device-performance problem.
+
+`changeMap()` correctly cleared `nearby`; `interact()` then incorrectly read
+`nearby.type` again in its next independent `if`. The fix captures the target
+once and returns immediately after dispatching its one handler. No save data,
+collision geometry, assets or story content changed.
+
+The previous transition tests called `changeMap()` directly. They did NOT cover
+the player's E-key dispatch and therefore missed this crash. The new regression
+was run against the unfixed code first and reproduced the exact exception.
+
+Hotfix verification:
+
+- `npm run check`: 23 logic regressions plus the existing geometry/asset suites pass.
+- All 31 directed doors exercised through `updatePlay()` with E, followed by
+  another gameplay update; destination and valid foot position asserted.
+- All 31 directed doors exercised through the click/tap prompt dispatch.
+- NPC and prop handlers that clear `nearby` dispatch once without crashing.
+- Actual browser: all 31 doors opened using E, including the gated annex with
+  its required flag enabled in the fixture. Each destination's live diagnostic
+  display updated after arrival, with a valid foot position.
+- Actual browser: six additional prompt-click routes (bedroom, front door,
+  street, college entrance, hall, annex) passed. No error/warning logs on the
+  isolated fixed-build tab.
+- Evidence: `outputs/qa-doorfix/browser-door-results.json` and before/after
+  screenshots. Browser fixtures place the player beside each door; this is
+  interaction-path coverage, not a claim of walking every complete story route.
+
+The larger Chapter 1 changes were deliberately excluded from this hotfix.
+Physical-phone hardware testing and the full twelve-day route audit remain
+separate work; simulated pointer tests are not presented as physical-phone QA.
+
 Tested 2 September 2026 against the actual local build. Prior report retained in
 docs/qa-foundation-v3.md. This is a geometry/placement pass, not acceptance of the
 entire Chapter 1 production brief.
