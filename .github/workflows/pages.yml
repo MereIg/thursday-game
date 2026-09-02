@@ -23,8 +23,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+
+      # Publish only the files required by the playable build. The repository
+      # also contains design documents, QA captures, source references and a
+      # downloadable archive; none of those should inflate the live site.
+      - name: Prepare lean runtime bundle
+        shell: bash
+        run: |
+          mkdir -p _site/assets _site/src
+          cp index.html styles.css _site/
+          cp -R src/. _site/src/
+          cp -R assets/characters assets/environment _site/assets/
+          touch _site/.nojekyll
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
       - id: deployment
         uses: actions/deploy-pages@v4
