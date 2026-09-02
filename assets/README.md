@@ -1,6 +1,22 @@
 # MARA art library
 
-All art used by the project is committed here. Nothing is hotlinked. Full PNG files are editable source masters; `web/` contains the deterministic, lightweight, pixel-reduced assets loaded by the game.
+All art used by the project is committed here. Nothing is hotlinked. Full PNG files are editable source masters; `web/` contains the deterministic runtime assets. Older v1/v2 masters and builds remain for comparison. The v3 inventory below supersedes earlier counts.
+
+## Foundation v3 — active replacements
+
+23 new PNG masters, approximately 41 MiB total:
+
+- `characters/mara-canonical-pixel-v3.png`: canonical neutral face and directional identity reference; no runtime duplicate needed.
+- `characters/mara-portraits-{warm,vulnerable,jealous,intense,romance,anomaly}-pixel-v3.png`: six 2×3 sheets, 36 unique cells. Runtime aliases provide additional names, not additional art.
+- `characters/mara-walk-pixel-v3.png`: four directions × four frames.
+- `characters/mara-actions-{everyday,distress}-pixel-v3.png`: two 3×2 sheets, twelve static poses. Everyday order: mug, phone, read, wave, hugSelf, stand. Distress order: wipeTears, tremble, collapse, clutchSleeve, angryCry, abruptStill.
+- `characters/cast-portraits-{neutral,happy,concerned}-pixel-v3.png`: three 3×2 sheets ordered Iris, June, Theo / Ren, Nia, Sam.
+- `scenes/{rowan-house,east-hall,seminar-room,cafeteria,music-room,archive-corridor,archive-annex}-v3.png`: seven replacement interiors.
+- `scenes/{cafe,library,station}-shifted-v3.png`: altered counterparts to existing normal scenes.
+
+Character v3 conversion: magenta key, crop, nearest-neighbour-only resampling, lossless WebP. No LANCZOS or palette reduction for these new character sheets. Walk-cell stray fragments are removed by connected-component cleanup. The source is still AI-generated pixel-style artwork and needs further deliberate pixel/face editing; this is not a claim of human hand-pixelled art.
+
+The complete runtime library now contains **50 WebPs, 5,903,844 bytes (5.63 MiB)**, including retained legacy files. Seven interiors and ten of the twelve action states have integration hooks; see the ledger for remaining animation/scene work. All assets remain in Git; Pages serves only runtime WebPs, not the large PNG masters.
 
 ## Appearance authority
 
@@ -27,7 +43,7 @@ Mara has no surname. Normal sheets do not present an overt monster form.
 - `characters/mara-actions-everyday-v2.png` — six everyday full-body poses.
 - `characters/mara-actions-distress-v2.png` — six distressed full-body poses.
 
-The runtime exposes 42 named Mara portrait states and 12 full-body action cells.
+The earlier state-name inventory included aliases. The active v3 library has 36 unique Mara portrait cells and twelve action cells; do not report aliases as extra expressions.
 
 ## Authored scene masters
 
@@ -61,6 +77,6 @@ These remain useful for minor maps and fallbacks, but major locations now use au
 - action poses: 112×160 native cells;
 - no smoothing at runtime;
 - isolated neutral checkerboard pixels are removed before palette reduction;
-- WebP output is roughly 2.2 MB while all source PNG masters remain in Git.
+- See the v3 totals above; all source PNG masters remain in Git.
 
 Rebuild with `npm run art:web`. Do not hand-edit `web/`; change the master or the conversion script and regenerate.

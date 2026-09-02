@@ -1,8 +1,10 @@
-# MARA — Game Design Bible (archived export)
+# MARA — Game Design Bible
+
+This document describes the full planned game, not a list of shipped features. See `DEVELOPMENT_STATUS.md` for the implemented/planned split and `ORIGINAL_VISION.md` for the preserved creative brief (a structured digest, not a verbatim transcript). Foundation v3 has a twelve-day playable calendar; later chapters and major endings below are not implemented.
 
 ## High concept
 
-**MARA** is a long-form 2D psychological-horror dating/life simulator about routine becoming evidence. The current canonical plan is the root-level `GAME_DESIGN.md`; this file is retained as an earlier exported snapshot.
+**MARA** is a long-form 2D psychological-horror dating/life simulator about routine becoming evidence. It begins as a warm, unusually polished college-life game. The player learns shortcuts, favourite songs, lunch rituals, friends' schedules, and the exact sound of coming home. Those comforts are never discarded when the horror arrives. They are reused against the player.
 
 The campus is Bellwether College, a small post-secondary arts and humanities college in the rain-prone town of Larkspur. All students and romanceable characters are adults aged 18–23. The player character is an adult first-year transfer student whose name and pronouns can be customized in the full release. The vertical slice uses the neutral default name **Alex Rowan**.
 
@@ -32,7 +34,7 @@ Primary regions:
 
 ### Mara
 
-Apparently a student. Apparently Alex's age. Bright red-brown hair, moss-green coat, warm amber eyes. No enrolment record consistently lists her, nobody can name a class she attends, and different people remember being introduced to her in mutually exclusive places. Her public persona is lightly chaotic, funny, generous, and disarmingly earnest. She remembers preferences and brings gifts that feel thoughtful before they feel invasive. She loves Alex with joyous sincerity and considers autonomy an avoidable misunderstanding.
+Apparently a student. Apparently Alex's age. Deep chestnut hair with muted warm highlights, moss-green cardigan, cream lace blouse, brown plaid skirt, dark tights, amber eyes, brass leaf clip and burgundy back ribbon. The supplied appearance reference and the v3 canonical sheet govern identity; do not reinterpret her as bright red-haired. No enrolment record consistently lists her, nobody can name a class she attends, and different people remember being introduced to her in mutually exclusive places. Her public persona is lightly chaotic, funny, generous, and disarmingly earnest. She remembers preferences and brings gifts that feel thoughtful before they feel invasive. She loves Alex with joyous sincerity and considers autonomy an avoidable misunderstanding.
 
 Mara is genuinely evil: she can deliberately terrify, isolate, erase, maim, or murder people because it improves her imagined shared life. She understands that victims suffer. Sometimes that knowledge is the point. She can regret upsetting Alex while feeling no remorse for the act.
 
@@ -115,7 +117,7 @@ NPCs follow schedule blocks with conditional overrides. They continue to form an
 
 Alex settles in, meets the cast, chooses classes and a club, helps with errands, works a café shift, decorates the bedroom, and can begin three romances. Mara is visible in backgrounds before her formal introduction. Her initial route is charming and legitimately fun. The first cryptic lines are rare enough to dismiss.
 
-The vertical slice implements the first five days: orientation, routine formation, first messages, optional café/park dates, early jealousy, distant sightings, room inconsistencies, and a Friday-night archive investigation unlocked by evidence.
+The current slice supports all twelve calendar days, with orientation, first messages, dates, errands and Mara's early route. Days six and seven add weekend schedules, picnic/arcade/tea conversation and ordinary messages. Stronger anomalies concentrate from day eight onward, the following opportunity begins on day ten, and the archive finale is gated until day twelve. This extends progression, not yet route-length content density: more lessons, visits, dates and group events are required before Chapter 1 meets its full promise.
 
 ### Chapter 2 — Someone Is Missing (days 13–25)
 
@@ -214,6 +216,10 @@ No ending permanently kills Mara. No ending transforms Alex into her. Apparent v
 
 The game uses a handcrafted pixel-adjacent look rendered through a fixed logical canvas and scaled cleanly. Cozy scenes use indigo outlines, apricot light, softened greens, lived-in clutter, high-resolution clustered-pixel portraits, and small directional character sheets. Runtime atlases provide sixteen material families, twenty furniture/evidence props and twenty outdoor/architecture assets. Collision rectangles are never treated as visible furniture. Horror rarely swaps to a new visual language. It changes one tile, holds one portrait frame, offsets a shadow, removes a background person, alters eye direction, or expands a room by eight pixels.
 
+Runtime rooms use 480×270, the title 320×180, portraits 128×128 cells and walking characters 64×80 cells. The v3 Mara and supporting portrait masters are explicitly generated with clustered pixel-style shapes, then keyed and resized with nearest-neighbour only; the older scene conversion still uses filtered reduction and restricted palettes. This is not equivalent to hand-placing pixels. A manual landmark/cluster consistency pass and scene collision/occlusion authoring remain necessary.
+
+One later campus event temporarily applies the wrong season, wrong hour and displaced horizontal image slices to a familiar hall (day nine in the present slice). A single render frame replaces the room with an asymmetrical composition containing Mara's subtly incorrect portrait. There is no sting or explanation; the hall remains slightly misregistered for the rest of the day. Reduced-flash mode suppresses the portrait flash. This is an original continuity interruption, not a recreation of another game's jumpscare.
+
 Mara belongs visually in the romance game: warm coat, leaf-shaped hair clip, expressive eyebrows, easy smile. Her inhuman frames are scarce enough that players debate them.
 
 Her nonhuman tells are authored punctuation, not a transformation state. On a handful of unusually cruel or impossible lines, the typewriter reveal can expose a horn silhouette, a tail-like curve, or a shadow whose height makes no spatial sense for roughly a tenth of a second. The normal smiling portrait continues underneath. These slips have no sound sting, codex label, achievement, or explanatory follow-up, and random everyday dialogue never announces them. A player can miss every one.
@@ -236,6 +242,16 @@ Content is authored in declarative JavaScript/JSON-compatible tables:
 - chapters define beats, deadlines, safety nets, route forks, and ending predicates.
 
 Authoring validation checks unreachable doors, schedule destinations, missing dialogue nodes, invalid item references, event deadlocks, save serialization, and ending predicate satisfiability. The seed is stored so rare-event reports can be reproduced without making probabilities predictable during play.
+
+That is the target validation coverage. Current automated checks cover map connectivity/interaction reachability, schedule destinations, prop actions, runtime asset existence, save separation/migration, settings safety, calendar progression, ambient branches and following transitions. Full narrative deadlock and ending-predicate validation is not implemented.
+
+## Foundation v3 implementation contracts
+
+- Manual snapshots: `mara-save-v2-1`, `-2`, `-3`; independent `mara-autosave-v2`; settings in `mara-settings-v1`. Legacy import retains the original key. No fictional save corruption deletes real saves.
+- Mara's runtime aliases resolve to 36 distinct portrait cells; aliases are not extra generated expressions. Twelve action cells are static poses, with limited crossfade/tremor animation and scene selection. They are not full action cycles.
+- Ambient conversations are now an external content pack with text, expression/action, two branches and relationship deltas; story tables and many scene callbacks still live in the engine/data file.
+- Audio has independent master, music, ambience, SFX and character-voice buses. Character voice identity is defined by waveform, register, envelope, pitch contour, filter and punctuation timing. Instant text does not schedule an entire line's bleeps simultaneously.
+- Mara's rare nonhuman punctuation stays authored and suppressible with reduced flashes. Most normal talk carries no hint. Music contamination is never explicitly explained to the player.
 
 ## Vertical slice completion target
 

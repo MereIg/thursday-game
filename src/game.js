@@ -1,13 +1,15 @@
 import {
-  PALETTE, CHARACTERS, MAPS, ITEMS, SCHEDULES, QUESTS, OPENING_LINES,
+  PALETTE, CHARACTERS, MAPS, ITEMS, SCHEDULES, DAY_SCHEDULES, QUESTS, OPENING_LINES,
   CHARACTER_TALK, MARA_TALKS, RANDOM_EVENTS, DAY_CARDS, maraSchedule
 } from "./data.js";
 import { music } from "./audio.js";
+import { maraAmbientNode, castAmbientNode } from "./content/ambient.js";
 
 const canvas = document.querySelector("#game");
 const ctx = canvas.getContext("2d", {alpha:false, desynchronized:true});
 ctx.imageSmoothingEnabled = false;
-const W=960,H=540,SAVE_KEY="thursday-save-v1";
+const W=960,H=540,LEGACY_SAVE_KEY="thursday-save-v1",SAVE_PREFIX="mara-save-v2-",AUTO_SAVE_KEY="mara-autosave-v2",SETTINGS_KEY="mara-settings-v1";
+const DEFAULT_SETTINGS={textSpeed:"normal",master:.78,music:.72,ambient:.28,sfx:.7,voice:.8,readable:false,reducedFlashes:false};
 const ART={};
 const MARA_PORTRAIT_MAP={
   neutral:["maraWarm",0],happy:["maraWarm",0],laugh:["maraWarm",1],shy:["maraWarm",2],embarrassed:["maraWarm",2],teasing:["maraWarm",3],affectionate:["maraWarm",4],awkward:["maraWarm",5],
@@ -15,22 +17,25 @@ const MARA_PORTRAIT_MAP={
   forcedSmile:["maraJealous",0],jealous:["maraJealous",1],hurt:["maraJealous",2],annoyed:["maraJealous",3],angryCry:["maraJealous",4],panic:["maraJealous",5],
   shouting:["maraIntense",0],furious:["maraIntense",1],shocked:["maraIntense",2],still:["maraIntense",3],cold:["maraIntense",4],dissociated:["maraIntense",5],
   excited:["maraRomance",0],proud:["maraRomance",1],flirt:["maraRomance",2],sleepy:["maraRomance",3],surprisedLove:["maraRomance",4],content:["maraRomance",5],
-  clipWrong:["maraAnomalies",0],pupilsWrong:["maraAnomalies",1],tooStill:["maraAnomalies",2],canine:["maraAnomalies",3],hornlike:["maraAnomalies",4],wrongShadow:["maraAnomalies",5]
+  clipWrong:["maraAnomalies",1],pupilsWrong:["maraAnomalies",0],tooStill:["maraAnomalies",2],canine:["maraAnomalies",3],hornlike:["maraAnomalies",4],wrongShadow:["maraAnomalies",5]
 };
+const MARA_ACTION_MAP={mug:["maraActionsEveryday",0],phone:["maraActionsEveryday",1],read:["maraActionsEveryday",2],wave:["maraActionsEveryday",3],hugSelf:["maraActionsEveryday",4],stand:["maraActionsEveryday",5],wipeTears:["maraActionsDistress",0],tremble:["maraActionsDistress",1],collapse:["maraActionsDistress",2],clutchSleeve:["maraActionsDistress",3],angryCry:["maraActionsDistress",4],abruptStill:["maraActionsDistress",5]};
 const ART_FILES={
   titleMara:["../assets/web/title/mara-bedroom-v2.webp",false],
   alexWalk:["../assets/web/characters/alex-walk.webp",false],
-  maraWalk:["../assets/web/characters/mara-walk.webp",false],
+  maraWalk:["../assets/web/characters/mara-walk-pixel-v3.webp",false],
   castDirections:["../assets/web/characters/cast-directions.webp",false],
-  castPortraits:["../assets/web/characters/cast-portraits.webp",false],
-  castHappy:["../assets/web/characters/cast-portraits-happy-v2.webp",false],
-  castConcerned:["../assets/web/characters/cast-portraits-concerned-v2.webp",false],
-  maraWarm:["../assets/web/characters/mara-portraits-warm-v2.webp",false],
-  maraVulnerable:["../assets/web/characters/mara-portraits-vulnerable-v2.webp",false],
-  maraJealous:["../assets/web/characters/mara-portraits-jealous-v2.webp",false],
-  maraIntense:["../assets/web/characters/mara-portraits-intense-v2.webp",false],
-  maraRomance:["../assets/web/characters/mara-portraits-romance-v2.webp",false],
-  maraAnomalies:["../assets/web/characters/mara-portraits-anomalies-v2.webp",false],
+  castPortraits:["../assets/web/characters/cast-portraits-neutral-pixel-v3.webp",false],
+  castHappy:["../assets/web/characters/cast-portraits-happy-pixel-v3.webp",false],
+  castConcerned:["../assets/web/characters/cast-portraits-concerned-pixel-v3.webp",false],
+  maraWarm:["../assets/web/characters/mara-portraits-warm-pixel-v3.webp",false],
+  maraVulnerable:["../assets/web/characters/mara-portraits-vulnerable-pixel-v3.webp",false],
+  maraJealous:["../assets/web/characters/mara-portraits-jealous-pixel-v3.webp",false],
+  maraIntense:["../assets/web/characters/mara-portraits-intense-pixel-v3.webp",false],
+  maraRomance:["../assets/web/characters/mara-portraits-romance-pixel-v3.webp",false],
+  maraAnomalies:["../assets/web/characters/mara-portraits-anomaly-pixel-v3.webp",false],
+  maraActionsEveryday:["../assets/web/characters/mara-actions-everyday-pixel-v3.webp",false],
+  maraActionsDistress:["../assets/web/characters/mara-actions-distress-pixel-v3.webp",false],
   furniture:["../assets/web/environment/furniture-atlas.webp",false],
   outdoor:["../assets/web/environment/outdoor-atlas.webp",false],
   materials:["../assets/web/environment/material-atlas.webp",false],
@@ -39,11 +44,21 @@ const ART_FILES={
   sceneCollege:["../assets/web/scenes/college-hall-v2.webp",false],
   sceneCollegeShifted:["../assets/web/scenes/college-hall-shifted-v2.webp",false],
   sceneCafe:["../assets/web/scenes/cafe-v2.webp",false],
+  sceneCafeShifted:["../assets/web/scenes/cafe-shifted-v3.webp",false],
   scenePark:["../assets/web/scenes/park-rain-v2.webp",false],
   sceneLibrary:["../assets/web/scenes/library-v2.webp",false],
+  sceneLibraryShifted:["../assets/web/scenes/library-shifted-v3.webp",false],
   sceneArcade:["../assets/web/scenes/arcade-v2.webp",false],
   sceneStation:["../assets/web/scenes/station-rain-v2.webp",false],
-  sceneTown:["../assets/web/scenes/high-street-rain-v2.webp",false]
+  sceneStationShifted:["../assets/web/scenes/station-shifted-v3.webp",false],
+  sceneTown:["../assets/web/scenes/high-street-rain-v2.webp",false],
+  sceneHome:["../assets/web/scenes/rowan-house-v3.webp",false],
+  sceneHall:["../assets/web/scenes/east-hall-v3.webp",false],
+  sceneClassroom:["../assets/web/scenes/seminar-room-v3.webp",false],
+  sceneCafeteria:["../assets/web/scenes/cafeteria-v3.webp",false],
+  sceneMusic:["../assets/web/scenes/music-room-v3.webp",false],
+  sceneArchive:["../assets/web/scenes/archive-corridor-v3.webp",false],
+  sceneAnnex:["../assets/web/scenes/archive-annex-v3.webp",false]
 };
 
 function removeConnectedLightBackground(img){
@@ -84,7 +99,7 @@ function relationship() { return {affection:0,trust:0,fear:0,suspicion:0,resentm
 function newState() {
   const relationships={}; Object.keys(CHARACTERS).forEach(k=>relationships[k]=relationship());
   return {
-    version:1, seed:Math.floor(Math.random()*9999999), day:1, time:432, weather:"sun",
+    version:2, seed:Math.floor(Math.random()*9999999), day:1, time:432, weather:"sun",
     map:"bedroom", player:{x:480,y:350,facing:"down"}, money:18, grade:0, energy:100,
     relationships, flags:{}, inventory:{}, quests:{welcome:{active:true,progress:0}},
     contacts:["nia"], messages:{nia:[{from:"nia",time:"07:02",text:"Orientation at nine! I left a map in your locker. You cannot escape friendship."}]},
@@ -98,34 +113,55 @@ function newState() {
 class Game {
   constructor() {
     this.state=newState();
+    this.settings=this.readSettings();music.setVolumes(this.settings);
     this.mode="title";
     this.previousMode="play";
     this.keys=new Set(); this.pressed=new Set();
     this.mouse={x:0,y:0,clicked:false};
     this.last=performance.now(); this.acc=0; this.clockAcc=0; this.footstep=0;
-    this.dialogue=null; this.dialogueIndex=0; this.dialogueReveal=0; this.dialoguePause=0;this.dialogueVoiceCount=0;this.choiceIndex=0;
+    this.dialogue=null; this.dialogueIndex=0; this.dialogueReveal=0; this.dialoguePause=0;this.dialogueVoiceCount=0;this.choiceIndex=0;this.previousPortrait=null;this.portraitBlend=1;
     this.overlayIndex=0; this.phoneContact=0; this.toast=null; this.toastTimer=0;
     this.fade=1; this.fadeDir=-1; this.transition=null; this.dayCard=null;
     this.nearby=null; this.particles=[]; this.rain=[]; this.screenShake=0;
-    this.mini=null; this.follow=null; this.weatherSlip=null; this.titlePulse=0; this.autosaveTimer=0;
+    this.mini=null; this.follow=null; this.weatherSlip=null; this.titlePulse=0; this.titleCursorY=205;this.autosaveTimer=0;this.slotMode="load";
     this.lastMap=""; this.eventCheck=0; this.sceneCaption=null; this.captionTimer=0;
     this.playerMoving=false;this.playerWalkTime=0;this.pointerTarget=null;
     this.perf={frames:0,elapsed:0,fps:60,maxFrame:0};
-    this.applyQAMode();
+    this.migrateLegacySave();this.applyQAMode();
     this.initInput(); this.initTouch(); this.buildRain();
     ART_READY.then(()=>document.querySelector("#loading")?.classList.add("hidden"));
     setTimeout(()=>document.querySelector("#loading")?.classList.add("hidden"),5000);
     requestAnimationFrame(t=>this.loop(t));
   }
 
+  readSettings(){
+    const result={...DEFAULT_SETTINGS};
+    try{const raw=JSON.parse(localStorage.getItem(SETTINGS_KEY)||"{}");
+      if(["slow","normal","fast","instant"].includes(raw?.textSpeed))result.textSpeed=raw.textSpeed;
+      for(const key of ["master","music","ambient","sfx","voice"])if(Number.isFinite(raw?.[key]))result[key]=clamp(raw[key],0,1);
+      for(const key of ["readable","reducedFlashes"])if(typeof raw?.[key]==="boolean")result[key]=raw[key];
+    }catch{}return result;
+  }
+  writeSettings(){try{localStorage.setItem(SETTINGS_KEY,JSON.stringify(this.settings));}catch{}music.setVolumes(this.settings);}
+  migrateLegacySave(){
+    try{
+      if(localStorage.getItem(`${SAVE_PREFIX}1`)||!localStorage.getItem(LEGACY_SAVE_KEY))return;
+      const state=JSON.parse(localStorage.getItem(LEGACY_SAVE_KEY));state.version=2;
+      localStorage.setItem(`${SAVE_PREFIX}1`,JSON.stringify({version:2,savedAt:Date.now(),label:"Imported THURSDAY save",state}));
+    }catch{}
+  }
+  saveSlots(){const out=[];for(let slot=1;slot<=3;slot++){try{const raw=JSON.parse(localStorage.getItem(`${SAVE_PREFIX}${slot}`));out.push(raw?{slot,...raw}:null);}catch{out.push(null);}}return out;}
+  latestSlot(){let all=this.saveSlots().filter(Boolean);try{const auto=JSON.parse(localStorage.getItem(AUTO_SAVE_KEY));if(auto)all.push({slot:0,...auto});}catch{}return all.sort((a,b)=>(b.savedAt||0)-(a.savedAt||0))[0]||null;}
+
   applyQAMode(){
     const p=new URLSearchParams(location.search),scene=p.get("qa");
     if(scene==="chapter"){
       const s=this.state;s.day=5;s.time=1210;s.chapterComplete=true;s.clues=5;s.corruption=3;s.motifInfection=3;s.relationships.mara.affection=8;s.relationships.mara.resentment=5;s.relationships.iris.affection=6;s.stats.events=3;this.mode="chapter";this.fade=0;this.fadeDir=0;return;
     }
+    if(scene==="follow"){this.state.day=10;this.state.time=1000;this.state.weather="rain";this.mode="follow";this.fade=0;this.fadeDir=0;this.follow={time:0,playerX:180,maraX:590,suspicion:0,success:0,stopped:false,route:null,noise:0,covers:[300,470,735]};music.setScene("stalking",{infection:2});return;}
     if(!scene||!MAPS[scene])return;
-    const s=this.state;s.map=scene;s.day=clamp(Number(p.get("day"))||3,1,5);s.time=clamp(Number(p.get("time"))||780,0,1439);
-    s.weather=p.get("weather")||((s.day===3||s.day===4)?"rain":"sun");s.player={...MAPS[scene].spawn,facing:"down"};
+    const s=this.state;s.map=scene;s.day=clamp(Number(p.get("day"))||3,1,12);s.time=clamp(Number(p.get("time"))||780,0,1439);
+    s.weather=p.get("weather")||([3,6,10].includes(s.day)?"rain":"sun");s.player={...MAPS[scene].spawn,facing:"down"};
     const clean=p.get("clean")==="1";
     if(!clean)s.flags={metMara:true,recordsQuest:true,searchedRecords:true,room307:true,investigationUnlocked:true,followDone:true};
     for(const flag of (p.get("set")||"").split(",").filter(Boolean))s.flags[flag]=true;
@@ -143,7 +179,7 @@ class Game {
     }
     this.mode="play";this.fade=0;this.fadeDir=0;
     if(p.get("event")==="weather-slip"){
-      s.day=4;s.map="college";s.weather="rain";s.flags.collegeShifted=true;s.flags.weatherSlip=true;
+      s.day=9;s.map="college";s.weather="sun";s.flags.collegeShifted=true;s.flags.weatherSlip=true;
       this.weatherSlip={time:.48,frames:Number(p.get("frame"))||8,freeze:p.get("freeze")==="1"};
     }
   }
@@ -170,7 +206,7 @@ class Game {
 
   setMouse(e) { const r=canvas.getBoundingClientRect();this.mouse.x=(e.clientX-r.left)*W/r.width;this.mouse.y=(e.clientY-r.top)*H/r.height; }
   consume(...codes) { for(const c of codes) if(this.pressed.has(c)){this.pressed.delete(c);return true;} return false; }
-  hasSave(){try{return !!localStorage.getItem(SAVE_KEY)}catch{return false}}
+  hasSave(){return !!this.latestSlot();}
 
   loop(now) {
     const rawDt=(now-this.last)/1000,dt=Math.min(.05,rawDt);this.last=now;this.acc+=dt;
@@ -182,6 +218,7 @@ class Game {
   }
 
   update(dt) {
+    document.querySelector("#game-shell").dataset.mode=this.mode;
     this.titlePulse+=dt; if(this.toastTimer>0)this.toastTimer-=dt;if(this.captionTimer>0)this.captionTimer-=dt;
     if(this.weatherSlip&&!this.weatherSlip.freeze){
       this.weatherSlip.time+=dt;
@@ -195,6 +232,9 @@ class Game {
     else if(this.mode==="phone") this.updatePhone();
     else if(this.mode==="journal") this.updateJournal();
     else if(this.mode==="pause") this.updatePause();
+    else if(this.mode==="slots") this.updateSlots();
+    else if(this.mode==="settings") this.updateSettings();
+    else if(this.mode==="credits") this.updateCredits();
     else if(this.mode==="shop") this.updateShop();
     else if(this.mode==="mini") this.updateMini(dt);
     else if(this.mode==="follow") this.updateFollow(dt);
@@ -203,25 +243,53 @@ class Game {
   }
 
   updateTitle() {
-    const options=this.hasSave()?["CONTINUE","NEW GAME","LOAD","SETTINGS","QUIT"]:["NEW GAME","LOAD","SETTINGS","QUIT"];
+    const options=this.hasSave()?["CONTINUE","NEW GAME","LOAD GAME","SETTINGS","CREDITS"]:["NEW GAME","LOAD GAME","SETTINGS","CREDITS"];
     if(this.consume("ArrowDown","KeyS"))this.overlayIndex=(this.overlayIndex+1)%options.length;
     if(this.consume("ArrowUp","KeyW"))this.overlayIndex=(this.overlayIndex+options.length-1)%options.length;
-    if(this.mouse.clicked){
-      options.forEach((_,i)=>{if(this.mouse.y>205+i*43&&this.mouse.y<243+i*43)this.overlayIndex=i;});
+    this.titleCursorY=lerp(this.titleCursorY,205+this.overlayIndex*43,.22);
+    let clickChoice=false;
+    if(this.mouse.clicked&&this.mouse.x>125&&this.mouse.x<430){
+      options.forEach((_,i)=>{if(this.mouse.y>205+i*43&&this.mouse.y<243+i*43){this.overlayIndex=i;clickChoice=true;}});
     }
-    if(this.consume("Enter","Space","KeyE")||this.mouse.clicked){
+    if(this.consume("Enter","Space","KeyE")||clickChoice){
       const pick=options[this.overlayIndex];
-      if(pick==="CONTINUE")this.load();
+      if(pick==="CONTINUE")this.load(this.latestSlot()?.slot??1);
       if(pick==="NEW GAME")this.startNew();
-      if(pick==="LOAD"){if(this.hasSave())this.load();else this.startDialogue([{speaker:"",text:"There isn't a saved week yet."}],"title");}
-      if(pick==="SETTINGS")this.startDialogue([{speaker:"SETTINGS",text:"Choose how you want the evening to sound.",choices:[
-        {text:music.muted?"Turn sound on.":"Turn sound off.",reply:"Done.",custom:()=>music.toggleMute()},
-        {text:"Keep it as it is.",reply:"All right."}
-      ]}],"title");
-      if(pick==="QUIT")this.startDialogue([{speaker:"",text:"Come back whenever you like. Larkspur will still be here."}],"title");
+      if(pick==="LOAD GAME"){this.previousMode="title";this.slotMode="load";this.overlayIndex=0;this.mode="slots";}
+      if(pick==="SETTINGS"){this.previousMode="title";this.overlayIndex=0;this.mode="settings";}
+      if(pick==="CREDITS"){this.previousMode="title";this.mode="credits";}
     }
     music.setScene("home",{infection:0});
   }
+
+  updateSlots(){
+    if(this.consume("ArrowDown","KeyS"))this.overlayIndex=(this.overlayIndex+1)%4;
+    if(this.consume("ArrowUp","KeyW"))this.overlayIndex=(this.overlayIndex+3)%4;
+    if(this.consume("Escape")){this.mode=this.previousMode;this.overlayIndex=0;return;}
+    let clickChoice=false;if(this.mouse.clicked&&this.mouse.x>215&&this.mouse.x<745){for(let i=0;i<3;i++)if(this.mouse.y>=132+i*82&&this.mouse.y<196+i*82){this.overlayIndex=i;clickChoice=true;}if(this.mouse.y>402&&this.mouse.y<445){this.overlayIndex=3;clickChoice=true;}}
+    if(this.consume("Enter","Space","KeyE")||clickChoice){
+      if(this.overlayIndex===3){this.mode=this.previousMode;this.overlayIndex=0;return;}
+      const slot=this.overlayIndex+1;
+      if(this.slotMode==="save"){this.save(true,slot);this.mode=this.previousMode;this.overlayIndex=0;}
+      else if(this.saveSlots()[this.overlayIndex])this.load(slot);
+      else this.toastMsg("That slot is empty.");
+    }
+  }
+
+  updateSettings(){
+    const rows=["textSpeed","master","music","ambient","sfx","voice","readable","reducedFlashes","fullscreen","back"];
+    if(this.consume("ArrowDown","KeyS"))this.overlayIndex=(this.overlayIndex+1)%rows.length;
+    if(this.consume("ArrowUp","KeyW"))this.overlayIndex=(this.overlayIndex+rows.length-1)%rows.length;
+    let clickChoice=false;if(this.mouse.clicked&&this.mouse.x>214&&this.mouse.x<746){const i=Math.floor((this.mouse.y-102)/37);if(i>=0&&i<rows.length&&(this.mouse.y-102)%37<30){this.overlayIndex=i;clickChoice=true;}}
+    const row=rows[this.overlayIndex],left=this.consume("ArrowLeft","KeyA")||(clickChoice&&this.mouse.x<480),right=this.consume("ArrowRight","KeyD")||(clickChoice&&this.mouse.x>=480),activate=this.consume("Enter","Space","KeyE")||clickChoice;
+    if(row==="textSpeed"&&(left||right||activate)){const opts=["slow","normal","fast","instant"],i=opts.indexOf(this.settings.textSpeed);this.settings.textSpeed=opts[(i+(left?-1:1)+opts.length)%opts.length];this.writeSettings();}
+    if(["master","music","ambient","sfx","voice"].includes(row)&&(left||right)){this.settings[row]=clamp(Math.round((this.settings[row]+(right?.1:-.1))*10)/10,0,1);this.writeSettings();music.sfx("choice");}
+    if(["readable","reducedFlashes"].includes(row)&&activate){this.settings[row]=!this.settings[row];this.writeSettings();}
+    if(row==="fullscreen"&&activate){if(!document.fullscreenElement)canvas.requestFullscreen?.();else document.exitFullscreen?.();}
+    if((row==="back"&&activate)||this.consume("Escape")){this.writeSettings();this.mode=this.previousMode;this.overlayIndex=0;}
+  }
+
+  updateCredits(){if(this.consume("Escape","Enter","Space","KeyE")||this.mouse.clicked)this.mode=this.previousMode;}
 
   startNew(){this.state=newState();this.mode="daycard";this.dayCard={...DAY_CARDS[0],timer:0,intro:true};this.fade=1;this.fadeDir=-1;music.setScene("morning",{infection:0});}
 
@@ -276,8 +344,9 @@ class Game {
 
   getNPCs() {
     const s=this.state,out=[];
-    for(const [id,blocks] of Object.entries(SCHEDULES)){
-      if(s.flags[`${id}Gone`]||(id==="theo"&&s.flags.theoMissingDay&&s.day===4))continue;
+    for(const [id,weekdayBlocks] of Object.entries(SCHEDULES)){
+      const blocks=DAY_SCHEDULES[s.day]?.[id]||weekdayBlocks;
+      if(s.flags[`${id}Gone`]||(id==="theo"&&s.flags.theoMissingDay&&s.day===10))continue;
       const b=blocks.find(v=>s.time>=v.from&&s.time<v.to);
       if(b&&b.map===s.map)out.push({id,...b});
     }
@@ -305,7 +374,7 @@ class Game {
     this.fade=1;this.fadeDir=-1;music.sfx("door");this.advanceTime(8);
     this.state.map=exit.to;this.state.player.x=exit.tx;this.state.player.y=exit.ty;this.state.visited[exit.to]=true;
     this.sceneCaption=MAPS[exit.to].name;this.captionTimer=2.2;
-    if(this.state.day===4&&MAPS[exit.to].kind==="college"&&!this.state.flags.weatherSlip){
+    if(this.state.day===9&&MAPS[exit.to].kind==="college"&&!this.state.flags.weatherSlip){
       this.state.flags.weatherSlip=true;this.state.flags.collegeShifted=true;this.weatherSlip={time:0,frames:0,freeze:false};
       music.setScene("silence",{abrupt:true});
     }else{this.tryRandomEvent(.12);this.updateMusic(true);}
@@ -326,24 +395,24 @@ class Game {
         {text:"Win your own.",reply:"Cruel. Attractive, but cruel.",character:"theo",affection:2}
       ]}],"play");
     } else if(id==="mara"){
-      const node=MARA_TALKS.find(n=>n.condition(s));
+      const node=MARA_TALKS.find(n=>!n.ambientDefault&&n.condition(s))||maraAmbientNode(s,r.talks);
       this.conversationNode(id,node);
       if(!s.flags.metMara)this.log("Met a girl called Mara. Only Mara.");
     } else {
-      const pool=CHARACTER_TALK[id]||[];const ix=Math.min(pool.length-1,Math.floor(r.talks/2));
-      this.conversationNode(id,pool[ix]||{text:"Good to see you.",choices:[{text:"You too.",reply:"See? Social interaction. We survived."}]});
+      const pool=CHARACTER_TALK[id]||[],ix=Math.floor(r.talks/2),node=ix<pool.length?pool[ix]:castAmbientNode(id,s,r.talks);
+      this.conversationNode(id,node);
       this.progressWelcome(id);
     }
     this.advanceTime(10);
   }
 
   conversationNode(id,node){
-    const lines=[{speaker:CHARACTERS[id].name,text:node.text,portrait:id,expression:node.expression,demonHint:node.demonHint,demonHintAt:node.demonHintAt,choices:node.choices.map(c=>({...c,character:id}))}];
+    const lines=[{speaker:CHARACTERS[id].name,text:node.text,portrait:id,expression:node.expression,action:node.action,demonHint:node.demonHint,demonHintAt:node.demonHintAt,choices:node.choices?.map(c=>({...c,character:id}))}];
     this.startDialogue(lines,"play");
   }
 
   startDialogue(lines,returnMode="play",onEnd=null){
-    this.previousMode=returnMode;this.mode="dialogue";this.dialogue=lines;this.dialogueIndex=0;this.dialogueReveal=0;this.dialoguePause=0;this.dialogueVoiceCount=0;this.choiceIndex=0;this.dialogueEnd=onEnd;
+    this.previousMode=returnMode;this.mode="dialogue";this.dialogue=lines;this.dialogueIndex=0;this.dialogueReveal=0;this.dialoguePause=0;this.dialogueVoiceCount=0;this.choiceIndex=0;this.dialogueEnd=onEnd;this.previousPortrait=null;this.portraitBlend=1;
   }
 
   dialogueProfile(line){
@@ -355,12 +424,15 @@ class Game {
   updateDialogue(dt){
     const line=this.dialogue?.[this.dialogueIndex];if(!line){this.closeDialogue();return;}
     const profile=this.dialogueProfile(line),before=Math.floor(this.dialogueReveal);
-    if(this.dialoguePause>0)this.dialoguePause=Math.max(0,this.dialoguePause-dt);
+    this.portraitBlend=Math.min(1,this.portraitBlend+dt*7.5);
+    if(this.settings.textSpeed==="instant"){this.dialogueReveal=line.text.length;this.dialoguePause=0;}
+    else if(this.dialoguePause>0)this.dialoguePause=Math.max(0,this.dialoguePause-dt);
     else{
-      this.dialogueReveal=Math.min(line.text.length,this.dialogueReveal+dt*profile.rate);
+      const speed={slow:.68,normal:1,fast:1.55,instant:99}[this.settings.textSpeed]||1;
+      this.dialogueReveal=Math.min(line.text.length,this.dialogueReveal+dt*profile.rate*speed);
       const after=Math.floor(this.dialogueReveal);
       for(let i=before;i<after;i++){
-        const ch=line.text[i]||"";if(!/\s/.test(ch)&&++this.dialogueVoiceCount%profile.every===0)music.voice(profile.id,profile.still);
+        const ch=line.text[i]||"";if(!/\s/.test(ch)&&++this.dialogueVoiceCount%profile.every===0)music.voice(profile.id,profile.still,line.expression||"neutral");
         if(/[.!?]/.test(ch))this.dialoguePause=Math.max(this.dialoguePause,profile.stop);else if(/[,;:—]/.test(ch))this.dialoguePause=Math.max(this.dialoguePause,profile.comma);
       }
     }
@@ -386,12 +458,12 @@ class Game {
     if(choice.effect)this.effect(choice.effect);
     if(choice.custom)choice.custom();
     this.state.choices.push({day:this.state.day,time:this.state.time,text:choice.text,character:id});
-    this.dialogue.splice(this.dialogueIndex+1,0,{speaker:id?CHARACTERS[id].name:"",text:choice.reply||"…",portrait:id,expression:choice.expression,demonHint:choice.demonHint,demonHintAt:choice.demonHintAt});
+    this.dialogue.splice(this.dialogueIndex+1,0,{speaker:id?CHARACTERS[id].name:"",text:choice.reply||"…",portrait:id,expression:choice.expression,action:choice.action,demonHint:choice.demonHint,demonHintAt:choice.demonHintAt});
     this.dialogue[this.dialogueIndex].choices=null;this.nextDialogue();
     if(id==="mara"&&choice.jealousy)this.state.relationships.mara.resentment+=choice.jealousy;
   }
 
-  nextDialogue(){this.dialogueIndex++;this.dialogueReveal=0;this.dialoguePause=0;this.dialogueVoiceCount=0;this.choiceIndex=0;if(this.dialogueIndex>=this.dialogue.length)this.closeDialogue();}
+  nextDialogue(){const line=this.dialogue?.[this.dialogueIndex];this.previousPortrait=line?.portrait?{id:line.portrait,expression:line.expression||"neutral",action:line.action}:null;this.dialogueIndex++;this.dialogueReveal=0;this.dialoguePause=0;this.dialogueVoiceCount=0;this.choiceIndex=0;this.portraitBlend=0;if(this.dialogueIndex>=this.dialogue.length)this.closeDialogue();}
   closeDialogue(){const cb=this.dialogueEnd;this.mode=this.previousMode||"play";this.dialogue=null;this.dialogueEnd=null;if(cb)cb();}
 
   useProp(action){
@@ -408,7 +480,7 @@ class Game {
     if(action==="notice")return simple("","GUITAR LESSONS. LOST CAT. PARK VOLUNTEERS. A blank square where something has been torn down very carefully.");
     if(action==="shop")return this.openShop();
     if(action==="wait"){this.advanceTime(60);this.toastMsg("An hour passes.");return;}
-    if(action==="fountain")return simple("",s.day===4?"Six coins rest at the bottom. Every one is dated next year.":"The college fountain smells faintly of pennies and rain.");
+    if(action==="fountain")return simple("",s.day>=9?"Six coins rest at the bottom. Every one is dated next year.":"The college fountain smells faintly of pennies and rain.");
     if(action==="collegeboard")return simple("","FILM CLUB — MUSIC SOCIETY — FOLKLORE — VOLUNTEERING. Nia has circled every option for you.");
     if(action==="locker")return this.locker();
     if(action==="poster")return simple("Iris","The photo walk is Wednesday after five. Bring film and shoes you don't respect.");
@@ -418,7 +490,7 @@ class Game {
     if(action==="quiet_lunch")return this.quietLunch();
     if(action==="study"){s.grade+=2;this.advanceTime(50);return simple("",`You study until the paragraphs behave. Grade confidence: ${s.grade}.`);}
     if(action==="records")return this.searchRecords();
-    if(action==="folklore")return simple("Ren",s.day>=4?"Every local account agrees on one detail: it happened on Thursday. They do not agree which Thursday.":"Half the books are folklore. The other half are books Ren insists will become folklore eventually.");
+    if(action==="folklore")return simple("Ren",s.day>=9?"Every local account agrees on one detail: it happened on Thursday. They do not agree which Thursday.":"Half the books are folklore. The other half are books Ren insists will become folklore eventually.");
     if(action==="rhythm")return this.startMini("rhythm");
     if(action==="listen"){s.energy=Math.min(100,s.energy+8);this.advanceTime(30);return simple("","You listen to both sides. The room feels larger when you close your eyes.");}
     if(action==="cafe")return this.cafeAction();
@@ -426,7 +498,7 @@ class Game {
     if(action==="cafe_piano")return simple("",s.flags.heardMotifTalk?"You pick out June's six notes. A cup breaks behind the counter.":"One key is slightly flat. It is also the nicest-sounding key.");
     if(action==="arcade_game")return this.arcadeAction();
     if(action==="prize")return simple("Theo","The plastic star costs four hundred tickets or one act of burglary. I'm flexible.");
-    if(action==="pond")return simple("",s.day===4?"The ducks leave the water at once. A red-haired reflection remains for a moment longer.":"A duck regards your academic prospects with open contempt.");
+    if(action==="pond")return simple("",s.day>=9?"The ducks leave the water at once. A red-haired reflection remains for a moment longer.":"A duck regards your academic prospects with open contempt.");
     if(action==="greenhouse")return this.greenhouse();
     if(action==="parkbench")return this.parkBench();
     if(action==="train")return this.trainAction();
@@ -451,9 +523,9 @@ class Game {
 
   sleep(){
     const s=this.state;
-    if(s.day>=5){s.time=430;s.energy=100;s.talkedToday={};s.flags.fridayLooped=true;this.save(false);this.mode="daycard";this.dayCard={title:"FRIDAY",sub:"The week does not end.",timer:0};music.setScene("morning",{infection:3,weather:s.weather});return;}
-    s.day++;s.time=430;s.energy=100;s.talkedToday={};s.weather=s.day===3||s.day===4?"rain":"sun";
-    s.motifInfection=Math.min(3,Math.floor((s.day-1)/2));s.corruption=Math.max(s.corruption,s.day-3);
+    if(s.day>=12){s.time=430;s.energy=100;s.talkedToday={};s.flags.fridayLooped=true;this.save(false);this.mode="daycard";this.dayCard={title:"FRIDAY",sub:"The week does not end.",timer:0};music.setScene("morning",{infection:3,weather:s.weather});return;}
+    s.day++;s.time=430;s.energy=100;s.talkedToday={};s.weather=[3,6,10].includes(s.day)?"rain":"sun";
+    s.motifInfection=Math.min(3,Math.floor((s.day-1)/4));s.corruption=clamp(Math.max(s.corruption,s.day-8),0,3);
     this.dailyMessages();this.socialSimulation();this.save(false);
     this.mode="daycard";this.dayCard={...(DAY_CARDS.find(d=>d.day===s.day)||{title:"SATURDAY",sub:"The week does not end."}),timer:0};
     music.setScene("morning",{infection:s.motifInfection,weather:s.weather},true);
@@ -466,7 +538,7 @@ class Game {
   windowScene(){
     const s=this.state;
     if(s.flags.movePillow&&!s.flags.pillowFound){s.flags.pillowFound=true;this.addItem("greenRibbon");this.startDialogue([{speaker:"",text:"The street is empty."},{speaker:"",text:"Under your pillow is a green ribbon. It smells like rain, though the window is shut."}],"play");return;}
-    if(s.day>=3&&s.time>1200)this.startDialogue([{speaker:"",text:"A figure stands beneath the dead streetlamp."},{speaker:"Alex",text:"When the next car passes, the pavement is empty."}],"play");
+    if(s.day>=8&&s.time>1200)this.startDialogue([{speaker:"",text:"A figure stands beneath the dead streetlamp."},{speaker:"Alex",text:"When the next car passes, the pavement is empty."}],"play");
     else this.startDialogue([{speaker:"",text:s.weather==="rain"?"Rain turns Mallow Street into a long reflection.":"The town is already awake. Someone across the street closes a curtain."}],"play");
   }
 
@@ -494,7 +566,7 @@ class Game {
   locker(){
     const s=this.state;
     if(!s.flags.gotMap){s.flags.gotMap=true;s.money+=4;this.startDialogue([{speaker:"",text:"Nia's map is covered in arrows, café recommendations, and one warning: “DO NOT LET THE EAST-HALL MACHINE WIN.”"},{speaker:"",text:"There is also £4 taped to it. “Emergency pastry fund.”"}],"play");}
-    else this.startDialogue([{speaker:"",text:s.day>=4?"Your locker contains a handwritten timetable for Mara. Every line says ALEX.":"Books, timetable, emergency snacks. Ordinary evidence of an ordinary week."}],"play");
+    else this.startDialogue([{speaker:"",text:s.day>=9?"Your locker contains a handwritten timetable for Mara. Every line says ALEX.":"Books, timetable, emergency snacks. Ordinary evidence of an ordinary week."}],"play");
   }
 
   attendClass(seat){
@@ -510,7 +582,7 @@ class Game {
   groupLunch(){
     this.advanceTime(35);this.state.relationships.nia.affection++;this.state.relationships.theo.affection++;
     const lines=[{speaker:"Theo",text:"I maintain the soup is a beverage."},{speaker:"Nia",text:"You used a straw once and lost voting rights."}];
-    if(this.state.day>=3)lines.push({speaker:"",text:"Iris's usual seat is empty. The cheerful cafeteria music reaches the end of its loop and starts again."});
+    if(this.state.day>=9)lines.push({speaker:"",text:"Iris's usual seat is empty. The cheerful cafeteria music reaches the end of its loop and starts again."});
     this.startDialogue(lines,"play");
   }
   quietLunch(){
@@ -553,7 +625,7 @@ class Game {
     if(s.flags.irisDate&&s.relationships.iris.affection>=3&&!s.flags.irisDateDone){s.flags.irisDateDone=true;s.stats.dates++;s.relationships.iris.affection+=3;this.advanceTime(75);
       this.startDialogue([{speaker:"Iris",portrait:"iris",expression:"happy",text:"I like this booth. Everyone outside becomes a film with no dialogue."},{speaker:"Alex",text:"What does that make us?"},{speaker:"Iris",portrait:"iris",expression:"happy",text:"The people pretending not to hold hands under the table."},{speaker:"",text:"For an hour, the rain is only rain."}],"play");return;}
     if(s.relationships.mara.affection>=5&&!s.flags.maraCafeDate){s.flags.maraCafeDate=true;s.stats.dates++;s.relationships.mara.affection+=3;this.advanceTime(70);
-      music.setScene("mara",{infection:1});this.startDialogue([{speaker:"Mara",portrait:"mara",expression:"proud",text:"I ordered for you. If it's wrong, lie. I want to feel impressive."},{speaker:"Mara",portrait:"mara",expression:"affectionate",text:"This is nice, isn't it? Just us and everybody else being somewhere else."},{speaker:"Mara",portrait:"mara",expression:"laugh",text:"That came out sinister. I meant the booth, Alex. I'm losing badly at being charming."},{speaker:"",text:"She makes you laugh hard enough to spill tea. For a while, nothing about her feels dangerous."}],"play");return;}
+      music.setScene("mara",{infection:1});this.startDialogue([{speaker:"Mara",portrait:"mara",expression:"proud",action:"mug",text:"I ordered for you. If it's wrong, lie. I want to feel impressive."},{speaker:"Mara",portrait:"mara",expression:"affectionate",action:"hugSelf",text:"This is nice, isn't it? Just us and everybody else being somewhere else."},{speaker:"Mara",portrait:"mara",expression:"laugh",action:"wave",text:"That came out sinister. I meant the booth, Alex. I'm losing badly at being charming."},{speaker:"",text:"She makes you laugh hard enough to spill tea. For a while, nothing about her feels dangerous."}],"play");return;}
     this.advanceTime(20);this.state.energy+=5;this.startDialogue([{speaker:"",text:"You watch umbrellas pass. The booth holds a small, temporary peace."}],"play");
   }
 
@@ -578,8 +650,8 @@ class Game {
 
   trainAction(){
     const s=this.state;
-    if(s.day===5&&s.time>=960&&!s.flags.followDone){this.startFollow();return;}
-    this.startDialogue([{speaker:"",text:s.day>=4?"The departure board flickers. For one second every train leaves at 19:17 on THURSDAY.":"Trains arrive, apologise electronically, and leave."}],"play");
+    if(s.day===10&&s.time>=960&&!s.flags.followDone){this.startFollow();return;}
+    this.startDialogue([{speaker:"",text:s.day>=9?"The departure board flickers. For one second every train leaves at 19:17 on THURSDAY.":"Trains arrive, apologise electronically, and leave."}],"play");
   }
 
   archiveDoor(){
@@ -608,17 +680,18 @@ class Game {
   redDoor(){
     const s=this.state;
     if(!s.flags.boxSeen||!s.flags.photosSeen){this.startDialogue([{speaker:"",text:"Behind the red paint, something knocks once. It waits for your answer."}],"play");return;}
+    if(s.day<12){this.startDialogue([{speaker:"",text:"The handle will not turn."},{speaker:"Mara",portrait:"mara",expression:"neutral",action:"stand",text:"Not today."},{speaker:"Alex",text:"Mara is behind you. The annex door is still locked from the inside."}],"play");return;}
     s.flags.redDoorSeen=true;
     this.startDialogue([
-      {speaker:"Mara",portrait:"mara",expression:"pleading",text:"Please don't."},
+      {speaker:"Mara",portrait:"mara",expression:"pleading",action:"clutchSleeve",text:"Please don't."},
       {speaker:"",text:"She is standing between you and the exit. You did not hear her enter."},
-      {speaker:"Mara",portrait:"mara",expression:"watery",text:"I had such a good week with you."},
+      {speaker:"Mara",portrait:"mara",expression:"watery",action:"wipeTears",text:"I had such a good week with you."},
       {speaker:"Alex",text:"What are you?"},
-      {speaker:"Mara",portrait:"mara",expression:"cold",text:"Mara."},
+      {speaker:"Mara",portrait:"mara",expression:"cold",action:"abruptStill",text:"Mara."},
       {speaker:"",portrait:"mara",text:"For one frame, her shadow continues upward after the ceiling ends.",demonHint:"shadow"},
       {speaker:"Mara",portrait:"mara",expression:"forcedSmile",text:"Can we go home now?"},
       {speaker:"Alex",text:"There are photographs of me from before I existed."},
-      {speaker:"Mara",portrait:"mara",expression:"tooStill",text:"Your room looked nicer the first time.",demonHint:"tail"},
+      {speaker:"Mara",portrait:"mara",expression:"tooStill",action:"abruptStill",text:"Your room looked nicer the first time.",demonHint:"tail",demonHintAt:.74},
       {speaker:"",text:"She smiles. It is the same warm smile that made you laugh in the café."}
     ],"play",()=>this.finishChapter());
   }
@@ -639,8 +712,15 @@ class Game {
     const s=this.state;
     if(s.day===2){this.addMessage("nia","Everyone survives Monday! Legally, that counts as a good week.");if(s.flags.metMara)this.addMessage("mara","hi :) did you get home okay?");}
     if(s.day===3){this.addMessage("iris","Photo walk after five? Bring film. I promise one artistic puddle maximum.");if(s.flags.metMara){this.addMessage("mara","morning!!");this.addMessage("mara","sorry too many exclamation marks");this.addMessage("mara","I was excited");}}
-    if(s.day===4){this.addMessage("june","The six-note thing is in the college jingle now. Tell me you hear it.");if(s.flags.metMara)this.addMessage("mara","you looked nice asleep");}
-    if(s.day===5){this.addMessage("ren","Station. After 16:00. She has used the service lane three Fridays in a row.");if(s.flags.metMara)this.addMessage("mara","don't take the train today");s.flags.investigationUnlocked=true;}
+    if(s.day===4){this.addMessage("june","Open rehearsal at four. Bribery biscuits provided.");if(s.flags.metMara)this.addMessage("mara","do you like cinnamon or is that just something I decided about you");}
+    if(s.day===5){this.addMessage("theo","Arcade after class. Nia says this is a group invitation. I say she fears losing alone.");if(s.flags.metMara)this.addMessage("mara","happy friday. that sounds sarcastic but it isn't");}
+    if(s.day===6){this.addMessage("sam","Your shift tips are behind the till. Also someone left you a very lopsided biscuit.");if(s.flags.metMara)this.addMessage("mara","the biscuit was meant to be a fox");}
+    if(s.day===7){this.addMessage("nia","Sunday park picnic. Bring nothing. Theo is bringing enough crisps to become a problem.");if(s.flags.metMara)this.addMessage("mara","I saw a dog that looked exactly like your coat");}
+    if(s.day===8){this.addMessage("iris","I developed the café roll. There is one frame I don't remember taking.");if(s.flags.metMara)this.addMessage("mara","can we have tea this week? proper tea not vending machine grief");}
+    if(s.day===9){this.addMessage("june","Someone's been using the practice room after closing. They keep leaving the pedal down.");if(s.flags.metMara)this.addMessage("mara","you looked nice asleep");}
+    if(s.day===10){this.addMessage("ren","Station. After 16:00. She has used the service lane three Wednesdays in a row.");if(s.flags.metMara)this.addMessage("mara","don't take the train today");s.flags.investigationUnlocked=true;}
+    if(s.day===11&&s.flags.metMara){this.addMessage("mara","I hate Thursdays");this.addMessage("mara","sorry. good morning :) ");}
+    if(s.day===12)this.addMessage("theo","Your phone connected to something at 03:17 again. It used your own device name.");
   }
 
   addMessage(id,text,from=id){
@@ -654,31 +734,36 @@ class Game {
     if(this.consume("Escape","KeyP")){this.mode=this.previousMode;return;}
     if(this.consume("ArrowDown","KeyS")){this.phoneContact=(this.phoneContact+1)%contacts.length;this.state.unread[contacts[this.phoneContact]]=0;}
     if(this.consume("ArrowUp","KeyW")){this.phoneContact=(this.phoneContact+contacts.length-1)%contacts.length;this.state.unread[contacts[this.phoneContact]]=0;}
-    if(this.consume("KeyR")&&contacts[this.phoneContact]==="mara")this.replyMara();
+    if(this.mouse.clicked){
+      if(this.mouse.x>=200&&this.mouse.x<=365){const i=Math.floor((this.mouse.y-103)/48);if(i>=0&&i<contacts.length){this.phoneContact=i;this.state.unread[contacts[i]]=0;}}
+      if(this.mouse.x>=715&&this.mouse.y>=48&&this.mouse.y<88){this.mode=this.previousMode;return;}
+    }
+    if((this.consume("KeyR")||(this.mouse.clicked&&this.mouse.x>=395&&this.mouse.x<=750&&this.mouse.y>=460&&this.mouse.y<=495))&&contacts[this.phoneContact]==="mara")this.replyMara();
   }
 
   replyMara(){
-    const s=this.state,id="mara";this.addMessage(id,s.day>=4?"How did you know I was asleep?":"Home safe. See you tomorrow.","you");s.unread[id]=0;
-    if(s.day>=4){setTimeout(()=>{this.addMessage("mara","know what?");this.addMessage("mara","sleep well :) ");s.flags.movePillow=true;},900);}
+    const s=this.state,id="mara";this.addMessage(id,s.day>=9?"How did you know I was asleep?":"Home safe. See you tomorrow.","you");s.unread[id]=0;
+    if(s.day>=9){setTimeout(()=>{this.addMessage("mara","know what?");this.addMessage("mara","sleep well :) ");s.flags.movePillow=true;},900);}
   }
 
   updateJournal(){if(this.consume("Escape","KeyJ"))this.mode=this.previousMode;if(this.consume("ArrowDown","KeyS"))this.overlayIndex++;if(this.consume("ArrowUp","KeyW"))this.overlayIndex=Math.max(0,this.overlayIndex-1);}
   updatePause(){
-    const opts=["RESUME","SAVE GAME",music.muted?"SOUND: OFF":"SOUND: ON","TITLE SCREEN"];
+    const opts=["RESUME","SAVE GAME","SETTINGS","TITLE SCREEN"];
     if(this.consume("ArrowDown","KeyS"))this.overlayIndex=(this.overlayIndex+1)%opts.length;if(this.consume("ArrowUp","KeyW"))this.overlayIndex=(this.overlayIndex+opts.length-1)%opts.length;
     if(this.consume("Escape")){this.mode="play";return;}
-    if(this.consume("Enter","Space","KeyE")){const p=opts[this.overlayIndex];if(p==="RESUME")this.mode="play";if(p==="SAVE GAME")this.save(true);if(p.startsWith("SOUND"))music.toggleMute();if(p==="TITLE SCREEN"){this.mode="title";this.overlayIndex=0;}}
+    let clickChoice=false;if(this.mouse.clicked&&this.mouse.x>320&&this.mouse.x<640){const i=Math.floor((this.mouse.y-196)/48);if(i>=0&&i<4){this.overlayIndex=i;clickChoice=true;}}
+    if(this.consume("Enter","Space","KeyE")||clickChoice){const p=opts[this.overlayIndex];if(p==="RESUME")this.mode="play";if(p==="SAVE GAME"){this.previousMode="pause";this.slotMode="save";this.overlayIndex=0;this.mode="slots";}if(p==="SETTINGS"){this.previousMode="pause";this.overlayIndex=0;this.mode="settings";}if(p==="TITLE SCREEN"){this.mode="title";this.overlayIndex=0;}}
   }
 
-  save(notify=true){try{localStorage.setItem(SAVE_KEY,JSON.stringify(this.state));if(notify){music.sfx("save");this.toastMsg("Game saved.");}}catch{this.toastMsg("Save failed in this browser.");}}
-  load(){try{const raw=JSON.parse(localStorage.getItem(SAVE_KEY));this.state=Object.assign(newState(),raw);this.mode="play";this.fade=1;this.fadeDir=-1;this.updateMusic(true);this.toastMsg("Welcome back.");}catch{this.toastMsg("Save could not be read.");}}
+  save(notify=true,slot=1){try{const packet={version:2,savedAt:Date.now(),label:`Day ${this.state.day} · ${fmtTime(this.state.time)} · ${MAPS[this.state.map]?.name||"Larkspur"}`,state:this.state};localStorage.setItem(notify?`${SAVE_PREFIX}${slot}`:AUTO_SAVE_KEY,JSON.stringify(packet));if(notify){music.sfx("save");this.toastMsg(`Saved to slot ${slot}.`);}}catch{this.toastMsg("Save failed in this browser.");}}
+  load(slot=1){try{const key=slot===0?AUTO_SAVE_KEY:`${SAVE_PREFIX}${slot}`,packet=JSON.parse(localStorage.getItem(key));if(!packet)throw new Error("empty");const raw=packet.state||packet;this.state=Object.assign(newState(),raw,{version:2});this.mode="play";this.fade=1;this.fadeDir=-1;this.updateMusic(true);this.toastMsg(slot===0?"Autosave resumed.":`Loaded slot ${slot}.`);}catch{this.toastMsg("Save could not be read.");}}
 
   storyTick(){
     const s=this.state;
     if(s.day===1&&s.time>=540&&!s.flags.orientation){s.flags.orientation=true;this.toastMsg("Orientation has started in the courtyard.");}
-    if(s.day>=4&&s.clues>=2&&!s.flags.investigationUnlocked){s.flags.investigationUnlocked=true;this.addMessage("ren","Service lane behind Larkspur Station. Friday, after four. Don't tell her.");}
-    if(s.day===4&&s.time>1260&&!s.flags.movePillow&&s.flags.metMara){s.flags.movePillow=true;this.addMessage("mara","move your pillow");}
-    if(s.day===4&&s.time>1320&&!s.flags.maraNightCall&&s.flags.metMara&&this.mode==="play")this.incomingMaraCall();
+    if(s.day>=10&&s.clues>=2&&!s.flags.investigationUnlocked){s.flags.investigationUnlocked=true;this.addMessage("ren","Service lane behind Larkspur Station. Wednesday, after four. Don't tell her.");}
+    if(s.day===9&&s.time>1260&&!s.flags.movePillow&&s.flags.metMara){s.flags.movePillow=true;this.addMessage("mara","move your pillow");}
+    if(s.day===9&&s.time>1320&&!s.flags.maraNightCall&&s.flags.metMara&&this.mode==="play")this.incomingMaraCall();
   }
 
   incomingMaraCall(){
@@ -687,14 +772,15 @@ class Game {
       {text:"Answer.",reply:"For several seconds there is only breathing and distant rain.",custom:()=>{s.relationships.mara.affection+=1;}},
       {text:"Decline.",reply:"The phone stops. It rings again before the screen goes dark.",custom:()=>{s.relationships.mara.resentment+=2;}},
       {text:"Turn the phone off.",reply:"The screen goes black. Her voice continues through the speaker: “Alex?”",custom:()=>{s.relationships.mara.fear+=2;s.flags.impossibleCall=true;}}
-    ]},{speaker:"Mara",portrait:"mara",expression:"watery",text:"I couldn't sleep. I kept thinking you were going somewhere without me."},{speaker:"Mara",portrait:"mara",expression:"panic",text:"You aren't, are you?"}],"play");
+    ]},{speaker:"Mara",portrait:"mara",expression:"watery",action:"hugSelf",text:"I couldn't sleep. I kept thinking you were going somewhere without me."},{speaker:"Mara",portrait:"mara",expression:"panic",action:"tremble",text:"You aren't, are you?"}],"play");
   }
 
   socialSimulation(){
     const s=this.state;s.socialTick++;
-    if(s.day===3){s.npcRelations.irisJune=-1;this.log("Iris and June argued about an altered photograph.");}
-    if(s.day===4&&s.relationships.iris.affection>=5){s.relationships.mara.resentment+=3;this.log("Mara asked Nia whether Iris was ‘making you different’. ");}
-    if(s.day===5&&s.relationships.theo.trust>=3)this.addMessage("theo","Your phone connected to something at 03:17 again. It used your own device name.");
+    if(s.day===4){s.npcRelations.theoNia=(s.npcRelations.theoNia||0)+1;this.log("Theo and Nia planned Friday's arcade night without waiting for you.");}
+    if(s.day===6){s.npcRelations.irisJune=-1;this.log("Iris and June argued about whether a photograph had been cropped.");}
+    if(s.day===7)this.log("Sam joined the park picnic after closing and beat Theo at cards.");
+    if(s.day===8&&s.relationships.iris.affection>=5){s.relationships.mara.resentment+=3;this.log("Mara asked Nia whether Iris was ‘making you different’. ");}
   }
 
   tryRandomEvent(bonus=0){
@@ -711,7 +797,7 @@ class Game {
   updateMusic(force=false){
     const s=this.state,map=MAPS[s.map];const mara=this.getNPCs().find(n=>n.id==="mara");let track=map.music;
     if(s.time>1260&&["street","highstreet","station"].includes(s.map))track="night";
-    if(mara&&dist(s.player,mara)<210){track=(mara.distant||s.day<=1)?"stalking":"mara";}
+    if(mara&&dist(s.player,mara)<210){if(s.day>=8&&mara.distant)track="stalking";else if(s.flags.metMara&&!mara.distant)track="mara";}
     const key=`${track}-${s.motifInfection}-${!!mara}-${s.weather}`;
     if(force||key!==this.lastMap){this.lastMap=key;music.setScene(track,{infection:s.motifInfection,nearMara:!!mara,weather:s.weather});}
   }
@@ -734,20 +820,24 @@ class Game {
   }
 
   startFollow(){
-    this.mode="follow";this.follow={time:0,playerX:180,maraX:590,suspicion:0,success:0,stopped:false};music.setScene("stalking",{infection:2},true);
+    this.mode="follow";this.follow={time:0,playerX:180,maraX:590,suspicion:0,success:0,stopped:false,route:null,noise:0,covers:[300,470,735]};music.setScene("stalking",{infection:2},true);
   }
   updateFollow(dt){
     const f=this.follow;f.time+=dt;
     if(this.mouse.clicked)f.playerX=clamp(f.playerX+(this.mouse.x<W/2?-42:42),50,900);
     const move=(this.keys.has("ArrowRight")||this.keys.has("KeyD")?1:0)-(this.keys.has("ArrowLeft")||this.keys.has("KeyA")?1:0);
-    f.playerX=clamp(f.playerX+move*150*dt,50,900);
-    if(!f.stopped)f.maraX-=18*dt;
+    const sprint=this.keys.has("ShiftLeft"),speed=sprint?225:150;f.playerX=clamp(f.playerX+move*speed*dt,50,900);f.noise=clamp(f.noise+(move?(sprint?35:9)*dt:-22*dt),0,100);
+    if(f.time>7&&f.time<10&&!f.route){if(this.consume("ArrowUp","KeyW"))f.route="alley";if(this.consume("ArrowDown","KeyS"))f.route="street";}
+    if(f.time>=10&&!f.route)f.route="street";
+    if(!f.stopped)f.maraX-=(f.route==="alley"?22:18)*dt;
     const d=f.maraX-f.playerX;
-    if(d<120)f.suspicion+=dt*30;else if(d>330)f.suspicion+=dt*18;else{f.suspicion=Math.max(0,f.suspicion-dt*8);f.success+=dt;}
-    if(f.time>11&&!f.stopped){f.stopped=true;music.setScene("silence",{abrupt:true});}
-    if(f.time>15&&f.stopped){f.stopped=false;f.maraX=620;music.setScene("stalking",{infection:2});}
+    const hidden=f.stopped&&f.covers.some(x=>Math.abs(f.playerX-x)<34),visible=f.stopped&&!hidden;
+    if(visible)f.suspicion+=dt*48;else if(d<120)f.suspicion+=dt*30;else if(d>330)f.suspicion+=dt*18;else{f.suspicion=Math.max(0,f.suspicion-dt*(hidden?18:8));f.success+=dt*(hidden?1.5:1);}
+    if(f.noise>62&&d<280)f.suspicion+=dt*24;
+    if(f.time>11&&f.time<15&&!f.stopped){f.stopped=true;music.setScene("silence",{abrupt:true});}
+    if(f.time>=15&&f.stopped){f.stopped=false;f.maraX=620;music.setScene("stalking",{infection:2});}
     if(f.suspicion>=100){this.finishFollow(false);return;}
-    if(f.time>=27){this.finishFollow(f.success>15);return;}
+    if(f.time>=27){this.finishFollow(f.success>(f.route==="alley"?13:16));return;}
     if(this.consume("Escape"))this.finishFollow(false);
   }
   finishFollow(success){
@@ -772,6 +862,9 @@ class Game {
     else if(this.mode==="daycard")this.drawDayCard();
     else if(this.mode==="follow")this.drawFollow();
     else if(this.mode==="chapter")this.drawChapter();
+    else if(this.mode==="slots"){this.previousMode==="title"?this.drawTitle():this.drawWorld();this.drawSlots();}
+    else if(this.mode==="settings"){this.previousMode==="title"?this.drawTitle():this.drawWorld();this.drawSettings();}
+    else if(this.mode==="credits"){this.drawTitle();this.drawCredits();}
     else {this.drawWorld();if(this.weatherSlip)this.drawWeatherSlip();if(this.mode==="dialogue")this.drawDialogue();if(this.mode==="phone")this.drawPhone();if(this.mode==="journal")this.drawJournal();if(this.mode==="pause")this.drawPause();if(this.mode==="shop")this.drawShop();if(this.mode==="mini")this.drawMini();}
     if(this.toastTimer>0)this.drawToast();if(this.fade>0){ctx.fillStyle=`rgba(12,10,22,${this.fade})`;ctx.fillRect(0,0,W,H);}ctx.restore();
   }
@@ -795,7 +888,7 @@ class Game {
     }
     const split=Math.floor(170+Math.sin(e.time*41)*90);
     ctx.globalAlpha=.32;ctx.drawImage(canvas,0,split,W,18,7,split,W,18);ctx.globalAlpha=1;
-    if(e.frames===9){
+    if(e.frames===9&&!this.settings.reducedFlashes){
       ctx.fillStyle="#f5e9d5";ctx.fillRect(0,0,W,H);
       ctx.globalAlpha=.94;this.drawArtPortrait("mara",795,258,1.72,"pupilsWrong");ctx.globalAlpha=1;
       ctx.fillStyle="#261722";ctx.fillRect(0,0,620,H);
@@ -808,11 +901,21 @@ class Game {
     if(ART.titleMara){ctx.imageSmoothingEnabled=false;ctx.drawImage(ART.titleMara,0,0,W,H);}
     else {ctx.fillStyle="#745044";ctx.fillRect(0,0,W,H);}
     const veil=ctx.createLinearGradient(0,0,570,0);veil.addColorStop(0,"#211722e8");veil.addColorStop(.62,"#211722b8");veil.addColorStop(1,"#21172200");ctx.fillStyle=veil;ctx.fillRect(0,0,610,H);
-    ctx.fillStyle="#fff1d5";ctx.textAlign="center";ctx.font='bold 64px "Trebuchet MS",sans-serif';ctx.letterSpacing="15px";ctx.fillText("MARA",267,118);ctx.letterSpacing="0px";
-    ctx.fillStyle="#e3bda5";ctx.font='italic 17px "Trebuchet MS",sans-serif';ctx.fillText("A new term in Larkspur.",267,150);
-    const opts=this.hasSave()?["CONTINUE","NEW GAME","LOAD","SETTINGS","QUIT"]:["NEW GAME","LOAD","SETTINGS","QUIT"];
-    const firstY=205;opts.forEach((o,i)=>{const y=firstY+i*43,selected=i===this.overlayIndex;ctx.fillStyle=selected?"#fff1d5":"#d6b9a8";ctx.font=selected?'bold 18px "Courier New",monospace':'16px "Courier New",monospace';ctx.textAlign="left";ctx.fillText(selected?`♥  ${o}`:`   ${o}`,145,y+24);});
+    this.drawPixelTitle(165,69,6);ctx.textAlign="center";
+    ctx.fillStyle="#e3bda5";ctx.font='italic 16px Georgia,serif';ctx.fillText("A new term in Larkspur.",267,150);
+    ctx.strokeStyle="#b77a71";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(184,166);ctx.quadraticCurveTo(267,176,350,166);ctx.stroke();ctx.fillStyle="#c9a46e";for(const [dx,dy,w,h] of [[0,8,2,11],[2,2,3,12],[5,0,5,9],[10,0,3,5]])ctx.fillRect(261+dx,153+dy,w,h);
+    const opts=this.hasSave()?["CONTINUE","NEW GAME","LOAD GAME","SETTINGS","CREDITS"]:["NEW GAME","LOAD GAME","SETTINGS","CREDITS"];
+    const firstY=205;opts.forEach((o,i)=>{const y=firstY+i*43,selected=i===this.overlayIndex;ctx.fillStyle=selected?"#fff1d5":"#d6b9a8";ctx.font=selected?'bold 18px "Courier New",monospace':'16px "Courier New",monospace';ctx.textAlign="left";ctx.fillText(`   ${o}`,145,y+24);});
+    ctx.fillStyle="#d8888f";ctx.font='bold 18px "Courier New",monospace';ctx.fillText("♥",145,this.titleCursorY+24);
     ctx.fillStyle="#f0d7c088";ctx.font='12px "Courier New",monospace';ctx.textAlign="left";ctx.fillText("ARROWS / WASD   ·   ENTER / E",145,488);
+  }
+
+  drawPixelTitle(x,y,unit){
+    // Original small bitmap lettering: pixel edges stay aligned to the game grid.
+    const glyphs={M:["1100011","1110111","1011101","1001001","1000001","1000001","1100011"],A:["0011100","0110110","1100011","1100011","1111111","1100011","1100011"],R:["1111110","1100011","1100011","1111110","1101100","1100110","1100011"]};
+    for(const [i,ch] of [..."MARA"].entries())for(const [row,bits] of glyphs[ch].entries())for(let col=0;col<bits.length;col++)if(bits[col]==="1"){
+      const px=x+(i*9+col)*unit,py=y+row*unit;ctx.fillStyle="#492d35";ctx.fillRect(px+2,py+3,unit,unit);ctx.fillStyle="#fff1d5";ctx.fillRect(px,py,unit,unit);
+    }
   }
 
   drawPixelSkyline(){
@@ -820,7 +923,7 @@ class Game {
     ctx.fillStyle="#242136";ctx.fillRect(0,450,W,90);ctx.fillStyle="#8da7b2";ctx.fillRect(0,448,W,3);
   }
 
-  drawDayCard(){ctx.fillStyle="#17152b";ctx.fillRect(0,0,W,H);const t=this.dayCard?.timer||0;ctx.globalAlpha=clamp(t,0,1);ctx.textAlign="center";ctx.fillStyle="#fff3da";ctx.font="52px Georgia";ctx.fillText(this.dayCard?.title||"MONDAY",480,250);ctx.fillStyle="#d0a993";ctx.font="italic 19px Georgia";ctx.fillText(this.dayCard?.sub||"",480,292);ctx.globalAlpha=1;}
+  drawDayCard(){ctx.fillStyle="#17152b";ctx.fillRect(0,0,W,H);const t=this.dayCard?.timer||0;ctx.globalAlpha=clamp(t,0,1);ctx.textAlign="center";ctx.fillStyle="#fff3da";ctx.font='bold 47px "Courier New",monospace';ctx.fillText(this.dayCard?.title||"MONDAY",480,250);ctx.fillStyle="#d0a993";ctx.font="italic 19px Georgia";ctx.fillText(this.dayCard?.sub||"",480,292);ctx.globalAlpha=1;}
 
   drawWorld(){
     this.drawMap(MAPS[this.state.map]);
@@ -871,12 +974,13 @@ class Game {
 
   drawAuthoredScene(kind){
     const shiftedBedroom=this.state.flags.bedroomShifted||this.state.flags.movePillow||this.state.flags.ownNumber;
-    const shiftedCollege=(this.state.flags.collegeShifted&&this.state.day===4)||this.state.flags.room307||this.state.flags.theoMissingDay;
+    const shiftedCollege=(this.state.flags.collegeShifted&&this.state.day===9)||this.state.flags.room307||this.state.flags.theoMissingDay;
     const art={
       bedroom:shiftedBedroom?ART.sceneBedroomShifted:ART.sceneBedroom,
+      home:ART.sceneHome,hall:ART.sceneHall,classroom:ART.sceneClassroom,cafeteria:ART.sceneCafeteria,music:ART.sceneMusic,archive:ART.sceneArchive,annex:ART.sceneAnnex,
       college:shiftedCollege?ART.sceneCollegeShifted:ART.sceneCollege,
-      cafe:ART.sceneCafe,park:ART.scenePark,library:ART.sceneLibrary,
-      arcade:ART.sceneArcade,station:ART.sceneStation,town:ART.sceneTown
+      cafe:this.state.day>=9?ART.sceneCafeShifted:ART.sceneCafe,park:ART.scenePark,library:this.state.day>=10?ART.sceneLibraryShifted:ART.sceneLibrary,
+      arcade:ART.sceneArcade,station:this.state.day>=10?ART.sceneStationShifted:ART.sceneStation,town:ART.sceneTown
     }[kind];
     if(!art)return false;
     ctx.save();ctx.imageSmoothingEnabled=false;ctx.drawImage(art,0,0,W,H);ctx.restore();return true;
@@ -959,6 +1063,13 @@ class Game {
       const img=ART.alexWalk,sw=img.width/4,sh=img.height/4,row={down:0,left:1,right:2,up:3}[facing]??0;
       ctx.imageSmoothingEnabled=false;ctx.drawImage(img,artFrame*sw,row*sh,sw,sh,-32,-60,64,80);ctx.restore();return true;
     }
+    const action=id==="mara"&&this.mode==="dialogue"&&this.dialogue?.[this.dialogueIndex]?.portrait==="mara"?this.dialogue[this.dialogueIndex].action:null;
+    const pose=action&&MARA_ACTION_MAP[action];
+    if(pose&&ART[pose[0]]){
+      const img=ART[pose[0]],sw=img.width/3,sh=img.height/2;
+      const tremor=action==="tremble"?Math.floor(performance.now()/120)%3-1:0;
+      ctx.drawImage(img,(pose[1]%3)*sw,Math.floor(pose[1]/3)*sh,sw,sh,-28+tremor,-60,56,80);ctx.restore();return true;
+    }
     if(id==="mara"&&ART.maraWalk){
       const img=ART.maraWalk,sw=img.width/4,sh=img.height/4,row={down:0,left:1,right:2,up:3}[facing]??0,col=artFrame;
       ctx.imageSmoothingEnabled=false;ctx.drawImage(img,col*sw,row*sh,sw,sh,-32,-60,64,80);ctx.restore();return true;
@@ -1034,17 +1145,25 @@ class Game {
     const line=this.dialogue?.[this.dialogueIndex];if(!line)return;
     const boxY=line.choices?250:374;ctx.fillStyle="#161426f2";ctx.fillRect(42,boxY,W-84,H-boxY-28);ctx.strokeStyle=line.portrait==="mara"?"#c97582":"#d6b894";ctx.lineWidth=2;ctx.strokeRect(43,boxY+1,W-86,H-boxY-30);
     const portraitX=line.choices?170:145,portraitY=line.choices?410:290,portraitScale=line.choices?.75:1;
-    const hintStart=line.text.length*(line.demonHintAt??.52),hintEnd=Math.min(line.text.length-.05,hintStart+.72),hintActive=!!line.demonHint&&this.dialogueReveal>=hintStart&&this.dialogueReveal<hintEnd;
+    const hintStart=line.text.length*(line.demonHintAt??.52),hintEnd=Math.min(line.text.length-.05,hintStart+.72),hintActive=!this.settings.reducedFlashes&&!!line.demonHint&&this.dialogueReveal>=hintStart&&this.dialogueReveal<hintEnd;
     if(line.portrait&&hintActive&&line.demonHint!=="horn")this.drawDemonHint(portraitX,portraitY,portraitScale,line.demonHint);
     let portraitExpression=line.expression||(line.portrait==="mara"?(line.demonHint?"still":"neutral"):"normal");
     if(line.portrait==="mara"&&hintActive&&line.demonHint==="horn")portraitExpression="hornlike";
     if(line.portrait==="mara"&&hintActive&&line.demonHint==="shadow")portraitExpression="wrongShadow";
-    if(line.portrait)this.drawPortrait(line.portrait,portraitX,portraitY,portraitScale,portraitExpression);
+    const action=line.portrait==="mara"&&line.action;
+    if(this.previousPortrait&&this.portraitBlend<1&&!action){ctx.save();ctx.globalAlpha=1-this.portraitBlend;this.drawPortrait(this.previousPortrait.id,portraitX-2,portraitY+2,portraitScale,this.previousPortrait.expression);ctx.restore();}
+    if(line.portrait){ctx.save();ctx.globalAlpha=this.portraitBlend<1?this.portraitBlend:1;if(action)this.drawMaraAction(action,145,H-29,line.choices?.86:1.04);else this.drawPortrait(line.portrait,portraitX,portraitY,portraitScale,portraitExpression);ctx.restore();}
     if(line.portrait&&hintActive&&line.demonHint==="horn")this.drawDemonHint(portraitX,portraitY,portraitScale,line.demonHint);
-    if(line.speaker){ctx.fillStyle=line.portrait==="mara"?"#f0a2aa":"#e8c792";ctx.font="bold 18px Georgia";ctx.textAlign="left";ctx.fillText(line.speaker,70,boxY+31);}
-    ctx.fillStyle="#fff3da";ctx.font="18px Georgia";ctx.textAlign="left";this.wrapText(line.text.slice(0,Math.floor(this.dialogueReveal)),70,boxY+60,820,25);
+    const textX=action?235:70,textWidth=action?655:820,font=this.settings.readable?'18px Arial,sans-serif':'18px Georgia';
+    if(line.speaker){ctx.fillStyle=line.portrait==="mara"?"#f0a2aa":"#e8c792";ctx.font=this.settings.readable?'bold 18px Arial,sans-serif':'bold 18px Georgia';ctx.textAlign="left";ctx.fillText(line.speaker,textX,boxY+31);}
+    ctx.fillStyle="#fff3da";ctx.font=font;ctx.textAlign="left";this.wrapText(line.text.slice(0,Math.floor(this.dialogueReveal)),textX,boxY+60,textWidth,25);
     if(line.choices&&this.dialogueReveal>=line.text.length){line.choices.forEach((c,i)=>{const y=315+i*46;ctx.fillStyle=i===this.choiceIndex?"#7c4a60":"#29243a";ctx.fillRect(400,y,500,38);ctx.strokeStyle=i===this.choiceIndex?"#f0bd9e":"#ffffff18";ctx.strokeRect(400.5,y+.5,499,37);ctx.fillStyle="#fff3da";ctx.font="15px Georgia";ctx.fillText(`${i+1}. ${c.text}`,418,y+25);});}
     else if(this.dialogueReveal>=line.text.length){ctx.fillStyle="#e8c792";ctx.font="12px sans-serif";ctx.textAlign="right";ctx.fillText("▼",890,H-44);}
+  }
+
+  drawMaraAction(action,x,bottom,scale=1){
+    const resolved=MARA_ACTION_MAP[action]||MARA_ACTION_MAP.stand,img=ART[resolved[0]];if(!img)return false;const sw=img.width/3,sh=img.height/2,sx=(resolved[1]%3)*sw,sy=Math.floor(resolved[1]/3)*sh,w=112*scale,h=160*scale;
+    ctx.save();ctx.imageSmoothingEnabled=false;ctx.fillStyle="#211a28";ctx.fillRect(x-w/2-4,bottom-h-4,w+8,h+8);ctx.strokeStyle="#d49887cc";ctx.strokeRect(x-w/2-3.5,bottom-h-3.5,w+7,h+7);ctx.drawImage(img,sx,sy,sw,sh,x-w/2,bottom-h,w,h);ctx.restore();return true;
   }
 
   drawDemonHint(x,y,scale,type){
@@ -1098,8 +1217,8 @@ class Game {
     ctx.fillStyle="#fff3da";ctx.font="bold 18px sans-serif";ctx.textAlign="left";ctx.fillText("MESSAGES",x+22,y+28);
     this.state.contacts.forEach((id,i)=>{const yy=y+55+i*48;ctx.fillStyle=i===this.phoneContact?"#5b4561":"transparent";ctx.fillRect(x+20,yy,165,40);ctx.fillStyle="#fff3da";ctx.font="14px sans-serif";ctx.fillText(CHARACTERS[id]?.name||id,x+30,yy+25);if(this.state.unread[id]){ctx.fillStyle="#d6657e";ctx.beginPath();ctx.arc(x+170,yy+20,9,0,Math.PI*2);ctx.fill();}});
     const id=this.state.contacts[this.phoneContact],msgs=this.state.messages[id]||[];ctx.fillStyle="#f7ead4";ctx.font="bold 16px sans-serif";ctx.fillText(CHARACTERS[id]?.name||id,x+215,y+70);
-    let yy=y+95;for(const m of msgs.slice(-7)){const mine=m.from==="you";const bw=Math.min(330,ctx.measureText(m.text).width+30);ctx.fillStyle=mine?"#536f63":"#3a334d";ctx.fillRect(mine?x+w-35-bw:x+215,yy,bw,42);ctx.fillStyle="#fff";ctx.font="13px sans-serif";this.wrapText(m.text,mine?x+w-25-bw:x+225,yy+17,bw-20,16);yy+=51;}
-    ctx.fillStyle="#aeb1bd";ctx.font="12px sans-serif";ctx.fillText(id==="mara"?"R reply   P / ESC close":"↑↓ contacts   P / ESC close",x+215,y+h-20);
+    let yy=y+95;for(const m of msgs.slice(-5)){const mine=m.from==="you";const bw=Math.min(330,ctx.measureText(m.text).width+30);ctx.fillStyle=mine?"#536f63":"#3a334d";ctx.fillRect(mine?x+w-35-bw:x+215,yy,bw,48);ctx.fillStyle="#fff";ctx.font="13px sans-serif";this.wrapText(m.text,mine?x+w-25-bw:x+225,yy+17,bw-20,16);yy+=60;}
+    ctx.fillStyle="#aeb1bd";ctx.font="12px sans-serif";ctx.fillText(id==="mara"?"R / tap here to reply":"↑↓ or tap a contact",x+215,y+h-20);ctx.fillText("CLOSE",x+w-60,y+28);
   }
 
   drawJournal(){
@@ -1109,7 +1228,27 @@ class Game {
     ctx.fillStyle="#6a5964";ctx.font="12px sans-serif";ctx.fillText("J / ESC close   ↑↓ scroll",155,474);
   }
 
-  drawPause(){ctx.fillStyle="#0b0a14cc";ctx.fillRect(0,0,W,H);ctx.fillStyle="#211d34";ctx.fillRect(320,105,320,330);ctx.strokeStyle="#dcc29a";ctx.strokeRect(321,106,318,328);ctx.fillStyle="#fff3da";ctx.textAlign="center";ctx.font="30px Georgia";ctx.fillText("PAUSED",480,155);const opts=["RESUME","SAVE GAME",music.muted?"SOUND: OFF":"SOUND: ON","TITLE SCREEN"];opts.forEach((o,i)=>{ctx.fillStyle=i===this.overlayIndex?"#efbd9b":"#a99b9b";ctx.font=i===this.overlayIndex?"bold 18px Georgia":"16px Georgia";ctx.fillText(o,480,220+i*48);});}
+  drawPause(){ctx.fillStyle="#0b0a14cc";ctx.fillRect(0,0,W,H);ctx.fillStyle="#211d34";ctx.fillRect(320,105,320,330);ctx.strokeStyle="#dcc29a";ctx.strokeRect(321,106,318,328);ctx.fillStyle="#fff3da";ctx.textAlign="center";ctx.font='bold 28px "Courier New",monospace';ctx.fillText("PAUSED",480,155);const opts=["RESUME","SAVE GAME","SETTINGS","TITLE SCREEN"];opts.forEach((o,i)=>{ctx.fillStyle=i===this.overlayIndex?"#efbd9b":"#a99b9b";ctx.font=i===this.overlayIndex?'bold 18px "Courier New",monospace':'16px "Courier New",monospace';ctx.fillText(o,480,220+i*48);});}
+
+  drawSlots(){
+    ctx.fillStyle="#0b0a14e8";ctx.fillRect(0,0,W,H);ctx.fillStyle="#211d34";ctx.fillRect(175,62,610,420);ctx.strokeStyle="#dcc29a";ctx.lineWidth=2;ctx.strokeRect(176,63,608,418);
+    ctx.fillStyle="#fff3da";ctx.textAlign="center";ctx.font='bold 27px "Courier New",monospace';ctx.fillText(this.slotMode==="save"?"SAVE GAME":"LOAD GAME",480,106);
+    const slots=this.saveSlots();for(let i=0;i<3;i++){const y=132+i*82,selected=i===this.overlayIndex,slot=slots[i];ctx.fillStyle=selected?"#604252":"#302a3d";ctx.fillRect(215,y,530,64);ctx.strokeStyle=selected?"#efbd9b":"#ffffff18";ctx.strokeRect(215.5,y+.5,529,63);ctx.textAlign="left";ctx.fillStyle="#fff3da";ctx.font='bold 16px "Courier New",monospace';ctx.fillText(`SLOT ${i+1}`,237,y+25);ctx.font="14px Georgia";ctx.fillStyle="#d7c7b2";ctx.fillText(slot?.label||"Empty",360,y+25);ctx.font="11px sans-serif";ctx.fillStyle="#9f929c";ctx.fillText(slot?new Date(slot.savedAt).toLocaleString():"No memories yet",360,y+46);}
+    ctx.textAlign="center";ctx.font='bold 16px "Courier New",monospace';ctx.fillStyle=this.overlayIndex===3?"#efbd9b":"#a99b9b";ctx.fillText("BACK",480,425);
+  }
+
+  drawSettings(){
+    ctx.fillStyle="#0b0a14e8";ctx.fillRect(0,0,W,H);ctx.fillStyle="#211d34";ctx.fillRect(170,34,620,470);ctx.strokeStyle="#dcc29a";ctx.lineWidth=2;ctx.strokeRect(171,35,618,468);ctx.fillStyle="#fff3da";ctx.textAlign="center";ctx.font='bold 27px "Courier New",monospace';ctx.fillText("SETTINGS",480,73);
+    const rows=[
+      ["TEXT SPEED",this.settings.textSpeed.toUpperCase()],
+      ["MASTER",`${Math.round(this.settings.master*100)}%`],["MUSIC",`${Math.round(this.settings.music*100)}%`],["AMBIENCE",`${Math.round(this.settings.ambient*100)}%`],["SFX",`${Math.round(this.settings.sfx*100)}%`],["CHARACTER VOICES",`${Math.round(this.settings.voice*100)}%`],
+      ["READABLE TYPE",this.settings.readable?"ON":"OFF"],["REDUCED FLASHES",this.settings.reducedFlashes?"ON":"OFF"],["FULLSCREEN","TOGGLE"],["BACK",""]
+    ];
+    rows.forEach(([label,value],i)=>{const y=102+i*37,sel=i===this.overlayIndex;ctx.fillStyle=sel?"#5d4051":"#29243a";ctx.fillRect(214,y,532,30);ctx.fillStyle=sel?"#fff3da":"#c7b7aa";ctx.font=sel?'bold 14px "Courier New",monospace':'14px "Courier New",monospace';ctx.textAlign="left";ctx.fillText(label,232,y+20);ctx.textAlign="right";ctx.fillText(value,728,y+20);});
+    ctx.fillStyle="#998995";ctx.textAlign="center";ctx.font="11px sans-serif";ctx.fillText("↑↓ SELECT   ←→ ADJUST   ENTER TOGGLE   ESC BACK",480,486);
+  }
+
+  drawCredits(){ctx.fillStyle="#0b0a14e8";ctx.fillRect(0,0,W,H);ctx.fillStyle="#211d34";ctx.fillRect(205,78,550,380);ctx.strokeStyle="#dcc29a";ctx.strokeRect(206,79,548,378);ctx.textAlign="center";ctx.fillStyle="#fff3da";ctx.font='bold 30px "Courier New",monospace';ctx.fillText("MARA",480,132);ctx.font="17px Georgia";ctx.fillText("An original indie life-sim in development",480,174);ctx.fillStyle="#d7c7b2";ctx.font="14px Georgia";ctx.fillText("Design, code, music system and original visual direction",480,231);ctx.fillText("built as one growing, data-driven game.",480,254);ctx.fillStyle="#a998a3";ctx.font="12px sans-serif";ctx.fillText("All romantic characters are adults aged 18+.",480,318);ctx.fillText("Press ENTER / E / ESC to return",480,416);}
 
   drawShop(){ctx.fillStyle="#0b0a14cc";ctx.fillRect(0,0,W,H);ctx.fillStyle="#eee0c4";ctx.fillRect(250,70,460,400);ctx.fillStyle="#493642";ctx.textAlign="left";ctx.font="bold 26px Georgia";ctx.fillText("CORNER SHOP",285,115);ctx.textAlign="right";ctx.fillText(`£${this.state.money}`,675,115);const goods=[{id:"film",price:5},{id:"record",price:8},{id:"plant",price:6},{id:"pastry",price:3}];goods.forEach((g,i)=>{const y=150+i*58;ctx.fillStyle=i===this.overlayIndex?"#d8ad82":"#ead8bb";ctx.fillRect(280,y,400,48);ctx.fillStyle="#493642";ctx.textAlign="left";ctx.font="bold 15px Georgia";ctx.fillText(ITEMS[g.id].name,295,y+20);ctx.font="12px Georgia";ctx.fillText(ITEMS[g.id].desc,295,y+38);ctx.textAlign="right";ctx.font="bold 15px Georgia";ctx.fillText(`£${g.price}`,660,y+28);});ctx.fillStyle=this.overlayIndex===goods.length?"#7d5060":"#493642";ctx.textAlign="center";ctx.font="bold 16px Georgia";ctx.fillText("LEAVE",480,420);}
 
@@ -1120,8 +1259,10 @@ class Game {
 
   drawFollow(){
     const f=this.follow,g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,"#171827");g.addColorStop(1,"#403643");ctx.fillStyle=g;ctx.fillRect(0,0,W,H);ctx.fillStyle="#11121d";for(let i=0;i<12;i++){const x=(i*120-f.time*35)%1080-60;ctx.fillRect(x,100,80,260);ctx.fillRect(x+20,70,10,300);}ctx.fillStyle="#56525c";ctx.fillRect(0,390,W,150);ctx.fillStyle="#8c7d74";ctx.fillRect(0,420,W,5);
-    this.drawSprite("player",f.playerX,400,false,"right",true);this.drawSprite("mara",f.maraX,400,false,"right",true);ctx.fillStyle="#151326dd";ctx.fillRect(0,0,W,65);ctx.fillStyle="#fff3da";ctx.font="bold 16px Georgia";ctx.textAlign="left";ctx.fillText("FOLLOW MARA — keep your distance",25,27);ctx.fillStyle="#3a3044";ctx.fillRect(25,40,300,10);ctx.fillStyle=f.suspicion>70?"#d65e70":"#d7b778";ctx.fillRect(25,40,300*f.suspicion/100,10);ctx.textAlign="right";ctx.fillStyle="#cbb7a7";ctx.fillText(`${Math.ceil(27-f.time)}s`,930,31);
+    for(const x of f.covers){ctx.fillStyle="#242330";ctx.fillRect(x-27,342,54,78);ctx.fillStyle="#55515b";ctx.fillRect(x-23,348,46,10);}
+    this.drawSprite("player",f.playerX,400,false,"right",true);this.drawSprite("mara",f.maraX,400,false,"right",true);ctx.fillStyle="#151326dd";ctx.fillRect(0,0,W,65);ctx.fillStyle="#fff3da";ctx.font="bold 16px Georgia";ctx.textAlign="left";ctx.fillText("FOLLOW MARA — distance, cover, and noise matter",25,25);ctx.fillStyle="#3a3044";ctx.fillRect(25,39,300,9);ctx.fillStyle=f.suspicion>70?"#d65e70":"#d7b778";ctx.fillRect(25,39,300*f.suspicion/100,9);ctx.fillStyle="#3a3044";ctx.fillRect(350,39,120,9);ctx.fillStyle="#8fa2b2";ctx.fillRect(350,39,120*f.noise/100,9);ctx.font="10px sans-serif";ctx.fillStyle="#b9adb1";ctx.fillText("SUSPICION",25,60);ctx.fillText("NOISE",350,60);ctx.textAlign="right";ctx.fillStyle="#cbb7a7";ctx.fillText(`${Math.ceil(27-f.time)}s`,930,31);
     if(f.stopped){ctx.fillStyle="#fff3da";ctx.textAlign="center";ctx.font="italic 18px Georgia";ctx.fillText("She stops walking.",480,110);}
+    if(f.time>7&&f.time<10&&!f.route){ctx.fillStyle="#17152be8";ctx.fillRect(285,92,390,72);ctx.fillStyle="#fff3da";ctx.textAlign="center";ctx.font='bold 15px "Courier New",monospace';ctx.fillText("ROUTE SPLITS",480,118);ctx.font="13px Georgia";ctx.fillText("↑ narrow alley / ↓ lit street",480,145);}
   }
 
   drawChapter(){

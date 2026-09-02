@@ -1,6 +1,6 @@
-# MARA — archived export notes
+# MARA
 
-The current playable package is `MARA-playable-opening.zip`. Canonical instructions and documentation now live in the repository root; this file is retained as an earlier exported snapshot.
+**MARA** is an original 2D school-life and relationship game whose warm routines gradually become unreliable. It is built with HTML5 Canvas and the Web Audio API, with no external runtime dependencies or hotlinked art.
 
 ## Play
 
@@ -27,8 +27,21 @@ Audio begins after the first click or keypress, as required by browsers. Headpho
 
 ## Scope
 
-The playable opening covers five in-game days with a free-roaming home, college, and town; seven scheduled characters with distinct dialogue voices and typing cadences; relationship and suspicion systems; quests, shopping and room customization; messages; two date paths; probabilistic events; an early stalking arc; a playable investigation sequence; scarce frame-length visual slips around Mara; and several state-dependent conclusions to the opening chapter. The story never supplies Mara with a surname or explains what she is.
+The current development build runs a twelve-day opening calendar with a free-roaming home, college and town; seven scheduled characters; original character bleeps and typing cadences; relationships; quests, shopping and room customization; messages; date scenes; rare events; stalking and investigation. There are three manual save slots plus autosave, migrated legacy saves and a persistent settings panel. The calendar is playable, but it is not yet twelve days of content-complete writing. The story never supplies Mara with a surname or explains what she is.
 
-The committed `assets/` directory contains the full raster art pass: Alex and Mara walk cycles, the supporting cast, dialogue portraits, material textures, furniture, evidence, nature, architecture, storefront and station assets. See [assets/README.md](assets/README.md) for the manifest and [outputs/screenshots](outputs/screenshots) for the browser-tested gallery.
+All generated PNG masters and runtime WebPs are committed in `assets/`. The v3 pass adds 23 master images: canonical Mara, pixel-style character sheets, seven interiors and three altered locations. This is generated art under ongoing direction, not a claim of completed hand-pixelled production art. See [assets/README.md](assets/README.md) for the manifest and [latest screenshots](outputs/screenshots/foundation-v3) for actual browser captures.
 
-The complete content and expansion architecture is documented in [GAME_DESIGN.md](GAME_DESIGN.md).
+[Play the review build](https://mereig.github.io/thursday-game/). The browser build is a convenient review target; a desktop package is still planned. Master PNGs are kept in Git but are not downloaded by the game. The current runtime image library is approximately 5.63 MiB.
+
+Use `npm run check` for validation and regression tests. Phone portrait controls are placed below the canvas; landscape is recommended for readable dialogue. Physical mobile-device QA remains outstanding.
+
+The downloadable ZIP under `outputs/` contains the runtime and documentation. Rebuilding art requires the full repository's PNG masters and Pillow; those masters are intentionally omitted from the small ZIP.
+
+Project documentation:
+
+- [GAME_DESIGN.md](GAME_DESIGN.md) — complete long-form game and systems plan.
+- [ORIGINAL_VISION.md](ORIGINAL_VISION.md) — preserved creative brief and non-negotiables.
+- [DEVELOPMENT_STATUS.md](DEVELOPMENT_STATUS.md) — honest implemented/planned ledger and QA notes.
+- [QA_REPORT.md](QA_REPORT.md) — automated checks, browser smoke tests and defects fixed.
+- [ART_PROMPTS.md](ART_PROMPTS.md) — generation specifications and runtime treatment.
+- [assets/README.md](assets/README.md) — committed master/runtime asset manifest.

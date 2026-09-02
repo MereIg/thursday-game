@@ -152,7 +152,7 @@ export const MAPS = {
   },
   cafe: {
     name:"Foxglove Café",region:"TOWN",kind:"cafe",music:"cafe",
-    spawn:{x:480,y:420},walls:[...edgeWalls,{x:60,y:70,w:410,h:90},{x:680,y:70,w:200,h:120}],
+    spawn:{x:480,y:420},walls:[...edgeWalls,{x:60,y:70,w:410,h:90},{x:680,y:70,w:200,h:120},{x:680,y:275,w:112,h:68},{x:310,y:310,w:145,h:70}],
     exits:[{x:430,y:455,w:100,h:55,to:"highstreet",tx:170,ty:280,label:"High Street"}],
     props:[
       {id:"counter",x:90,y:90,w:350,h:60,label:"Order / work",action:"cafe"},
@@ -240,6 +240,25 @@ export const SCHEDULES = {
   ]
 };
 
+export const DAY_SCHEDULES = {
+  6:{
+    iris:[{from:570,to:820,map:"highstreet",x:700,y:350},{from:820,to:1080,map:"park",x:610,y:350},{from:1080,to:1250,map:"cafe",x:680,y:350}],
+    june:[{from:600,to:800,map:"cafe",x:720,y:350},{from:800,to:1060,map:"highstreet",x:430,y:350}],
+    theo:[{from:620,to:980,map:"arcade",x:550,y:330},{from:980,to:1180,map:"cafe",x:610,y:350}],
+    ren:[{from:600,to:1040,map:"library",x:620,y:330},{from:1040,to:1200,map:"park",x:520,y:350}],
+    nia:[{from:570,to:790,map:"highstreet",x:520,y:350},{from:790,to:1120,map:"cafe",x:570,y:350}],
+    sam:[{from:480,to:1260,map:"cafe",x:535,y:260}]
+  },
+  7:{
+    iris:[{from:650,to:1050,map:"park",x:610,y:350},{from:1050,to:1190,map:"highstreet",x:700,y:350}],
+    june:[{from:650,to:1080,map:"park",x:700,y:350}],
+    theo:[{from:640,to:1050,map:"park",x:440,y:350},{from:1050,to:1260,map:"arcade",x:550,y:330}],
+    ren:[{from:650,to:850,map:"highstreet",x:390,y:350},{from:850,to:1080,map:"park",x:520,y:350}],
+    nia:[{from:620,to:1100,map:"park",x:350,y:350},{from:1100,to:1240,map:"cafe",x:570,y:350}],
+    sam:[{from:560,to:1140,map:"cafe",x:535,y:260}]
+  }
+};
+
 export function maraSchedule(state) {
   const day = state.day, time = state.time;
   const sightings = [
@@ -257,7 +276,18 @@ export function maraSchedule(state) {
     {day:4,from:1120,to:1200,map:"park",x:270,y:350},
     {day:5,from:450,to:560,map:"hall",x:520,y:350},
     {day:5,from:980,to:1090,map:"station",x:560,y:380},
-    {day:5,from:1110,to:1260,map:"annex",x:760,y:380}
+    {day:6,from:620,to:720,map:"cafe",x:755,y:430},
+    {day:6,from:1040,to:1140,map:"park",x:275,y:350},
+    {day:7,from:660,to:750,map:"library",x:485,y:350},
+    {day:7,from:1080,to:1190,map:"highstreet",x:810,y:350,distant:true},
+    {day:8,from:470,to:550,map:"college",x:820,y:355},
+    {day:8,from:1030,to:1140,map:"arcade",x:700,y:330},
+    {day:9,from:680,to:760,map:"hall",x:820,y:360},
+    {day:9,from:1120,to:1200,map:"street",x:520,y:310},
+    {day:10,from:980,to:1090,map:"station",x:560,y:380},
+    {day:11,from:700,to:780,map:"library",x:480,y:350},
+    {day:12,from:450,to:560,map:"hall",x:520,y:350},
+    {day:12,from:1110,to:1260,map:"annex",x:760,y:380}
   ];
   const found=sightings.find(s=>s.day===day && time>=s.from && time<s.to) || null;
   if(found?.map==="annex"&&state.flags.followDone&&!state.flags.maraKnowsFollow)return null;
@@ -391,7 +421,7 @@ export const MARA_TALKS = [
     ]
   },
   {
-    condition:s=>s.day>=4 && s.flags.maraIrisJealous && !s.flags.lateJealousTalk,
+    condition:s=>s.day>=8 && s.flags.maraIrisJealous && !s.flags.lateJealousTalk,
     expression:"forcedSmile",
     text:"Iris won't look at me now. I only said hello.",
     choices:[
@@ -411,7 +441,7 @@ export const MARA_TALKS = [
     ]
   },
   {
-    condition:s=>s.day>=4 && !s.flags.thursdayLine,
+    condition:s=>s.day>=11 && !s.flags.thursdayLine,
     expression:"tooStill",
     text:"You look tired. Thursdays always do this to you.",
     choices:[
@@ -422,6 +452,7 @@ export const MARA_TALKS = [
   },
   {
     condition:s=>true,
+    ambientDefault:true,
     expression:"happy",
     text:"Hi. I was going to text you, but then you were actually here.",
     choices:[
@@ -433,22 +464,29 @@ export const MARA_TALKS = [
 ];
 
 export const RANDOM_EVENTS = [
-  {id:"wrongSong",minDay:3,weight:3,cooldown:2,places:["cafe","arcade"],text:"The song playing overhead begins halfway through a melody you recognise but cannot name.",flag:"wrongSong",motif:true},
-  {id:"ownNumber",minDay:4,weight:2,cooldown:2,places:["bedroom"],text:"A notification appears from your own number: “don't forget the window”. It deletes itself.",flag:"ownNumber"},
-  {id:"cameraFigure",minDay:4,weight:2,cooldown:2,places:["park","street","college"],text:"Your phone camera opens in your pocket. For one frame, someone is standing behind you.",flag:"cameraFigure"},
-  {id:"emptyCorner",minDay:4,weight:2,cooldown:3,places:["classroom"],text:"Everyone is staring at the same empty corner. Nia laughs. Conversation resumes. Nobody explains.",flag:"emptyCorner"},
-  {id:"trainMara",minDay:4,weight:2,cooldown:2,places:["highstreet","station"],text:"A train passes. Mara is visible through one window, looking directly at you. The next carriage is empty.",flag:"trainMara"},
-  {id:"lightOn",minDay:4,weight:3,cooldown:2,places:["street"],text:"Your bedroom light is already on. You are certain you turned it off.",flag:"lightOn"},
-  {id:"wrongReflection",minDay:4,weight:1,cooldown:3,places:["cafe","cafeteria"],text:"In the dark glass, Mara's reflection is smiling. Mara herself is not there.",flag:"wrongReflection"},
-  {id:"missingDay",minDay:5,weight:1,cooldown:4,places:["college"],text:"Theo is absent all day. Nobody, including his lecturers, remembers his name. Tomorrow he will complain about homework.",flag:"theoMissingDay"},
-  {id:"windowKnock",minDay:5,weight:1,cooldown:3,places:["bedroom"],night:true,text:"Three soft knocks touch the bedroom window. You are on the first floor.",flag:"windowKnock"},
-  {id:"doorInside",minDay:5,weight:1,cooldown:4,places:["bedroom"],night:true,text:"You hear your bedroom door open behind you. You are facing the only door. It remains closed.",flag:"doorInside"}
+  {id:"wrongSong",minDay:6,weight:3,cooldown:2,places:["cafe","arcade"],text:"The song playing overhead begins halfway through a melody you recognise but cannot name.",flag:"wrongSong",motif:true},
+  {id:"ownNumber",minDay:9,weight:2,cooldown:2,places:["bedroom"],text:"A notification appears from your own number: “don't forget the window”. It deletes itself.",flag:"ownNumber"},
+  {id:"cameraFigure",minDay:8,weight:2,cooldown:2,places:["park","street","college"],text:"Your phone camera opens in your pocket. For one frame, someone is standing behind you.",flag:"cameraFigure"},
+  {id:"emptyCorner",minDay:9,weight:2,cooldown:3,places:["classroom"],text:"Everyone is staring at the same empty corner. Nia laughs. Conversation resumes. Nobody explains.",flag:"emptyCorner"},
+  {id:"trainMara",minDay:9,weight:2,cooldown:2,places:["highstreet","station"],text:"A train passes. Mara is visible through one window, looking directly at you. The next carriage is empty.",flag:"trainMara"},
+  {id:"lightOn",minDay:9,weight:3,cooldown:2,places:["street"],text:"Your bedroom light is already on. You are certain you turned it off.",flag:"lightOn"},
+  {id:"wrongReflection",minDay:8,weight:1,cooldown:3,places:["cafe","cafeteria"],text:"In the dark glass, Mara's reflection is smiling. Mara herself is not there.",flag:"wrongReflection"},
+  {id:"missingDay",minDay:10,weight:1,cooldown:4,places:["college"],text:"Theo is absent all day. Nobody, including his lecturers, remembers his name. Tomorrow he will complain about homework.",flag:"theoMissingDay"},
+  {id:"windowKnock",minDay:10,weight:1,cooldown:3,places:["bedroom"],night:true,text:"Three soft knocks touch the bedroom window. You are on the first floor.",flag:"windowKnock"},
+  {id:"doorInside",minDay:11,weight:1,cooldown:4,places:["bedroom"],night:true,text:"You hear your bedroom door open behind you. You are facing the only door. It remains closed.",flag:"doorInside"}
 ];
 
 export const DAY_CARDS = [
   {day:1,title:"MONDAY",sub:"Everybody begins somewhere."},
   {day:2,title:"TUESDAY",sub:"Your routine begins to feel like yours."},
   {day:3,title:"WEDNESDAY",sub:"Remember an umbrella."},
-  {day:4,title:"THURSDAY",sub:"Something feels slightly out of place."},
-  {day:5,title:"FRIDAY",sub:"Follow her. Don't let her see you."}
+  {day:4,title:"THURSDAY",sub:"Nia insists Thursday lunch counts as an event."},
+  {day:5,title:"FRIDAY",sub:"The first week ends in cheap chips."},
+  {day:6,title:"SATURDAY",sub:"No alarm. No timetable. Rain after lunch."},
+  {day:7,title:"SUNDAY",sub:"The town is quieter when college closes."},
+  {day:8,title:"MONDAY",sub:"Familiar corridors. Familiar faces."},
+  {day:9,title:"TUESDAY",sub:"The forecast says sunshine."},
+  {day:10,title:"WEDNESDAY",sub:"Follow her. Do not let her see you."},
+  {day:11,title:"THURSDAY",sub:"Mara hates Thursdays."},
+  {day:12,title:"FRIDAY",sub:"Some doors remember being opened."}
 ];

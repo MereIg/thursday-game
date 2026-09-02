@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "serve": "python -m http.server 4173",
-    "check": "node --check src/game.js && node --check src/audio.js && node src/validate.mjs",
+    "check": "node --check src/game.js && node --check src/audio.js && node --check src/content/ambient.js && node src/validate.mjs && node scripts/test_game.mjs",
     "art:web": "python scripts/build_web_art.py"
   }
 }

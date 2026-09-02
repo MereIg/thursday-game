@@ -22,6 +22,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Validate game and regression tests
+        run: npm run check
       - uses: actions/configure-pages@v5
 
       # Publish only the files required by the playable build. The repository

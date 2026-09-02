@@ -99,8 +99,29 @@ body {
 .dpad .right { left: 88px; top: 44px; }
 .action { position: absolute; right: 24px; bottom: 24px; width: 66px; height: 66px; }
 .phone { position: absolute; right: 104px; bottom: 34px; width: 54px; height: 54px; font-size: 9px !important; }
+.menu { position: absolute; right: 15px; top: 56px; width: 44px; height: 44px; font-size: 9px !important; }
+#orientation-tip { display: none; }
+#game-shell[data-mode="dialogue"] .action { top: 56px; bottom: auto; right: 68px; width: 44px; height: 44px; }
+#game-shell[data-mode="settings"] .action,
+#game-shell[data-mode="slots"] .action,
+#game-shell[data-mode="pause"] .action { display: none; }
+#game-shell[data-mode="dialogue"] .dpad,
+#game-shell[data-mode="dialogue"] .phone,
+#game-shell[data-mode="title"] #touch-controls,
+#game-shell[data-mode="settings"] .dpad,
+#game-shell[data-mode="slots"] .dpad,
+#game-shell[data-mode="pause"] .dpad { display: none; }
 
 @media (pointer: coarse), (max-width: 760px) {
   #touch-controls { display: block; }
   #game-shell { border-radius: 0; }
+}
+
+@media (max-width: 760px) and (orientation: portrait) {
+  #game-shell { aspect-ratio: auto; overflow: visible; }
+  #game { height: auto; aspect-ratio: 16 / 9; }
+  #touch-controls { position: relative; height: 180px; background: #17152b; }
+  .menu { top: 12px; }
+  #game-shell[data-mode="dialogue"] .action { top: 12px; }
+  #orientation-tip { display: block; padding: 12px; color: #d6b8a0; text-align: center; font: 12px system-ui, sans-serif; background: #17152b; }
 }

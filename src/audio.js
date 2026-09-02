@@ -82,6 +82,8 @@ export class MusicEngine {
     this.master = null;
     this.music = null;
     this.ambient = null;
+    this.sfxBus = null;
+    this.voiceBus = null;
     this.active = false;
     this.track = "home";
     this.pendingTrack = "home";
@@ -97,6 +99,7 @@ export class MusicEngine {
     this.rainGain = null;
     this.generation = 0;
     this.voiceStep = 0;
+    this.volumes = {master:.78,music:.72,ambient:.28,sfx:.7,voice:.8};
   }
 
   async start() {
@@ -108,14 +111,20 @@ export class MusicEngine {
     if (!AC) return;
     this.ctx = new AC({latencyHint:"interactive"});
     this.master = this.ctx.createGain();
-    this.master.gain.value = 0.68;
+    this.master.gain.value = this.volumes.master;
     this.master.connect(this.ctx.destination);
     this.music = this.ctx.createGain();
-    this.music.gain.value = 0.72;
+    this.music.gain.value = this.volumes.music;
     this.music.connect(this.master);
     this.ambient = this.ctx.createGain();
-    this.ambient.gain.value = 0.24;
+    this.ambient.gain.value = this.volumes.ambient;
     this.ambient.connect(this.master);
+    this.sfxBus = this.ctx.createGain();
+    this.sfxBus.gain.value = this.volumes.sfx;
+    this.sfxBus.connect(this.master);
+    this.voiceBus = this.ctx.createGain();
+    this.voiceBus.gain.value = this.volumes.voice;
+    this.voiceBus.connect(this.master);
     this.createNoise();
     this.active = true;
     this.nextBeat = this.ctx.currentTime + 0.05;
@@ -153,7 +162,7 @@ export class MusicEngine {
     this.track=track; this.step=0; this.nextBeat=now+.03; this.generation++;
     this.music.gain.cancelScheduledValues(now);
     this.music.gain.setValueAtTime(.001,now);
-    this.music.gain.exponentialRampToValueAtTime(.72,now+1.2);
+    this.music.gain.exponentialRampToValueAtTime(Math.max(.001,this.volumes.music),now+1.2);
   }
 
   updateRain() {
@@ -209,18 +218,18 @@ export class MusicEngine {
     this.bell(pitch,when+dur*.12,vol);
   }
 
-  note(pitch, when, duration, wave="sine", volume=.04, detune=0) {
+  note(pitch, when, duration, wave="sine", volume=.04, detune=0, destination=this.music, cutoff=null) {
     const osc=this.ctx.createOscillator(), gain=this.ctx.createGain(), filter=this.ctx.createBiquadFilter();
     osc.type=wave; osc.frequency.setValueAtTime(midi(pitch),when); osc.detune.value=detune;
-    filter.type="lowpass"; filter.frequency.value=wave==="square"?1250:2400;
+    filter.type="lowpass"; filter.frequency.value=cutoff||(wave==="square"?1250:2400);
     gain.gain.setValueAtTime(.0001,when); gain.gain.exponentialRampToValueAtTime(Math.max(.001,volume),when+.018);
     gain.gain.exponentialRampToValueAtTime(.0001,when+Math.max(.07,duration));
-    osc.connect(filter); filter.connect(gain); gain.connect(this.music); osc.start(when); osc.stop(when+duration+.06);
+    osc.connect(filter); filter.connect(gain); gain.connect(destination||this.music); osc.start(when); osc.stop(when+duration+.06);
   }
 
-  bell(pitch, when, volume=.035) {
-    this.note(pitch,when,.75,"sine",volume);
-    this.note(pitch+12,when,.42,"sine",volume*.22,4);
+  bell(pitch, when, volume=.035, destination=this.music) {
+    this.note(pitch,when,.75,"sine",volume,0,destination);
+    this.note(pitch+12,when,.42,"sine",volume*.22,4,destination);
   }
 
   tick(when, volume=.012) {
@@ -232,25 +241,32 @@ export class MusicEngine {
   sfx(name) {
     if (!this.active) return;
     const now=this.ctx.currentTime;
-    if (name==="text") { this.bell(84,now,.028); this.bell(88,now+.07,.022); }
-    if (name==="choice") this.note(72,now,.11,"triangle",.04);
-    if (name==="door") { this.note(38,now,.18,"triangle",.045); this.note(33,now+.09,.24,"triangle",.025); }
-    if (name==="step") this.note(31+Math.random()*3,now,.035,"triangle",.012);
-    if (name==="shock") { this.note(41,now,1.4,"sawtooth",.035); this.note(42,now,1.2,"triangle",.028); }
-    if (name==="save") [0,4,7,12].forEach((n,i)=>this.bell(67+n,now+i*.08,.025));
-    if (name==="call") [0,7,3,10].forEach((n,i)=>this.bell(70+n,now+i*.12,.035));
+    if (name==="text") { this.bell(84,now,.028,this.sfxBus); this.bell(88,now+.07,.022,this.sfxBus); }
+    if (name==="choice") this.note(72,now,.11,"triangle",.04,0,this.sfxBus);
+    if (name==="door") { this.note(38,now,.18,"triangle",.045,0,this.sfxBus); this.note(33,now+.09,.24,"triangle",.025,0,this.sfxBus); }
+    if (name==="step") this.note(31+Math.random()*3,now,.035,"triangle",.012,0,this.sfxBus,900);
+    if (name==="shock") { this.note(41,now,1.4,"sawtooth",.035,0,this.sfxBus); this.note(42,now,1.2,"triangle",.028,0,this.sfxBus); }
+    if (name==="save") [0,4,7,12].forEach((n,i)=>this.bell(67+n,now+i*.08,.025,this.sfxBus));
+    if (name==="call") [0,7,3,10].forEach((n,i)=>this.bell(70+n,now+i*.12,.035,this.sfxBus));
   }
 
-  voice(id="narrator",still=false) {
+  voice(id="narrator",still=false,emotion="neutral") {
     if(!this.active||this.muted||id==="narrator")return;
     const profiles={
-      alex:{pitch:68,wave:"triangle",volume:.006},mara:{pitch:74,wave:"sine",volume:.0065},
-      iris:{pitch:70,wave:"sine",volume:.0055},june:{pitch:79,wave:"triangle",volume:.0055},
-      theo:{pitch:60,wave:"square",volume:.0048},ren:{pitch:57,wave:"triangle",volume:.005},
-      nia:{pitch:84,wave:"square",volume:.0048},sam:{pitch:64,wave:"sine",volume:.0055}
+      alex:{pitch:66,wave:"triangle",alt:"sine",volume:.009,pattern:[0,0,2,-1],dur:.03,cutoff:1800},
+      mara:{pitch:74,wave:"sine",alt:"triangle",volume:.010,pattern:[0,3,2,0,-2,2],dur:.045,cutoff:2200},
+      iris:{pitch:69,wave:"sine",alt:"sine",volume:.008,pattern:[0,-2,1,-3],dur:.04,cutoff:1600},
+      june:{pitch:78,wave:"triangle",alt:"sine",volume:.008,pattern:[0,4,2,7,4,2],dur:.035,cutoff:2300},
+      theo:{pitch:58,wave:"square",alt:"triangle",volume:.007,pattern:[0,0,-3,2],dur:.025,cutoff:1050},
+      ren:{pitch:55,wave:"triangle",alt:"sine",volume:.0075,pattern:[0,1,-1,-4],dur:.042,cutoff:1350},
+      nia:{pitch:82,wave:"square",alt:"triangle",volume:.0065,pattern:[0,5,2,7,4],dur:.022,cutoff:1450},
+      sam:{pitch:63,wave:"sine",alt:"triangle",volume:.008,pattern:[0,-2,3,0],dur:.05,cutoff:1500}
     };
-    const p=profiles[id]||profiles.alex,pattern=still?[0,0,-1]:[0,2,0,-2],pitch=(still&&id==="mara"?52:p.pitch)+pattern[this.voiceStep++%pattern.length];
-    this.note(pitch,this.ctx.currentTime,.026,still?"sine":p.wave,still?.004:p.volume);
+    const p=profiles[id]||profiles.alex,index=this.voiceStep++,angry=["furious","shouting","angryCry"].includes(emotion);
+    const pattern=still?[0,0,0,-1]:p.pattern,pitch=(still&&id==="mara"?50:p.pitch)+(angry?-5:0)+pattern[index%pattern.length];
+    const now=this.ctx.currentTime,wave=still?"sine":(index%3===2?p.alt:p.wave),dur=still?.07:p.dur;
+    this.note(pitch,now,dur,wave,still?.004:p.volume,0,this.voiceBus,still?700:p.cutoff);
+    if(id==="mara"&&!still&&index%4===0)this.note(pitch+12,now+.008,dur*.7,"sine",p.volume*.22,angry?7:2,this.voiceBus,2600);
   }
 
   stingMara() {
@@ -261,8 +277,19 @@ export class MusicEngine {
 
   toggleMute() {
     this.muted=!this.muted;
-    if (this.active) this.master.gain.setTargetAtTime(this.muted?0:.68,this.ctx.currentTime,.08);
+    if (this.active) this.master.gain.setTargetAtTime(this.muted?0:this.volumes.master,this.ctx.currentTime,.08);
     return this.muted;
+  }
+
+  setVolumes(values={}) {
+    for(const key of Object.keys(this.volumes))if(Number.isFinite(values[key]))this.volumes[key]=Math.max(0,Math.min(1,values[key]));
+    if(!this.active)return;
+    const now=this.ctx.currentTime;
+    this.master.gain.setTargetAtTime(this.muted?0:this.volumes.master,now,.04);
+    this.music.gain.setTargetAtTime(this.volumes.music,now,.04);
+    this.ambient.gain.setTargetAtTime(this.volumes.ambient,now,.04);
+    this.sfxBus.gain.setTargetAtTime(this.volumes.sfx,now,.04);
+    this.voiceBus.gain.setTargetAtTime(this.volumes.voice,now,.04);
   }
 }
 

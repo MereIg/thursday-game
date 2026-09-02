@@ -1,55 +1,58 @@
-# MARA — visual and functional QA
+# MARA — foundation v3 QA
 
-Test date: 2 September 2026  
-Build: September pixel-art pass
+Test date: 2 September 2026. This report supersedes the earlier five-day report. Local browser play-testing was performed against the actual build; screenshots are not mockups.
 
-## Automated validation
+## Automated checks
 
-`npm run check` passes:
+`npm run check` passes JavaScript syntax, sixteen-map connectivity and interaction reachability, seven-character schedules, ten event references and eleven items. It also runs twelve logic regressions:
 
-- JavaScript syntax for `src/game.js` and `src/audio.js`.
-- 16 maps and their exit destinations.
-- 7 characters and schedule map references.
-- 10 rare events and 11 inventory items.
+1. Every image referenced by the active runtime exists.
+2. Three manual slots remain independent from autosave.
+3. Continue resumes a newer autosave (slot zero).
+4. Legacy migration retains the original save and cannot overwrite slot one.
+5. Invalid settings values cannot poison text speed or volume controls.
+6. Days five through twelve advance without an early chapter ending.
+7. Weekend schedule destinations and time ranges are valid.
+8. Ambient dialogue has branches and respects the evening-only gate.
+9. Following silence/resume is scheduled once, not once per frame.
+10. Settings and save-slot panels accept pointer input.
+11. Instant text reveals the line without a simultaneous voice burst.
+12. The annex finale is unavailable before day twelve.
 
-`npm run art:web` completes and produces 28 runtime WebP files totalling about 1.62 MB from 32 committed non-runtime art/reference files. The full master library is about 60.69 MB and is not included in the Pages payload.
+These use a headless DOM/audio mock for game logic. They do not prove visual quality, audio quality or every narrative route.
 
-`git diff --check` reports no whitespace errors.
+`npm run art:web` completes: 50 runtime WebPs, 5,903,844 bytes (5.63 MiB), including retained legacy files. New PNG masters total 23 files / approximately 41 MiB and are not part of the Pages download. `git diff --check` passes.
 
-## Browser smoke tests
+## Browser checks
 
-The build was run through the in-app browser against the local HTTP server, not judged from source files alone.
+- Ordinary title renders the authored bedroom image and functioning menu targets.
+- Settings opened from the title; text speed changed through the pointer UI.
+- Manual save/load panels show three distinct slots, not three labels for the same save. A day-six bedroom state was saved through the UI into slot three, survived page reload, appeared under Load and resumed into the bedroom.
+- Mara's new portrait sheets, readable dialogue choices, reveal effects and full-body mug pose rendered in the café.
+- Supporting cast's replacement square portrait rendered correctly.
+- New seminar room and archive annex backgrounds rendered after image decode.
+- Following scene displayed the new walk sheet, cover/noise indicators and route branch.
+- 390×844 viewport: controls are below the scene, not over the portrait/dialogue. The text remains too small in portrait orientation; this is an acknowledged mobile usability gap.
+- Development-console warning/error sampling returned no entries during the inspected scenes.
+- One desktop sample reported 239.8 FPS / 4.3 ms worst frame while in the save panel. This is host-specific, not a low-end device performance guarantee.
 
-| Test | Result |
-|---|---|
-| Ordinary title at first presentation | Pass; no horror genre label or revealing slogan |
-| Title artwork at 320×180 native resolution | Pass; nearest-neighbour clusters visible |
-| Bedroom authored art | Pass |
-| Café authored art and walk sprites | Pass |
-| College authored art after decode | Pass |
-| Rainy park authored art and rain layer | Pass |
-| Mara dialogue, typing, choices and 128×128 portrait | Pass |
-| Supporting-character square portrait and choices | Pass |
-| Bedroom → landing interaction and fade | Pass; mode remained `play`, map became `landing` |
-| Phone open/close | Pass; `play → phone → play` |
-| Natural Day 4 travel into Bellwether | Pass; map became `college` and the event completed |
-| QA-frozen one-frame weather-slip composition | Pass |
-| Annex scene and investigation props | Pass |
-| Runtime telemetry | Approximately 239–241 FPS in the test host; sampled worst frame 16.8 ms during initial load |
+## Defects found and fixed
 
-## Defects found and fixed during this pass
+- Continue used a falsy fallback for slot zero, incorrectly ignoring autosave.
+- Following repeatedly restarted its silence/music transition after Mara's stop interval.
+- Oversized portrait-mode touch controls covered the game; moved below it and added Menu.
+- Title/pause/settings/slot actions needed proper pointer hit targets; added them.
+- Phone lacked pointer contact selection/reply/close targets; added them.
+- Instant text could schedule many bleeps at once; it now bypasses bleep scheduling.
+- Evening-only ambient dialogue could play in the morning; added a time condition.
+- A generated prop retained visible checkerboard background; atlas cleanup corrected.
+- Two café tables allowed the player to pass through their visible surfaces; added blockers.
+- Reduced-flash mode now suppresses authored horn/tail/shadow glimpses as well as the one-frame campus portrait.
 
-1. Generated portrait backgrounds left pale checkerboard islands around Mara's hair. The build now removes isolated low-chroma light cells before palette reduction.
-2. A fixed 300 ms loading timer exposed old rectangle/fallback art before image decode. The loading screen now waits on every runtime art promise, with a five-second failure fallback.
-3. Map changes faded toward permanent black. Transitions now enter the destination at full cover and fade in.
-4. Major authored rooms were not always visible in early QA captures because of defect 2; the gallery was recaptured after the asset barrier fix.
-5. Smooth source portraits still read as generated illustration. Runtime portraits were reduced from 192×192 to 128×128 cells and palettes tightened; the title was reduced from 480×270 to 320×180.
-6. Monday/Tuesday rare horror could arrive before attachment formed. Most supernatural event gates now begin on Days 3–5.
+## Screenshot evidence
 
-## Gallery
+Latest real browser captures: `outputs/screenshots/foundation-v3/`. Old galleries remain untouched for comparison. Normal QA entry points include `?qa=cafe&day=6&time=700&near=booth`, `?qa=classroom&day=4&clean=1`, `?qa=annex&day=12&time=1200`, and `?qa=follow`. QA modes are explicit test fixtures, not evidence that every intervening story branch was completed by hand.
 
-The repository contains nine screenshots captured from the running build under `outputs/screenshots/`: title, bedroom, café, college, rainy park, Iris dialogue, Mara dialogue, archive annex and the QA-frozen weather-slip frame.
+## Not verified / not finished
 
-## Known production gaps
-
-This is still a five-day vertical slice, not the promised final long game. Several secondary interiors continue to use the modular atlas rather than a full authored room. Full-body Mara action sheets are built and committed but only the walk sheet and portrait states are currently selected by ordinary gameplay. Accessibility/settings depth, extended chapters and major ending routes remain production milestones in `DEVELOPMENT_STATUS.md`.
+No physical phone or low-powered laptop was available. No network-throttled decode test or whole twelve-day manual playthrough was completed. The score has not received a final headphone/loudness/listening acceptance pass; new bleeps and volume routing are implemented, but the soundtrack is still synthesized rather than final rendered stems. Several room collision/prop anchors and foreground occlusion still disagree with their background art. Mara's generated sheets need further face/cluster consistency editing, and most action poses are not multi-frame animations. The twelve-day calendar lacks final content density. Later chapters/endings, rich supporting expression libraries, remapping, non-fiction content warnings and fully unified/mobile-readable UI remain open in `DEVELOPMENT_STATUS.md`.
