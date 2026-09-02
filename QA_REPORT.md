@@ -29,6 +29,12 @@ Hotfix verification:
 - Actual browser: six additional prompt-click routes (bedroom, front door,
   street, college entrance, hall, annex) passed. No error/warning logs on the
   isolated fixed-build tab.
+- Public deployment `33658168760` succeeded for hotfix `f08f87d`. Verified the
+  loaded entry is `src/game.js?v=20260902-doorfix1`. On that public build,
+  pressed E to leave the bedroom, walked across Rowan House using normal
+  click-to-walk input, then pressed E to go outside. Mallow Street rendered,
+  the clock continued, foot position was valid, and error/warning logs were
+  empty. Screenshot: `outputs/qa-doorfix/published-walk-home-to-street.png`.
 - Evidence: `outputs/qa-doorfix/browser-door-results.json` and before/after
   screenshots. Browser fixtures place the player beside each door; this is
   interaction-path coverage, not a claim of walking every complete story route.
