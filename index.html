@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#17152b" />
+  <meta name="description" content="THURSDAY — a 2D psychological-horror dating and life simulation game." />
+  <title>THURSDAY</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main id="game-shell" aria-label="THURSDAY game">
+    <canvas id="game" width="960" height="540" tabindex="0" aria-label="Game canvas"></canvas>
+    <output id="qa-status" hidden aria-hidden="true"></output>
+    <div id="loading" aria-live="polite">
+      <div class="loading-title">THURSDAY</div>
+      <div class="loading-subtitle">arranging the week…</div>
+    </div>
+    <div id="touch-controls" aria-hidden="true">
+      <div class="dpad">
+        <button data-key="ArrowUp" class="up">▲</button>
+        <button data-key="ArrowLeft" class="left">◀</button>
+        <button data-key="ArrowDown" class="down">▼</button>
+        <button data-key="ArrowRight" class="right">▶</button>
+      </div>
+      <button data-key="KeyP" class="phone">PHONE</button>
+      <button data-key="KeyE" class="action">E</button>
+    </div>
+  </main>
+  <noscript>THURSDAY requires JavaScript to play.</noscript>
+  <script type="module" src="src/game.js"></script>
+</body>
+</html>

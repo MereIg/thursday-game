@@ -1,0 +1,106 @@
+:root {
+  color-scheme: dark;
+  --ink: #17152b;
+  --cream: #fff4dc;
+  --rose: #d66b82;
+  --moss: #557260;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #0c0b17;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(ellipse at 50% 30%, #28223e 0%, #12101f 48%, #080710 100%);
+}
+
+#game-shell {
+  position: relative;
+  width: min(100vw, calc(100vh * 16 / 9));
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: clamp(0px, 1vw, 10px);
+  box-shadow: 0 22px 90px #000b, 0 0 0 1px #ffffff14;
+  background: var(--ink);
+}
+
+#game {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  touch-action: none;
+  outline: none;
+  cursor: default;
+}
+
+#loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  background: #17152b;
+  transition: opacity 700ms ease;
+  pointer-events: none;
+}
+
+#loading.hidden { opacity: 0; }
+
+.loading-title {
+  color: #fff4dc;
+  font-size: clamp(28px, 6vw, 68px);
+  letter-spacing: .32em;
+  margin-right: -.32em;
+}
+
+.loading-subtitle {
+  margin-top: 16px;
+  color: #d6b8a0;
+  font-size: clamp(11px, 1.5vw, 17px);
+  letter-spacing: .14em;
+  font-style: italic;
+}
+
+#touch-controls {
+  display: none;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+#touch-controls button {
+  pointer-events: auto;
+  border: 1px solid #fff4;
+  color: #fff;
+  background: #17152b99;
+  border-radius: 50%;
+  font: 700 13px system-ui, sans-serif;
+  backdrop-filter: blur(4px);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.dpad { position: absolute; left: 18px; bottom: 18px; width: 132px; height: 132px; }
+.dpad button { position: absolute; width: 44px; height: 44px; }
+.dpad .up { left: 44px; top: 0; }
+.dpad .left { left: 0; top: 44px; }
+.dpad .down { left: 44px; top: 88px; }
+.dpad .right { left: 88px; top: 44px; }
+.action { position: absolute; right: 24px; bottom: 24px; width: 66px; height: 66px; }
+.phone { position: absolute; right: 104px; bottom: 34px; width: 54px; height: 54px; font-size: 9px !important; }
+
+@media (pointer: coarse), (max-width: 760px) {
+  #touch-controls { display: block; }
+  #game-shell { border-radius: 0; }
+}

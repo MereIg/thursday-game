@@ -1,0 +1,10 @@
+{
+  "name": "thursday-game",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "serve": "python -m http.server 4173",
+    "check": "node --check src/game.js && node --check src/audio.js && node src/validate.mjs"
+  }
+}
