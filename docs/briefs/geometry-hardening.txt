@@ -1,0 +1,235 @@
+Before adding more content, do a full geometry/asset-placement hardening pass for MARA.
+
+I do NOT want AI-generated sprite boundaries, transparency, or visible pixels to determine gameplay collision or placement. Treat every visual asset as artwork only. Gameplay geometry must be separately authored and validated.
+
+Implement these rules across the entire project:
+
+1. CHARACTERS MUST HAVE FIXED FOOT ANCHORS
+
+* Every overworld character sprite must have one explicit ground/feet anchor.
+* Switching idle/walk/action/expression/outfit sprites must never change the character's world position.
+* Mara's feet must remain locked to the same ground coordinate through every animation frame.
+* Different-sized images must be offset around the same anchor rather than moving the actor.
+* Never position characters using the centre of the PNG.
+
+2. USE FIXED CHARACTER COLLIDERS
+
+* Do not generate collision from alpha/transparency or sprite silhouettes.
+* Characters should use a small rectangular/capsule-like collision area around their feet/lower body.
+* Mara changing pose, outfit, expression or animation must not change her walking collider.
+* Hair, hands, bags, skirts, etc. should not expand collision.
+
+3. SEPARATE ART FROM COLLISION
+   Every room/object should have:
+
+* visual sprite/image
+* collision geometry
+* interaction geometry
+* ground/depth anchor
+* optional attachment points
+
+These must be independent.
+
+4. OBJECT COLLISION MUST BE AUTHORED
+   Do not derive collision from AI artwork.
+   For every furniture/prop class, define sane geometry manually:
+
+* tables
+* chairs
+* beds
+* counters
+* desks
+* walls
+* doors
+* shelves
+* sofas
+* vending machines
+* etc.
+
+If an AI-generated picture does not fit its collider, adjust/crop/reposition the ART. Do not distort gameplay geometry around random artwork.
+
+5. ADD STANDARD OBJECT TYPES
+   Create reusable definitions such as:
+   CHARACTER
+   CHAIR
+   TABLE_SMALL
+   TABLE_LARGE
+   BED
+   SOFA
+   DOOR
+   COUNTER
+   WALL
+   NPC_INTERACTION
+   ITEM_PICKUP
+
+Each type should have sensible default collision and interaction behaviour that can then be overridden manually.
+
+6. ADD ATTACHMENT/SNAP POINTS
+   Interactive furniture needs explicit anchors.
+
+Examples:
+
+* chair.sitAnchor
+* bed.lieAnchor
+* counter.interactionAnchor
+* door.entryAnchor
+* item.handAnchor
+
+When Mara sits down, do not eyeball her position from the generated image. Snap Mara's character anchor/action pose to the furniture's authored sit anchor.
+
+7. DEPTH SORTING
+   Make sure characters actually look like they are standing on the floor instead of floating.
+
+Depth/y-sorting should use each actor/object's GROUND POINT, not the PNG's top/bottom bounds.
+
+Example:
+
+* Mara behind table when her feet are behind its depth boundary.
+* Mara in front when her feet move below it.
+* Tall hair/portrait dimensions must not affect depth sorting.
+
+8. ROOM WALKABLE AREAS
+   Every map should have an explicit walkable/collision layer independent from the room artwork.
+
+AI-generated room backgrounds are NEVER trusted for walls or floor boundaries.
+
+Manually/authorially define:
+
+* walkable floor
+* blocked tiles/regions
+* entrances
+* transitions
+* interaction zones
+* furniture collision
+* NPC spawn anchors
+
+9. BUILD A COLLISION DEBUG MODE
+   Add a developer toggle that overlays:
+
+* character colliders
+* object colliders
+* interaction zones
+* ground anchors
+* sit/attachment anchors
+* navigation boundaries
+* spawn points
+
+Use clearly distinguishable outlines/labels.
+
+I need screenshots from this mode during QA so errors can actually be seen.
+
+10. AUTOMATIC VALIDATION
+    Build development checks that flag:
+
+* missing ground anchors
+* missing collision definitions
+* sprites whose dimensions unexpectedly changed
+* action poses with inconsistent anchor positions
+* object colliders outside their intended room
+* characters spawning inside solid geometry
+* doors whose destination spawn is blocked
+* furniture interaction anchors inside collision
+* sprites whose sheet frames overlap neighbouring cells
+* animation frames whose feet drift excessively
+
+Treat validation failures as bugs.
+
+11. TEST EVERY MARA POSE
+    Cycle through every overworld/action state at one fixed coordinate.
+
+Her feet should remain visually planted on the same point.
+
+Test:
+
+* idle
+* walking directions
+* holding tea
+* phone
+* crying
+* trembling
+* wiping tears
+* hugging herself
+* still pose
+* future poses
+
+If switching animation causes Mara to jump, float, sink, or slide, fix the sprite offset/anchor.
+
+12. TEST CHARACTER-FURNITURE INTERACTIONS
+    Create a small test room containing:
+
+* chair
+* table
+* sofa
+* bed
+* door
+* wall
+* counter
+
+Test Mara walking around them, behind them, in front of them, sitting, interacting and entering/exiting.
+
+Do not rely only on automated tests. Inspect the rendered game.
+
+13. AI ASSETS CANNOT OVERRIDE TECHNICAL STANDARDS
+    Generated artwork must conform to the game's technical templates.
+
+The correct workflow is:
+
+game geometry/template
+→ required dimensions/anchor
+→ generate/create artwork
+→ fit artwork into template
+→ inspect in-game
+→ adjust art offsets
+→ validate
+
+NOT:
+
+generate random image
+→ guess collision from image
+→ change the game to fit it
+
+14. DEFINE TECHNICAL ASSET SPECIFICATIONS
+    Document standards for:
+
+* overworld character canvas sizes
+* portrait sizes
+* tile size
+* frame dimensions
+* feet anchors
+* prop anchors
+* pixel density
+* outline thickness
+* allowed palettes where appropriate
+* sprite sheet padding
+* frame spacing
+
+All future generated assets must follow them.
+
+15. INSPECT EXISTING ASSETS
+    Audit everything currently in assets/, especially AI-generated files.
+
+Check for:
+
+* inconsistent margins
+* characters floating
+* feet positioned differently
+* sheet cells crossing boundaries
+* inconsistent scale
+* bad transparency
+* furniture whose visual boundaries disagree badly with gameplay geometry
+
+Fix the technical issue rather than hiding it.
+
+We already discovered at least one generated action sheet where poses crossed the assumed cell boundaries. I do not want similar mistakes silently accumulating across hundreds of assets.
+
+The rule for the project going forward is:
+
+VISUAL ART DOES NOT DEFINE GAMEPLAY GEOMETRY.
+
+Collision, ground position, depth, interaction zones and attachment points are authored game data.
+
+And:
+
+ANY VISUAL/PLACEMENT INCONSISTENCY THAT IS NOT AN INTENTIONAL MARA ANOMALY IS A BUG.
+
+Do this before massively expanding later chapters. Update the development documentation with these rules so future Codex sessions preserve them.

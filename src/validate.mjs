@@ -1,5 +1,6 @@
 import { MAPS, CHARACTERS, SCHEDULES, ITEMS, QUESTS, RANDOM_EVENTS } from "./data.js";
 import { readFileSync } from "node:fs";
+import { canStand, canInteract } from "./geometry.js";
 
 const errors=[];
 for(const [id,map] of Object.entries(MAPS)){
@@ -10,12 +11,7 @@ for(const [id,map] of Object.entries(MAPS)){
   }
   const propIds=new Set();
   for(const prop of map.props||[]){if(propIds.has(prop.id))errors.push(`Duplicate prop ${prop.id} in ${id}`);propIds.add(prop.id);}
-  const collides=(x,y)=>map.walls.some(w=>x-12<w.x+w.w&&x+12>w.x&&y-12<w.y+w.h&&y+14>w.y);
-  const reachable=obj=>{
-    const tx=obj.x+obj.w/2,ty=obj.y+obj.h/2;
-    for(let y=62;y<490;y+=8)for(let x=46;x<915;x+=8)if(!collides(x,y)&&Math.hypot(x-tx,y-ty)<82)return true;
-    return false;
-  };
+  const reachable=obj=>canStand(map,obj.interactionAnchor)&&canInteract(map,obj.interactionAnchor,obj);
   for(const exit of map.exits||[])if(!reachable(exit))errors.push(`Exit ${exit.label} is not interactable in ${id}`);
   for(const prop of map.props||[])if(!reachable(prop))errors.push(`Prop ${prop.id} is not interactable in ${id}`);
 }
@@ -26,7 +22,7 @@ for(const [id,blocks] of Object.entries(SCHEDULES)){
 for(const event of RANDOM_EVENTS){for(const place of event.places)if(!MAPS[place])errors.push(`Event ${event.id} references missing map ${place}`);}
 const reachableMaps=new Set(["bedroom"]),queue=["bedroom"];
 while(queue.length){const id=queue.shift();for(const e of MAPS[id].exits||[])if(!reachableMaps.has(e.to)){reachableMaps.add(e.to);queue.push(e.to);}}
-for(const id of Object.keys(MAPS))if(!reachableMaps.has(id))errors.push(`Map ${id} is disconnected from the playable world`);
+for(const id of Object.keys(MAPS))if(!MAPS[id].debugOnly&&!reachableMaps.has(id))errors.push(`Map ${id} is disconnected from the playable world`);
 for(const [id,c] of Object.entries(CHARACTERS)){
   if(!c.sprite?.hairStyle||!c.sprite?.legs||!c.sprite?.shoes)errors.push(`Character ${id} is missing complete sprite art data`);
 }

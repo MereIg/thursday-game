@@ -1,5 +1,11 @@
 # MARA — Game Design Bible
 
+Production requirement: art never defines gameplay geometry. Read `ASSET_SPEC.md`
+before changing maps or importing sprites. Fixed foot anchors/colliders, authored
+approaches/entries, attachments and foreground depth are mandatory. Complete new
+production briefs are preserved verbatim in `docs/briefs/`; the implementation
+ledger distinguishes the long-term plan from what is actually playable.
+
 This document describes the full planned game, not a list of shipped features. See `DEVELOPMENT_STATUS.md` for the implemented/planned split and `ORIGINAL_VISION.md` for the preserved creative brief (a structured digest, not a verbatim transcript). Foundation v3 has a twelve-day playable calendar; later chapters and major endings below are not implemented.
 
 ## High concept

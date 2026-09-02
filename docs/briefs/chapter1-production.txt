@@ -1,0 +1,2205 @@
+Continue development of the existing MARA repository.
+
+Before changing anything, thoroughly reread and inspect:
+
+- GAME_DESIGN.md
+- ORIGINAL_VISION.md
+- DEVELOPMENT_STATUS.md
+- QA_REPORT.md
+- README.md
+- assets/README.md
+- the current runtime code
+- Days 1–5 as actually implemented
+- all existing Mara portrait/action/walk assets
+- the current music/audio engine
+- existing screenshots and QA routes
+
+Do not blindly regenerate or replace systems that are already working well.
+
+Preserve the strongest existing writing, systems, art direction, adaptive music concepts, investigation systems and Mara characterization.
+
+This is a MAJOR CHAPTER 1 PRODUCTION PASS.
+
+Do NOT begin building Chapters 2–5 yet.
+
+The goal is to turn:
+
+CHAPTER 1 — THE GOOD WEEK
+
+from the current compressed five-day vertical slice into a polished, genuinely content-rich 12-day opening chapter.
+
+It should be able to stand on its own as a genuinely enjoyable indie school/life/relationship RPG even if every supernatural event were temporarily disabled.
+
+The current problem is NOT that MARA lacks systems.
+
+The current problem is that there is not yet enough authored life, dialogue, interaction, animation, environmental detail and memorable everyday content to justify the scale of the horror later.
+
+Do not solve that by adding twenty more shallow mechanics.
+
+Actually fill the existing game with life.
+
+
+==================================================
+CORE CREATIVE CONTRACT
+==================================================
+
+MARA begins as a genuinely warm, attractive, funny and polished school/town relationship game.
+
+The horror works because the player first learns to love and trust:
+
+- their bedroom
+- routes home
+- café
+- college
+- characters
+- music
+- phone
+- routines
+- Mara
+- mundane interactions
+
+Then those familiar things become unreliable.
+
+The player should eventually be frightened by:
+
+- three familiar notes
+- one chair being wrong
+- one missing person at lunch
+- a strange blink
+- their bedroom lamp being somewhere else
+- Mara standing somewhere she could not possibly have reached
+- a familiar notification sounding slightly wrong
+
+Do NOT immediately advertise that this is a horror game.
+
+Do NOT make everything dark, bloody, glitchy or red.
+
+Do NOT give Mara a conventional monster transformation.
+
+Do NOT fully explain Mara.
+
+Do NOT give her a surname, concrete biography, reliable family history, clear age, address, species taxonomy or exposition chapter explaining what she is.
+
+Internally, Mara is demonic.
+
+The player never receives a clean answer.
+
+Her nature should emerge through contradiction.
+
+Mara genuinely loves Alex.
+
+Mara is also genuinely evil.
+
+She is not misunderstood, secretly good, redeemable or fixable.
+
+Her affection does not cancel out her cruelty.
+
+Her cruelty does not mean her affection is fake.
+
+
+==================================================
+PRIMARY PRODUCTION GOAL
+==================================================
+
+Expand Chapter 1 to Days 1–12.
+
+Do NOT simply stretch the existing five-day story into twelve numbered days.
+
+Restructure Chapter 1 so that:
+
+1. familiarity is established,
+2. relationships become meaningful,
+3. Mara becomes emotionally important,
+4. subtle inconsistencies begin,
+5. suspicion grows,
+6. investigation becomes intentional,
+7. the current annex material becomes the chapter climax.
+
+The player should have enough experience with Larkspur that changing something tiny becomes meaningful.
+
+The current Friday station/annex material occurs far too quickly for the final pacing.
+
+Move and expand that material toward Days 11–12.
+
+
+==================================================
+CHAPTER 1 PACING
+==================================================
+
+DAYS 1–2 — ALMOST ENTIRELY NORMAL
+
+These should feel like the beginning of a cozy indie college/life RPG.
+
+Focus on:
+
+- orientation
+- moving in
+- learning the town
+- meeting characters
+- classes
+- discovering clubs
+- shopping
+- café
+- arcade
+- park
+- library
+- room customization
+- errands
+- first friendships
+- funny mundane dialogue
+- player choice
+- first distant Mara sightings
+
+Mara should mostly seem like:
+
+- awkward
+- cute
+- observant
+- slightly strange
+- nervous
+- affectionate
+- funny
+
+She can know something slightly unusual, but there should always still be a plausible explanation.
+
+No hard horror.
+
+No obvious supernatural event.
+
+No horn/tail frame.
+
+No huge revelation.
+
+The player should be completely capable of thinking:
+
+“Okay, she is just a weird girl who likes me.”
+
+
+DAYS 3–4 — RELATIONSHIPS FORM
+
+Deepen:
+
+- Mara
+- Iris
+- June
+- Theo
+- Ren
+- Nia
+- Sam
+
+Add:
+
+- longer conversations
+- more classes
+- after-college activities
+- walks
+- café moments
+- rain scenes
+- first proper hangouts
+- first dates becoming possible
+- more texts
+- characters interacting with one another
+
+Mara should gain a lot of normal material.
+
+She should be:
+
+- funny
+- clingy
+- shy
+- affectionate
+- embarrassing
+- excited
+- occasionally jealous
+- apologetic
+- sometimes insecure
+
+The first supernatural signs can begin, but they must remain tiny and debatable.
+
+Examples:
+
+- a familiar melody appears somewhere unexpected
+- photograph seems slightly different
+- Mara appears in the background of another photograph
+- reflection timing is subtly wrong
+- a route feels shorter
+- a sign has one changed letter
+- furniture position seems slightly different
+- Mara knows something she could theoretically have overheard
+
+Do not confirm anything.
+
+
+DAYS 5–7 — ROUTINES BECOME IMPORTANT
+
+By now the player should have established:
+
+- preferred lunch location
+- favourite characters
+- route home
+- favourite café seat
+- room decorations
+- classes
+- hangout habits
+- phone habits
+- preferred activities
+
+Add substantial ordinary content:
+
+- larger dates
+- group hangouts
+- spontaneous encounters
+- long texting conversations
+- phone calls
+- evening activities
+- club events
+- jobs
+- side quests
+- weather-specific activities
+- NPC conflicts
+- rumours
+- friendships changing without Alex
+
+Mara becomes more emotionally intense.
+
+She can:
+
+- become jealous
+- cry
+- send too many messages
+- apologise
+- become possessive
+- argue
+- get embarrassed
+- become delighted
+- ask to walk home
+- get genuinely hurt by rejection
+- behave perfectly normally afterward
+
+Still include plenty of scenes where NOTHING scary happens.
+
+The player needs to like spending time with her.
+
+Allow mild continuity errors.
+
+Allow very rare impossible remarks.
+
+Examples:
+
+“Your room looked warmer the first time.”
+
+“You cried more last time.”
+
+“I hate Thursdays.”
+
+“Don't take the train tomorrow.”
+
+Mara must NEVER follow such remarks with useful exposition.
+
+She may deny having said them.
+
+
+DAYS 8–10 — HORROR BECOMES UNDENIABLE
+
+Now allow:
+
+- contradictory records
+- impossible travel
+- altered photographs
+- wrong reflections
+- changes to familiar rooms
+- missing objects
+- NPC memory inconsistencies
+- phone timestamps that make no sense
+- Mara knowing things without a plausible source
+- Mara's motif becoming consciously recognisable
+- subtle visual corruption
+- rare demonic hints
+
+Investigation becomes a player choice.
+
+The player can begin:
+
+- checking records
+- comparing schedules
+- asking people questions
+- checking phone metadata
+- revisiting photographs
+- following Mara
+- deliberately testing whether Mara knows things
+
+Mara is NOT omniscient.
+
+The player must genuinely be able to:
+
+- hide something
+- lie successfully
+- follow her undetected
+- temporarily protect someone
+- keep certain evidence secret
+
+The game should not tell the player whether Mara knows.
+
+Jealousy consequences should sometimes be delayed.
+
+Do not make every bad thing happen immediately after a romantic choice.
+
+
+DAYS 11–12 — CHAPTER 1 CLIMAX
+
+Build toward the station-following and annex investigation.
+
+Move the existing major investigation here.
+
+Expand it considerably.
+
+The player should have several possible reasons for investigating:
+
+- Ren's records
+- Iris photographs
+- Theo's phone evidence
+- Sam's contradictory memory
+- June's music observations
+- personal room intrusions
+- Mara's impossible behaviour
+
+The station-following sequence should feel earned.
+
+Improve stealth substantially.
+
+Mara may:
+
+- genuinely fail to detect Alex
+- notice Alex but pretend she did not
+- deliberately lead Alex somewhere
+- lose Alex
+- stop suddenly
+- alter her route
+- set a trap
+
+Different outcomes should produce different annex experiences.
+
+The annex should remain deeply unexplained.
+
+Current strong ideas should remain:
+
+- possessions belonging to people
+- evidence that predates events
+- impossible duplicates
+- photographs of Alex from before Alex existed
+- old versions of Alex's room
+- “THURSDAY AGAIN”
+- Mara confronting Alex
+- Alex asking what she is
+- Mara answering only:
+
+“Mara.”
+
+Keep that.
+
+Do NOT add an exposition dump afterward.
+
+The annex is the END of Chapter 1, not the explanation of the game.
+
+
+==================================================
+CONTENT DENSITY
+==================================================
+
+Massively expand authored content.
+
+Current characters run out of unique conversation far too quickly.
+
+For Chapter 1, target roughly:
+
+15–30 meaningful conversation scenes per important supporting character.
+
+Mara should have substantially more.
+
+These scenes should not all be giant story scenes.
+
+Many should be small, specific moments.
+
+Dialogue conditions should include:
+
+- day
+- time
+- weather
+- location
+- affection
+- trust
+- fear
+- suspicion
+- resentment
+- Mara jealousy
+- Mara attachment
+- prior choices
+- inventory
+- room decorations
+- current quest
+- who Alex spent time with
+- whether another NPC is nearby
+- whether Mara plausibly observed something
+- recent messages
+- previous arguments
+- whether Alex rejected/accepted an invitation
+
+Do not make conversations feel like NPC dialogue menus where characters repeat their entire personality every time.
+
+Characters should sometimes simply talk about stupid everyday things.
+
+
+==================================================
+MARA DIALOGUE
+==================================================
+
+Mara needs dozens of genuinely mundane interactions.
+
+Topics should include:
+
+- food
+- bad coffee
+- weather
+- buses
+- classes
+- clothes
+- music
+- sleep
+- shops
+- tea
+- homework
+- stupid jokes
+- being bored
+- complaining
+- embarrassing herself
+- small gifts
+- awkward silences
+- walking
+- rain
+- texting
+- random observations
+- apologising
+- excitement
+- social anxiety
+- petty arguments
+- jealousy
+- reconciliation
+- crying
+- anger
+- clinginess
+- insecurity
+- affection
+
+Most early Mara dialogue should still work if the player does not know this is horror.
+
+Avoid generic AI-yandere writing such as:
+
+“You are mine forever.”
+
+“You cannot escape me.”
+
+“You belong only to me.”
+
+etc.
+
+Those lines are generic and boring.
+
+Keep Mara specific and conversational.
+
+She can say things like:
+
+“I missed you. It was only a few hours. I know.”
+
+or:
+
+“I cried in the bathroom for twenty minutes. Then I got angry that I'd cried.”
+
+or:
+
+“I wasn't waiting. I was... I knew you'd come this way.”
+
+Her speech should sometimes be messy.
+
+She can lose her train of thought.
+
+She can say something unfair.
+
+She can regret saying it.
+
+She can shout.
+
+She can cry.
+
+She can become angry that she cried.
+
+She can become completely silent.
+
+Her emotional transitions are important.
+
+Stillness should eventually be more frightening than rage.
+
+
+==================================================
+SUPPORTING CAST
+==================================================
+
+Iris, June, Theo, Ren, Nia and Sam need meaningful independent lives.
+
+Do not write them as information vending machines about Mara.
+
+Add:
+
+- group conversations
+- inside jokes
+- characters meeting without Alex
+- arguments
+- reconciliation
+- cancelled plans
+- gossip
+- rumours
+- personal worries
+- relationships evolving
+- characters helping one another
+- characters annoying one another
+- off-screen events
+- messages about events Alex did not witness
+
+NPC schedules should have conditional overrides.
+
+Example:
+
+Theo normally goes to the arcade.
+
+But one evening:
+
+- he studies with June
+- another day he skips because they argued
+- another day he appears at the café because Nia dragged him there
+
+The social world needs to move even if Alex ignores it.
+
+The player must become attached to these characters before later chapters damage them.
+
+
+==================================================
+DATES AND HANGOUTS
+==================================================
+
+Current dates are far too short.
+
+Expand them into sequences.
+
+A proper date/hangout should include several of:
+
+- meeting up
+- travelling
+- environmental interaction
+- several conversations
+- optional choices
+- activity/minigame
+- awkward moment
+- funny moment
+- quiet moment
+- optional romantic escalation
+- walking home
+- message afterward
+
+Not every hangout should be romantic.
+
+Add:
+
+- studying together
+- arcade with Theo
+- photography with Iris
+- music practice with June
+- café downtime with Sam/Nia
+- folklore stuff with Ren
+- shopping
+- rainy walks
+- park greenhouse
+- late-night café
+- sitting somewhere doing almost nothing
+
+Mara especially needs several substantial scenes where absolutely nothing frightening happens.
+
+The player should have believable reasons to fall for her.
+
+
+==================================================
+CLASSES / DAILY LIFE
+==================================================
+
+Classes currently need much more variety.
+
+Add:
+
+- different lecturers/topics
+- seat-dependent interactions
+- character-specific moments
+- optional skipping
+- consequences for skipping
+- classes interrupted by mundane things
+- occasional character arguments
+- assignments
+- studying
+- small grade progression
+
+Avoid repetitive text.
+
+Expand café work.
+
+Differentiate:
+
+- café work
+- arcade
+- rhythm/music
+
+They should not all feel like variations of one timing bar.
+
+Add small but meaningful activities:
+
+- club meetings
+- errands
+- shopping
+- room decoration
+- helping friends
+- studying
+- walking
+- sitting in the park
+- listening to records
+- evening phone calls
+- collecting small objects
+- weather events
+
+Do not create grind.
+
+The goal is atmosphere and relationships, not farming statistics.
+
+
+==================================================
+MARA VISUAL DESIGN
+==================================================
+
+Continue moving toward genuinely deliberate low-resolution pixel art.
+
+Do not rely on simply downsampling smooth AI illustrations.
+
+Generated high-resolution masters may remain as source/reference material.
+
+Runtime assets must look intentionally pixel-built.
+
+LOCK MARA'S NORMAL DESIGN.
+
+Across normal portraits and sprites, preserve:
+
+- head width
+- eye spacing
+- eye size
+- nose position
+- mouth position
+- jaw shape
+- hair silhouette
+- crown loop
+- burgundy ribbon
+- brass leaf clip
+- amber-brown eyes
+- moss cardigan
+- cream blouse
+- plaid skirt
+- overall palette
+- proportions
+
+Normal Mara must be EXTREMELY consistent.
+
+This is critical.
+
+If normal Mara changes accidentally from image to image, intentional horror inconsistencies become meaningless.
+
+Use one canonical base wherever possible.
+
+Create expression variants from that same base rather than generating entirely separate portraits.
+
+The normal face is the authority.
+
+
+==================================================
+DEMONIC HINTS
+==================================================
+
+Keep the demonic implication.
+
+I like it.
+
+Do NOT remove it.
+
+But tier it carefully.
+
+COMMON ABNORMALITY:
+
+- wrong pupil position
+- clip on wrong side
+- reflection blinking late
+- held smile
+- missing breathing animation
+- sprite one pixel taller
+- shadow slightly wrong
+- gaze toward player while body faces away
+- one bad animation frame
+- movement stops too abruptly
+
+RARE ABNORMALITY:
+
+- canine appears slightly too sharp
+- horn-like hair silhouette
+- tail-like shadow/curve
+- shadow continues too far
+- impossible eye shape for one frame
+
+VERY LATE:
+
+more undeniable demonic phenomena can occur.
+
+Still avoid a standard “monster form.”
+
+No transformation sequence explaining what she is.
+
+Rare horn/tail frames should feel like:
+
+“WHAT THE FUCK WAS THAT?”
+
+not:
+
+“Oh, Mara has entered demon mode.”
+
+
+==================================================
+MARA ANIMATION
+==================================================
+
+Actually use the full-body action assets already created.
+
+Use animations for:
+
+- sitting
+- drinking
+- reading
+- phone use
+- looking away
+- waving
+- covering face
+- hugging herself
+- wiping tears
+- trembling hands
+- crying
+- running
+- stopping
+- leaning
+- turning
+- standing completely still
+
+Add small emotional transitions where practical.
+
+Especially:
+
+happy -> hurt
+
+hurt -> crying
+
+crying -> furious
+
+furious -> completely still
+
+Do not merely replace one portrait with another instantly every time.
+
+Timing is one of the main horror tools.
+
+Examples:
+
+Mara stops blinking.
+
+Her breathing animation disappears.
+
+Her smile remains for half a second after the dialogue box disappears.
+
+She turns before Alex enters the room.
+
+She looks directly toward the player before Alex speaks.
+
+
+==================================================
+ENVIRONMENT ART
+==================================================
+
+Finish authored versions of the major spaces.
+
+Priority:
+
+- Alex bedroom
+- kitchen
+- home landing
+- classroom
+- cafeteria
+- college hall
+- college courtyard
+- library
+- music room
+- computer room
+- café
+- arcade
+- park
+- greenhouse
+- station
+- High Street
+- friends' homes
+
+The player should memorize these spaces.
+
+Then create deliberate altered variants.
+
+Examples:
+
+- room one tile wider
+- chair moved one tile
+- window slightly larger
+- painting moved
+- poster text changed
+- one locker missing
+- door on another wall
+- table orientation wrong
+- shop sign one letter different
+- lighting direction wrong
+- familiar NPC missing
+- bench moved
+- kettle on another counter
+- streetlight gone
+- room slightly shorter
+- reflection showing an object not present
+
+Avoid obvious “horror filter” art.
+
+No constant red tint.
+
+No generic glitch overlay.
+
+No blood just because something is supernatural.
+
+The normal environment should remain visible underneath the wrongness.
+
+
+==================================================
+BEDROOM
+==================================================
+
+The bedroom is especially important.
+
+It should become the safest and most personal space in the game.
+
+Expand:
+
+- decoration
+- computer interactions
+- phone use
+- photos
+- storage
+- desk
+- window
+- lighting
+- music
+- sleep
+- changing objects
+- small collectibles
+
+Remember player decoration choices.
+
+If Alex places:
+
+- lamp
+- plant
+- photograph
+- arcade prize
+- record
+
+the game must know EXACTLY where those things normally are.
+
+Later continuity errors should use the player's own decoration choices.
+
+Example:
+
+The player always puts the fern beside the desk.
+
+One night it is beside the bed.
+
+No dialogue acknowledges it.
+
+That is valuable horror.
+
+
+==================================================
+SLEEP
+==================================================
+
+Expand sleep beyond a simple day-transition button.
+
+MOST NIGHTS MUST BE COMPLETELY SAFE.
+
+This is critical.
+
+The player needs to learn:
+
+bed -> sleep -> fade -> morning.
+
+Do this many times.
+
+Make it boring and trusted.
+
+Then occasionally violate it.
+
+Add several small conditional sleep events across the long game.
+
+For Chapter 1, include at most one substantial sleep-related horror sequence.
+
+
+SLEEP EVENT IDEA
+
+Late Chapter 1.
+
+Alex chooses Sleep.
+
+Normal fade to black.
+
+After several seconds the bedroom slowly becomes visible again.
+
+The room is extremely dark.
+
+Alex is still lying in bed.
+
+Movement does nothing.
+
+No HUD.
+
+No dialogue UI at first.
+
+Normal room ambience.
+
+Breathing.
+
+Then someone appears at the far edge of the bedroom.
+
+The figure walks toward the bed very slowly.
+
+No loud horror music.
+
+Eventually it becomes recognizable as Mara.
+
+She stands beside Alex.
+
+She speaks normally at first.
+
+Possible dialogue tone:
+
+“You always fall asleep faster here.”
+
+“I remembered it differently.”
+
+Then Mara begins speaking several lines of an invented phonetic language.
+
+IMPORTANT:
+
+This must NOT simply be backwards English.
+
+It should sound structured enough that players believe it might be decipherable.
+
+However, there should be no reliable one-to-one translation.
+
+Reversing the audio should not reveal a hidden English sentence.
+
+Spectrogram analysis should not reveal a simple message.
+
+Do not create fake “ancient demon language” lore.
+
+One line may be displayed conceptually as:
+
+[You understand her.]
+
+Mara then returns to ordinary English.
+
+Possible final line:
+
+“Sorry.”
+
+“Wrong Thursday.”
+
+Cut immediately to black.
+
+Morning.
+
+Normal bedroom.
+
+Normal music.
+
+Mara messages:
+
+“morning :)”
+
+“sleep okay?”
+
+Do not allow Alex to immediately give an exposition speech about the dream.
+
+Keep it ambiguous:
+
+- sleep paralysis
+- dream
+- Mara entering the room
+- supernatural event
+- altered memory
+
+Do NOT repeat this type of scene often.
+
+
+==================================================
+LATER SLEEP HORROR
+==================================================
+
+Preserve the possibility for Chapters 3–4 of a much more disturbing sleep paralysis event.
+
+One possible later concept:
+
+Alex wakes unable to move.
+
+Something stands near the door.
+
+It approaches.
+
+The player assumes it is Mara.
+
+Its proportions gradually become subtly impossible.
+
+When it reaches the bed:
+
+Mara is suddenly already lying beside Alex.
+
+Meaning the approaching thing was NOT Mara.
+
+Without opening her eyes Mara quietly says:
+
+“Don't look at it.”
+
+Do not explain what it was.
+
+This belongs later, not Chapter 1.
+
+
+==================================================
+JUMPSCARES
+==================================================
+
+The game should not become a jumpscare game.
+
+The current subtle horror philosophy is correct.
+
+However, include a VERY SMALL number of genuine hard scares across the entire game.
+
+Approximately 3–5 memorable hard scares across a huge game is enough.
+
+The player should eventually believe:
+
+“This game doesn't really do jumpscares.”
+
+Then betray that expectation.
+
+For Chapter 1:
+
+AT MOST ONE proper hard scare.
+
+
+WINDOW EYE CONCEPT
+
+Late enough that the bedroom/window has been interacted with many times.
+
+At night:
+
+the player hears tapping.
+
+They inspect the window.
+
+Nothing outside.
+
+Rain.
+
+Long quiet pause.
+
+Then for approximately 120–180 milliseconds:
+
+an impossibly close amber eye occupies most of the visible window.
+
+The pupil reacts toward the player's position.
+
+Use an original composition.
+
+Do NOT copy OMORI's exact eye scene or artwork.
+
+Audio:
+
+NO stock scream.
+
+Use one physically sharp TAP against the glass.
+
+Immediately return to normal.
+
+No camera shake spam.
+
+No glitch screen.
+
+No achievement.
+
+No “WHAT THE HELL WAS THAT?” dialogue.
+
+Inspecting the window again should simply say something ordinary such as:
+
+“Rain runs down the glass.”
+
+Let players wonder if they actually saw it.
+
+
+==================================================
+RANDOM HORROR EVENTS
+==================================================
+
+Keep rare events conditional and probabilistic.
+
+Examples:
+
+- Mara in passing train
+- camera figure
+- changed photograph
+- bedroom light already on
+- strange phone message
+- wrong reflection
+- everybody looking at empty corner
+- missing NPC day
+- window knock
+- impossible door sound
+
+Expand the pool eventually.
+
+But rarity must remain meaningful.
+
+No progression-critical clue may require random chance.
+
+Players should finish Chapter 1 while missing many rare events.
+
+Different people should experience different weird moments.
+
+
+==================================================
+THURSDAY EVENT
+==================================================
+
+Keep the existing authored Thursday continuity break.
+
+Improve presentation.
+
+The college briefly obeys:
+
+- wrong weather
+- wrong time
+- altered spatial layout
+- displaced visual strips
+- incorrect Mara frame
+
+It should happen rapidly enough that players may question what they saw.
+
+Do not turn it into a full glitch montage.
+
+The important part is the sudden violation of a familiar place.
+
+
+==================================================
+MUSIC — EXTREMELY IMPORTANT
+==================================================
+
+Music remains one of the most important systems in MARA.
+
+Do NOT replace the adaptive music architecture.
+
+Improve it.
+
+The existing concept of Mara's six-note motif infecting unrelated music is one of the strongest ideas in the project.
+
+Normal music must be GOOD first.
+
+Do not write “horror music” before the player has learned the real melodies.
+
+Every important location should have a memorable musical identity.
+
+Core families include:
+
+- morning
+- home
+- college
+- town
+- café
+- friends
+- rain
+- night
+- arcade
+- library
+- dates
+- loneliness
+- Mara
+- investigation
+
+Mara's romantic theme:
+
+“Where You Are”
+
+must initially feel genuinely beautiful, warm and romantic.
+
+Players should like the melody.
+
+Then gradually infect other tracks with its contour.
+
+Mara motif:
+
+scale degrees 3–5–6–5–2–3.
+
+Keep and develop that identity.
+
+Infection should use:
+
+- hidden inner-voice fragments
+- two-note references
+- altered harmonies
+- missing accompaniment
+- melody crossing into bass
+- wrong cadence
+- changed instrumentation
+- slight tuning drift
+- unusual loop boundary
+- silence where accompaniment should exist
+- Mara motif remaining when everything else stops
+
+By late game, hearing only 3–4 notes should make experienced players nervous.
+
+Do not simply add static or distortion.
+
+Do not rely on generic scary drones.
+
+Create:
+
+- warm Mara variation
+- shy/romantic variation
+- jealous variation
+- sad variation
+- possessive variation
+- furious variation
+- stalking variation
+- nightmare variation
+- late-game variation
+
+All should still contain recognizable musical DNA.
+
+Music transitions should respond to:
+
+- location
+- weather
+- time
+- Mara proximity
+- attachment
+- jealousy
+- exposure
+- investigation
+- corruption
+
+But occasionally SUPPRESS Mara's motif even when she is nearby.
+
+The soundtrack should never become a reliable Mara radar.
+
+
+==================================================
+EVERYDAY SOUND DESIGN
+==================================================
+
+Sound design needs a major production pass.
+
+Do NOT attempt to synthesise every mundane sound from scratch.
+
+Use a hybrid approach.
+
+
+CUSTOM / PURPOSE-BUILT SOUNDS
+
+Create distinctive original sounds for recurring identity-heavy elements:
+
+- phone notification
+- text received
+- text sent
+- incoming call
+- typing
+- menu movement
+- menu confirmation
+- save
+- load
+- journal
+- inventory
+- college bell
+- café door bell
+- bedroom door
+- Mara-specific audio cues
+- dialogue voice bleeps
+- supernatural event punctuation
+- recurring train chime where appropriate
+
+These should become recognizable to the player.
+
+
+REAL / LICENSED FIELD-RECORDING SOUNDS
+
+For ordinary environmental audio it is acceptable and preferable to use properly licensed recordings.
+
+Examples:
+
+- rain
+- wind
+- footsteps
+- shoes on pavement
+- indoor footsteps
+- chairs
+- fabric movement
+- cups
+- spoons
+- kettle
+- doors
+- lockers
+- paper
+- books
+- typing
+- distant traffic
+- buses
+- trains
+- station ambience
+- café ambience
+- arcade room tone
+- fluorescent hum
+- birds
+- park ambience
+
+Use only assets whose licensing clearly allows this project.
+
+Prefer:
+
+- CC0
+- royalty-free commercial licenses
+- permissive licenses with manageable attribution
+
+For every externally sourced audio asset, preserve:
+
+- source
+- author
+- original filename
+- URL/source reference
+- license
+- attribution requirement
+- modification notes
+
+Store this in an AUDIO_LICENSES.md or equivalent manifest.
+
+Never introduce an unknown-license asset.
+
+Do not scrape random copyrighted sounds from games, films, YouTube videos or other commercial media.
+
+
+==================================================
+AUDIO COHESION
+==================================================
+
+Do NOT dump random sound-library clips into the game unchanged.
+
+Process sounds so they belong to the same world.
+
+Use tasteful:
+
+- EQ
+- volume normalization
+- trimming
+- pitch adjustment
+- filtering
+- layering
+- stereo width control
+- low-resolution texture where appropriate
+
+Do not overprocess everything.
+
+The game should have a recognizable sonic identity.
+
+
+==================================================
+HORROR THROUGH NORMAL SOUNDS
+==================================================
+
+Everyday sounds should later become horror tools.
+
+Players first need to memorize the normal versions.
+
+Then create deliberately wrong variants.
+
+Examples:
+
+PHONE:
+
+Normal notification contains two notes.
+
+After many hours, one notification plays the same sound except the second note is slightly flat.
+
+Do not acknowledge it.
+
+
+BEDROOM DOOR:
+
+Normal door:
+
+latch
+hinge
+impact
+
+One night:
+
+hinge
+impact
+
+No latch.
+
+Meaning the door may already have been open.
+
+
+COLLEGE BELL:
+
+Normally four notes.
+
+One day:
+
+five notes.
+
+Nobody reacts.
+
+
+FOOTSTEPS:
+
+Normally left/right variations.
+
+During one supernatural scene every step is exactly identical.
+
+
+KETTLE:
+
+Normally clicks off.
+
+One night it stops boiling without the click.
+
+
+PHONE VIBRATION:
+
+Normally one vibration.
+
+One message later produces two even though only one notification exists.
+
+
+MARA:
+
+Her footsteps may stop half a second before her walking animation does.
+
+Her dialogue bleeps may disappear entirely when she becomes perfectly still.
+
+These should be subtle.
+
+Avoid loud “creepy sound effect” signalling.
+
+
+==================================================
+ROOM TONE
+==================================================
+
+Give important locations subtle ambient identities.
+
+Examples:
+
+Bedroom:
+- distant road
+- building settling
+- radiator
+- light rain
+- occasional train
+
+College:
+- distant voices
+- fluorescent hum
+- hallway doors
+- shoes
+- PA system
+
+Café:
+- cups
+- espresso machine
+- chairs
+- distant conversation
+- door bell
+
+Station:
+- track hum
+- distant train
+- wind
+- PA
+- metal creaks
+
+Library:
+- ventilation
+- pages
+- chairs
+- distant steps
+
+Silence should still contain physical sound.
+
+During horror, removing ONE familiar layer can be more effective than adding a horror sound.
+
+
+==================================================
+PHONE
+==================================================
+
+Expand the phone substantially.
+
+Add:
+
+- longer conversations
+- believable typing delays
+- typing indicators
+- missed calls
+- voicemail
+- photos
+- contact avatars
+- group chats
+- delayed replies
+- messages while Alex is occupied
+- characters messaging late
+- characters messaging one another
+- deleted messages
+- edited messages later in Chapter 1
+- timestamps
+- call history
+
+Mara should send many normal messages.
+
+Examples:
+
+food
+memes/jokes
+complaints
+weather
+school
+asking if Alex got home
+embarrassing double texts
+apologies
+photos
+small observations
+
+Do not make every message creepy.
+
+Later, ordinary phone behaviour becomes evidence.
+
+Examples:
+
+- notification but no message
+- message timestamp earlier than it was sent
+- message edits itself
+- deleted text returns
+- Alex's own number sends something
+- Mara's typing indicator continues after she is physically standing beside Alex
+
+
+==================================================
+UI
+==================================================
+
+Give the entire UI a cohesive authored game identity.
+
+Current generic browser-font presentation is temporary.
+
+Replace generic-looking typography/presentation with a cohesive style appropriate for an indie pixel-art romance/life RPG.
+
+Keep readability high.
+
+Unify:
+
+- title screen
+- dialogue
+- phone
+- journal
+- inventory
+- shop
+- settings
+- pause
+- save/load
+- relationship displays where visible
+
+Do not visually advertise horror on first launch.
+
+The first title screen should look like a charming romance/life game.
+
+MARA title.
+
+Warm room.
+
+Mara prominently presented.
+
+No blood.
+
+No creepy subtitle.
+
+No glitch font.
+
+No red horror typography.
+
+Later launches may subtly change tiny elements depending on progression.
+
+
+==================================================
+SAVE / LOAD
+==================================================
+
+Finish real save functionality.
+
+LOAD must not simply equal CONTINUE.
+
+Implement proper save slots.
+
+Support:
+
+- autosave
+- manual save
+- multiple slots
+- timestamps
+- chapter/day information
+- version migration
+
+Migrate the old internal THURSDAY save identifier to MARA cleanly.
+
+Do NOT destroy current development/test saves.
+
+Create explicit migration logic.
+
+Later fake “corrupted save” events must NEVER damage actual user data.
+
+All corrupted-save effects are theatrical copies/variants.
+
+
+==================================================
+SETTINGS / ACCESSIBILITY
+==================================================
+
+Implement actual settings.
+
+Include where practical:
+
+- master volume
+- music volume
+- SFX volume
+- dialogue/voice bleep volume
+- text speed
+- fullscreen
+- control remapping
+- screen shake
+- flashing reduction
+- jumpscare intensity/reduction option if appropriate
+- text accessibility
+- touch/mobile settings
+
+Keep required content warnings outside the fictional first-launch title presentation.
+
+
+==================================================
+CONTENT ARCHITECTURE
+==================================================
+
+The game is going to contain thousands of lines.
+
+Do NOT continue dumping all dialogue into giant JavaScript files.
+
+Externalize authored content into clean data-driven content packs.
+
+Create a scalable structure such as:
+
+content/
+  chapter1/
+    day01.json
+    day02.json
+    ...
+    mara.json
+    iris.json
+    june.json
+    theo.json
+    ren.json
+    nia.json
+    sam.json
+    group_events.json
+    phone.json
+    dates.json
+    horror.json
+
+Exact structure is flexible.
+
+The principle is not.
+
+Dialogue/event nodes should support conditions such as:
+
+- day
+- time
+- weather
+- map
+- NPC present
+- relationship values
+- Mara hidden state
+- prior choices
+- inventory
+- quest flags
+- social graph
+- observation channel
+- whether Mara knows something
+- recent activity
+- probability
+- cooldown
+
+Build the architecture now for a long game.
+
+
+==================================================
+MARA OBSERVATION MODEL
+==================================================
+
+Never treat Mara as magically knowing everything by default.
+
+For meaningful player actions, record possible knowledge channels:
+
+- direct observation
+- NPC report
+- phone compromise
+- route prediction
+- physical evidence
+- supernatural intuition
+- unknown
+
+Allow Mara to fail to learn something.
+
+Allow the player to lie successfully.
+
+Allow secrets.
+
+Allow the player to think they succeeded without certainty.
+
+This uncertainty is important.
+
+
+==================================================
+NPC SOCIAL SIMULATION
+==================================================
+
+Expand the social graph.
+
+NPCs should change relationships independently.
+
+Support:
+
+- friendships
+- arguments
+- attraction
+- dating
+- breakups
+- reconciliation
+- distrust
+- rumours
+- protective behaviour
+
+Mara can interfere with these systems.
+
+But not every social change should involve Mara.
+
+The world must exist without her.
+
+
+==================================================
+STEALTH
+==================================================
+
+Improve the following system.
+
+Add:
+
+- sight cones
+- cover
+- noise
+- distance
+- target suspicion
+- hiding
+- route branches
+- false routes
+- Mara stopping
+- Mara doubling back
+- optional alternate approach
+
+Do not make Mara omniscient.
+
+A skilled player should sometimes genuinely follow her successfully.
+
+
+==================================================
+MARA EMOTIONAL MODEL
+==================================================
+
+Preserve and deepen hidden variables such as:
+
+- attachment
+- jealousy per person
+- abandonment panic
+- control
+- exposure
+- composure
+- hunger
+
+Do not reduce Mara to one affection score.
+
+High affection does NOT necessarily mean safety.
+
+High jealousy does NOT always immediately cause violence.
+
+Use weighted contextual reactions.
+
+Possible responses to jealousy include:
+
+- joke
+- silence
+- awkwardness
+- clinginess
+- crying
+- angry text
+- public argument
+- delayed consequence
+- nothing visible
+
+Avoid repetition through cooldowns.
+
+
+==================================================
+ART PRODUCTION
+==================================================
+
+Do not generate hundreds of unused images.
+
+Create art because the playable game requires it.
+
+Priority:
+
+1. canonical Mara consistency
+2. remaining important locations
+3. actually using Mara's action poses
+4. supporting-cast route expressions
+5. altered location variants
+6. UI artwork
+
+Inspect all artwork in the actual 960×540 game.
+
+Do not judge quality only by opening the source PNG.
+
+
+==================================================
+PERFORMANCE
+==================================================
+
+Maintain smooth performance on ordinary laptops and phones.
+
+Preserve nearest-neighbour scaling.
+
+Avoid unnecessary huge runtime images.
+
+Optimize runtime assets while preserving master files.
+
+Do not sacrifice visual consistency merely to reduce file size.
+
+
+==================================================
+QA
+==================================================
+
+After this production pass:
+
+Run automated validation.
+
+Then PLAY the game.
+
+Do not merely inspect source code.
+
+Test the complete Days 1–12 through multiple runs.
+
+Minimum route tests:
+
+1. Mara-friendly
+2. Mara-rejecting
+3. Iris-focused
+4. investigation-focused
+5. exploration-heavy
+6. minimal-horror-event run
+
+Check:
+
+- all 12 days can be completed
+- no progression depends on a rare event
+- no softlocks
+- save/load works
+- save migration works
+- NPC schedules remain valid
+- map exits work
+- mobile controls work
+- dialogue does not rapidly repeat
+- early Mara remains believable
+- horror does not escalate too quickly
+- rare events remain genuinely rare
+- bedroom remains mostly safe
+- jumpscare does not repeat casually
+- sleep event has correct gating
+- annex works across different relationship states
+- Mara can genuinely fail to notice stealth
+- characters have enough ordinary dialogue
+- dates are substantial enough
+- music transitions behave correctly
+- sound volumes are consistent
+- audio licenses are documented
+- altered environments differ intentionally
+- Mara's normal face stays visually consistent
+- anomaly sprites look deliberately wrong rather than accidentally inconsistent
+
+Test the rendered game visually.
+
+Capture QA screenshots.
+
+Where useful, capture short recordings/GIFs of:
+
+- emotional animation
+- Thursday slip
+- sleep event
+- major UI flows
+
+Update QA_REPORT.md with actual findings.
+
+
+==================================================
+DOCUMENTATION
+==================================================
+
+Update DEVELOPMENT_STATUS.md honestly.
+
+Separate:
+
+IMPLEMENTED
+
+from:
+
+PLANNED
+
+Do not claim something exists because a design note exists.
+
+Only mark something complete if it is playable.
+
+Preserve ORIGINAL_VISION.md unless a genuine creative-contract change is necessary.
+
+Update GAME_DESIGN.md only where implementation decisions change canon.
+
+Update assets/audio manifests.
+
+
+==================================================
+IMPORTANT THINGS NOT TO DO
+==================================================
+
+DO NOT start Chapters 2–5.
+
+DO NOT create another giant design-only document instead of implementing.
+
+DO NOT produce dozens of unused assets.
+
+DO NOT replace strong existing Mara dialogue with generic yandere dialogue.
+
+DO NOT make Mara ominous in every conversation.
+
+DO NOT make every night scary.
+
+DO NOT spam jumpscares.
+
+DO NOT turn Mara into a conventional monster.
+
+DO NOT explain her species.
+
+DO NOT create a boss battle.
+
+DO NOT make all horror red/glitchy/bloody.
+
+DO NOT make Mara omniscient.
+
+DO NOT make supporting characters exist only to explain Mara.
+
+DO NOT pad 12 days with repeated interactions.
+
+DO NOT use stolen/copyrighted sound effects.
+
+DO NOT introduce audio assets with unknown licenses.
+
+DO NOT destroy player save files for fake corruption effects.
+
+DO NOT sacrifice the cozy game to accelerate toward horror.
+
+
+==================================================
+FINAL QUALITY TEST
+==================================================
+
+The most important test for Chapter 1 is:
+
+DISABLE EVERY SUPERNATURAL EVENT.
+
+Would somebody still enjoy playing Days 1–12?
+
+Would they:
+
+- have favourite characters?
+- enjoy Mara?
+- remember locations?
+- recognize music?
+- care about their bedroom?
+- want to go on dates?
+- enjoy exploring?
+- have funny moments?
+- become attached to their routines?
+
+If NO:
+
+Chapter 1 is not finished.
+
+The horror depends on the answer being YES.
+
+
+SECOND TEST:
+
+After enabling horror again:
+
+Does changing ONE tiny familiar detail make the player uncomfortable?
+
+If NO:
+
+the normal world is not yet consistent or memorable enough.
+
+
+THIRD TEST:
+
+Does Mara feel like a specific human character who happens to be something impossible?
+
+Or does she feel like a generic AI-written yandere?
+
+If generic:
+
+rewrite her.
+
+
+==================================================
+DELIVERABLE
+==================================================
+
+Build the actual playable twelve-day Chapter 1 production pass.
+
+Do not stop after planning.
+
+Implement.
+
+Play it.
+
+Find weak parts.
+
+Rewrite them.
+
+Test again.
+
+Fix visual problems.
+
+Fix audio problems.
+
+Fix pacing.
+
+Fix repetition.
+
+Then commit the completed production pass to the repository with an accurate summary of:
+
+- what became playable
+- what content was added
+- what remains unfinished
+- known bugs
+- QA results
+
+Do not begin Chapter 2 until Chapter 1 passes the quality tests above.
+
+
+
+Worked for 18s
+
+Yeah — that’s already in the game, and I’d absolutely keep expanding it.
+
+Right now each main character has their own dialogue typing profile: different text speed, how often their voice bleep plays, and how long they pause at commas vs full stops. For example, Nia types very quickly, Theo is pretty fast, Iris and Sam are slower, Mara is slower/more deliberate, and narration barely bleeps at all. Mara also gets a special “still” profile where her typing becomes much slower and the punctuation pauses become unnaturally long.
+
+So yes, I’d want every important person to eventually be recognizable even without looking at the portrait.
+
+I’d push it further than it currently does, though. Each character should have a unique combination of:
+
+typing cadence
+
+punctuation pauses
+
+little pitch/timbre of their dialogue bleep
+
+how many characters occur between bleeps
+
+whether they accelerate through excited sentences
+
+whether hesitation creates actual pauses
+
+whether commas feel quick or thoughtful
+
+occasional characteristic sound variation
+
+
+Like Nia should feel fast and energetic, almost racing through sentences. Theo quick and clipped. Iris slower and dry, with longer deliberate pauses. June slightly uneven because she hesitates then suddenly talks faster. Ren controlled and sparse. Sam relaxed and slow.
+
+And Mara should probably have the most sophisticated one because her typewriter itself can become part of the horror.
+
+Normal happy Mara might type slightly faster than usual.
+
+Embarrassed Mara could type in little bursts:
+
+I was just— pause I mean, I wasn't waiting.
+
+Crying Mara could have irregular long pauses.
+
+Furious Mara could suddenly type way faster than anyone else, barely respecting punctuation.
+
+Then when she becomes still, everything changes:
+
+very slow letters
+long punctuation pauses
+fewer voice bleeps
+eventually no bleeps at all
+
+So you could have been hearing Mara's little voice sound for 15 hours, and then one dialogue box appears where her letters type out in absolute silence.
+
+That would be creepy as fuck without needing any visual effect.
+
+And I’d add this to the Codex brief explicitly: character typewriter/voice profiles should be treated as character identity, not just accessibility settings. The user's text-speed setting can multiply the speed globally, but it shouldn't erase the relative personality differences between characters.
+
+Add random easter eggs for stuff If u can too 
+Make a shit massive roster of stuff u cah use for assets etc but remembering it all etc sk yah
+
+
+Ad

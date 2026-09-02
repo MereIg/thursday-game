@@ -4,6 +4,12 @@
 
 ## Play
 
+Geometry hardening v4: all existing rooms have separate collision/interaction
+layers, fixed-foot sprites and foreground occlusion. Press F2 to inspect them.
+See [asset/geometry standards](ASSET_SPEC.md), [QA results](QA_REPORT.md), and
+[current limitations](DEVELOPMENT_STATUS.md). Full production briefs: `docs/briefs/`.
+This update does not claim that twelve days of finished story content exist.
+
 Run a local web server from this directory:
 
 ```powershell
@@ -29,13 +35,13 @@ Audio begins after the first click or keypress, as required by browsers. Headpho
 
 The current development build runs a twelve-day opening calendar with a free-roaming home, college and town; seven scheduled characters; original character bleeps and typing cadences; relationships; quests, shopping and room customization; messages; date scenes; rare events; stalking and investigation. There are three manual save slots plus autosave, migrated legacy saves and a persistent settings panel. The calendar is playable, but it is not yet twelve days of content-complete writing. The story never supplies Mara with a surname or explains what she is.
 
-All generated PNG masters and runtime WebPs are committed in `assets/`. The v3 pass adds 23 master images: canonical Mara, pixel-style character sheets, seven interiors and three altered locations. This is generated art under ongoing direction, not a claim of completed hand-pixelled production art. See [assets/README.md](assets/README.md) for the manifest and [latest screenshots](outputs/screenshots/foundation-v3) for actual browser captures.
+All generated PNG sources, fixed-grid production character masters and runtime WebPs are committed in `assets/`. The current pass fits new street source art to authored geometry and locks character exports against accidental frame normalization. This is generated art under ongoing direction, not a claim of completed hand-pixelled production art. See [assets/README.md](assets/README.md) for the manifest and [latest screenshots](outputs/screenshots/geometry) for actual browser captures.
 
-[Play the review build](https://mereig.github.io/thursday-game/). The browser build is a convenient review target; a desktop package is still planned. Master PNGs are kept in Git but are not downloaded by the game. The current runtime image library is approximately 5.63 MiB.
+[Play the review build](https://mereig.github.io/thursday-game/). The browser build is a convenient review target; a desktop package is still planned. Source/master files are kept in Git but are not downloaded by the game. The current runtime image library is approximately 5.68 MiB.
 
 Use `npm run check` for validation and regression tests. Phone portrait controls are placed below the canvas; landscape is recommended for readable dialogue. Physical mobile-device QA remains outstanding.
 
-The downloadable ZIP under `outputs/` contains the runtime and documentation. Rebuilding art requires the full repository's PNG masters and Pillow; those masters are intentionally omitted from the small ZIP.
+The downloadable ZIP under `outputs/` contains the runtime, regression tests and documentation. Rebuilding art requires the full repository's fixed-grid production masters, PNG scene sources and Pillow; those masters are intentionally omitted from the small ZIP.
 
 Project documentation:
 

@@ -4,11 +4,14 @@ import { readFileSync, existsSync } from "node:fs";
 import vm from "node:vm";
 import * as data from "../src/data.js";
 import * as ambient from "../src/content/ambient.js";
+import * as geometry from "../src/geometry.js";
+import * as streetArt from "../src/street-art.js";
 
-const storage=new Map(), calls=[];
-const element={dataset:{},classList:{add(){}},addEventListener(){},getContext(){return{};}};
+const storage=new Map(), calls=[],drawCalls=[];
+const drawing=new Proxy({},{get:(target,name)=>target[name]||(name==="measureText"?(text)=>({width:text.length*8}):(...args)=>drawCalls.push([name,...args]))});
+const element={dataset:{},classList:{add(){}},addEventListener(){},getContext(){return drawing;}};
 const context=vm.createContext({
-  ...data,...ambient, URL,URLSearchParams,console,Math,Date,Uint8Array,Int32Array,
+  ...data,...ambient,...geometry,...streetArt, URL,URLSearchParams,console,Math,Date,Uint8Array,Int32Array,
   location:{search:""},performance:{now:()=>0},window:{},
   document:{querySelector:()=>element,querySelectorAll:()=>[],createElement:()=>element},
   localStorage:{getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value)},
@@ -80,5 +83,57 @@ test("instant dialogue reveals all text without a voice burst",()=>{
 test("annex finale is gated until day twelve",()=>{
   game.state=newState();game.state.day=11;game.state.flags.boxSeen=true;game.state.flags.photosSeen=true;game.redDoor();assert.equal(game.state.flags.redDoorSeen,undefined);
   game.state.day=12;game.redDoor();assert.equal(game.state.flags.redDoorSeen,true);assert.equal(game.state.chapterComplete,false);
+});
+test("every map transition lands at a valid authored entry",()=>{
+  for(const [id,map] of Object.entries(data.MAPS))for(const exit of map.exits){
+    game.state=newState();game.state.map=id;game.state.player={...map.spawn};game.changeMap(exit);
+    assert.equal(game.state.map,exit.to);assert.ok(geometry.canStand(data.MAPS[exit.to],game.state.player),`${id} -> ${exit.to}`);
+  }
+});
+test("old saves blocked by new furniture recover without rewriting the saved file",()=>{
+  game.state=newState();delete game.state.geometryVersion;game.state.player={x:120,y:200,facing:"up"};game.save(true,1);
+  const original=storage.get("mara-save-v2-1");game.load(1);
+  assert.ok(geometry.canStand(data.MAPS.bedroom,game.state.player));assert.equal(game.state.geometryVersion,1);
+  assert.equal(storage.get("mara-save-v2-1"),original);
+});
+test("QA scenes do not overwrite real autosaves",()=>{
+  const original=storage.get("mara-autosave-v2");game.qaSession=true;game.state.money=999;game.save(false);
+  assert.equal(storage.get("mara-autosave-v2"),original);game.qaSession=false;
+});
+test("talking pins an NPC until the scene ends when the timetable changes",()=>{
+  game.state=newState();game.state.map="classroom";game.state.time=715;game.sceneActors=null;game.poseAudit=null;
+  const before=game.getNPCs().find(n=>n.id==="iris");game.talkTo("iris");
+  assert.equal(game.state.time,725);assert.equal(game.getNPCs().find(n=>n.id==="iris").x,before.x);
+  game.closeDialogue();assert.ok(!game.getNPCs().some(n=>n.id==="iris"));
+});
+test("actual sprite draw calls preserve the foot landmark across all Mara poses",()=>{
+  game.state=newState();game.mode="play";game.playerWalkTime=0;
+  for(const pose of geometry.POSE_AUDIT)for(let frame=0;frame<4;frame++){
+    drawCalls.length=0;game.renderActor={qaPose:pose,qaFrame:frame,attached:true};
+    game.drawArtSprite("mara",400,300);const draw=drawCalls.filter(c=>c[0]==="drawImage").at(-1);
+    assert.ok(draw,pose);const spec=geometry.SPRITE_SPECS[pose]||geometry.SPRITE_SPECS.mara;
+    const actualY=pose==="tremble"?draw[7]+(spec.anchor.y-116)*spec.scale:draw[7]+spec.anchor.y*spec.scale;
+    assert.ok(Math.abs(actualY-300)<.001,pose);assert.equal(draw[6]+spec.anchor.x*spec.scale,400,pose);
+  }
+  game.renderActor=null;
+});
+test("seating uses the furniture attachment and renders above its seat-back",()=>{
+  game.state=newState();game.state.map="geometrylab";game.testAttachment("chair");
+  const chair=data.MAPS.geometrylab.geometry.objects.find(o=>o.id==="chair"),mara=game.sceneActors[0];
+  assert.equal(mara.x,chair.attachments.sitAnchor.x);assert.equal(mara.y,chair.attachments.sitAnchor.y);
+  assert.ok(mara.depth>chair.ground.y);assert.equal(mara.action,"mug");
+  game.detachActor();assert.equal(game.sceneActors,null);
+});
+test("a café date keeps Mara physically seated through different dialogue expressions",()=>{
+  game.state=newState();game.state.map="cafe";game.state.relationships.mara.affection=6;game.boothAction();
+  const before=JSON.stringify(game.sceneActors[0]);game.nextDialogue();assert.equal(JSON.stringify(game.sceneActors[0]),before);
+  assert.equal(game.sceneActors[0].action,"mug");game.closeDialogue();
+});
+test("new game, travel and loading clear temporary attachment and path state",()=>{
+  game.state=newState();game.qaSession=false;game.save(true,3);
+  for(const reset of [()=>game.startNew(),()=>game.changeMap(data.MAPS.bedroom.exits[0]),()=>game.load(3)]){
+    game.poseGallery=true;game.poseAudit={index:0};game.sceneActors=[{id:"mara"}];game.attachment={objectId:"chair"};game.navigationPath=[{x:10,y:10}];game.pointerTarget={x:10,y:10};
+    reset();assert.equal(game.poseGallery,false);assert.equal(game.poseAudit,null);assert.equal(game.sceneActors,null);assert.equal(game.attachment,null);assert.equal(game.pointerTarget,null);assert.equal(game.navigationPath.length,0);
+  }
 });
 console.log(`${tests} logic regression checks passed. Visual and audio inspection remain separate.`);

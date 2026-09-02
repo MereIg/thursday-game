@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "serve": "python -m http.server 4173",
-    "check": "node --check src/game.js && node --check src/audio.js && node --check src/content/ambient.js && node src/validate.mjs && node scripts/test_game.mjs",
+    "check": "node --check src/game.js && node --check src/audio.js && node --check src/content/ambient.js && node src/validate.mjs && node scripts/test_game.mjs && node scripts/test_geometry.mjs && node scripts/test_assets.mjs",
+    "audit:assets": "python scripts/audit_geometry_assets.py",
     "art:web": "python scripts/build_web_art.py"
   }
 }

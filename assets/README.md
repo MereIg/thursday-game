@@ -1,5 +1,19 @@
 # MARA art library
 
+## Geometry v4 — current production policy
+
+The active 14 character sheets now rebuild unchanged from `production/characters/`.
+They are lossless, fixed-canvas, pixel-editable masters. No alpha-box cropping,
+per-pose normalization or automatic centring remains in the production builder.
+Large generated PNGs remain as source/reference history; they are not automatically
+valid future sheet templates. Read `../ASSET_SPEC.md` before editing/importing art.
+
+New street source: `scenes/mallow-street-geometry-v4.png`; built-in image-generation
+prompt: `scenes/mallow-street-geometry-prompt.md`. Its source pieces are fitted to
+existing geometry by `src/street-art.js`. Runtime: 51 images, approximately 5.68 MiB.
+`web/integrity.json` and `outputs/geometry-asset-audit.json` record the reviewed files.
+The v3 conversion description below is historical; it is no longer the build path.
+
 All art used by the project is committed here. Nothing is hotlinked. Full PNG files are editable source masters; `web/` contains the deterministic runtime assets. Older v1/v2 masters and builds remain for comparison. The v3 inventory below supersedes earlier counts.
 
 ## Foundation v3 — active replacements

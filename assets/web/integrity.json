@@ -1,0 +1,637 @@
+{
+  "version": 1,
+  "specs": {
+    "player": {
+      "art": "alexWalk",
+      "cols": 4,
+      "rows": 4,
+      "cell": {
+        "w": 64,
+        "h": 80
+      },
+      "anchor": {
+        "x": 32,
+        "y": 78
+      },
+      "scale": 1
+    },
+    "mara": {
+      "art": "maraWalk",
+      "cols": 4,
+      "rows": 4,
+      "cell": {
+        "w": 64,
+        "h": 80
+      },
+      "anchor": {
+        "x": 32,
+        "y": 78
+      },
+      "scale": 1
+    },
+    "cast": {
+      "art": "castDirections",
+      "cols": 4,
+      "rows": 6,
+      "cell": {
+        "w": 64,
+        "h": 80
+      },
+      "anchor": {
+        "x": 32,
+        "y": 78
+      },
+      "scale": 1
+    },
+    "mug": {
+      "art": "maraActionsEveryday",
+      "index": 0,
+      "cols": 3,
+      "rows": 2,
+      "cell": {
+        "w": 112,
+        "h": 160
+      },
+      "anchor": {
+        "x": 44,
+        "y": 157
+      },
+      "scale": 0.4
+    },
+    "phone": {
+      "art": "maraActionsEveryday",
+      "index": 1,
+      "cols": 3,
+      "rows": 2,
+      "cell": {
+        "w": 112,
+        "h": 160
+      },
+      "anchor": {
+        "x": 53,
+        "y": 157
+      },
+      "scale": 0.5
+    },
+    "read": {
+      "art": "maraActionsEveryday",
+      "index": 2,
+      "cols": 3,
+      "rows": 2,
+      "cell": {
+        "w": 112,
+        "h": 160
+      },
+      "anchor": {
+        "x": 55,
+        "y": 157
+      },
+      "scale": 0.5
+    },
+    "wave": {
+      "art": "maraActionsEveryday",
+      "index": 3,
+      "cols": 3,
+      "rows": 2,
+      "cell": {
+        "w": 112,
+        "h": 160
+      },
+      "anchor": {
+        "x": 55,
+        "y": 157
+      },
+      "scale": 0.5
+    },
+    "hugSelf": {
+      "art": "maraActionsEveryday",
+      "index": 4,
+      "cols": 3,
+      "rows": 2,
+      "cell": {
+        "w": 112,
+        "h": 160
+      },
+      "anchor": {
+        "x": 51,
+        "y": 157
+      },
+      "scale": 0.5
+    },
+    "stand": {
+      "art": "maraActionsEveryday",
+      "index": 5,
+      "cols": 3,
+      "rows": 2,
+      "cell": {
+        "w": 112,
+        "h": 160
+      },
+      "anchor": {
+        "x": 56,
+        "y": 157
+      },
+      "scale": 0.5
+    },
+    "wipeTears": {
+      "art": "maraActionsDistress",
+      "index": 0,
+      "cols": 3,
+      "rows": 2,
+      "cell": {
+        "w": 112,
+        "h": 160
+      },
+      "anchor": {
+        "x": 57,
+        "y": 157
+      },
+      "scale": 0.5
+    },
+    "tremble": {
+      "art": "maraActionsDistress",
+      "index": 1,
+      "cols": 3,
+      "rows": 2,
+      "cell": {
+        "w": 112,
+        "h": 160
+      },
+      "anchor": {
+        "x": 54,
+        "y": 157
+      },
+      "scale": 0.5
+    },
+    "collapse": {
+      "art": "maraActionsDistress",
+      "index": 2,
+      "cols": 3,
+      "rows": 2,
+      "cell": {
+        "w": 112,
+        "h": 160
+      },
+      "anchor": {
+        "x": 40,
+        "y": 156
+      },
+      "scale": 0.34
+    },
+    "clutchSleeve": {
+      "art": "maraActionsDistress",
+      "index": 3,
+      "cols": 3,
+      "rows": 2,
+      "cell": {
+        "w": 112,
+        "h": 160
+      },
+      "anchor": {
+        "x": 54,
+        "y": 157
+      },
+      "scale": 0.5
+    },
+    "angryCry": {
+      "art": "maraActionsDistress",
+      "index": 4,
+      "cols": 3,
+      "rows": 2,
+      "cell": {
+        "w": 112,
+        "h": 160
+      },
+      "anchor": {
+        "x": 57,
+        "y": 157
+      },
+      "scale": 0.5
+    },
+    "abruptStill": {
+      "art": "maraActionsDistress",
+      "index": 5,
+      "cols": 3,
+      "rows": 2,
+      "cell": {
+        "w": 112,
+        "h": 160
+      },
+      "anchor": {
+        "x": 55,
+        "y": 157
+      },
+      "scale": 0.5
+    }
+  },
+  "files": [
+    {
+      "path": "assets/web/characters/alex-walk.webp",
+      "width": 256,
+      "height": 320,
+      "bytes": 43144,
+      "sha256": "d5068254294f448574934cf04a8361113933281ebf921d1a394a2e16678b5234",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/characters/cast-directions.webp",
+      "width": 256,
+      "height": 480,
+      "bytes": 71996,
+      "sha256": "f4b1b60a75c1cbe67bb66003cf865dcf2446eedb94ac6e4e0cf1a9105ba0d2a3",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/characters/cast-portraits-concerned-pixel-v3.webp",
+      "width": 384,
+      "height": 256,
+      "bytes": 98890,
+      "sha256": "557f325b65615d5febe47b2b97750f27337abf51c2b8c12b5acc9200ba11dc72",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/characters/cast-portraits-concerned-v2.webp",
+      "width": 384,
+      "height": 256,
+      "bytes": 26276,
+      "sha256": "6873b344c1563591c90cf2529347acf04b237781270fcfe500c2c233eae1ec2a",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/characters/cast-portraits-happy-pixel-v3.webp",
+      "width": 384,
+      "height": 256,
+      "bytes": 103804,
+      "sha256": "eeef60930d8d35c5e086837d6bd0aa92f295343508e55080ae395faae56131a1",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/characters/cast-portraits-happy-v2.webp",
+      "width": 384,
+      "height": 256,
+      "bytes": 28818,
+      "sha256": "62bd07f607758303c07dec7aadd7df7c0f30ee273d163c50ee83c15eb1cb16b7",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/characters/cast-portraits-neutral-pixel-v3.webp",
+      "width": 384,
+      "height": 256,
+      "bytes": 100114,
+      "sha256": "59bc61ccd237f2d55c3309169acbb29b72b541f876148997bdaadd2f7cf00ab2",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/characters/cast-portraits.webp",
+      "width": 384,
+      "height": 256,
+      "bytes": 46788,
+      "sha256": "5b08cd46b8e8b0b332cdd0a8fca460e2586533c06b4287d32c78786db9e6509f",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/characters/mara-actions-distress-pixel-v3.webp",
+      "width": 336,
+      "height": 320,
+      "bytes": 80348,
+      "sha256": "6b80cd913c5bba0d8f998a939a9550cf7179a7f414aa14c4ffc743d70fe7c096",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/characters/mara-actions-distress-v2.webp",
+      "width": 224,
+      "height": 480,
+      "bytes": 50180,
+      "sha256": "a3aba8aec4a7e28ceb1d170ae9f35b6ce781a0e0f5b29b6a9aebb622503d0c9f",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/characters/mara-actions-everyday-pixel-v3.webp",
+      "width": 336,
+      "height": 320,
+      "bytes": 68746,
+      "sha256": "39c83a54497b5afd168d7d61f7a36f553487450ba76a9d934f97ad78a2382e9d",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/characters/mara-actions-everyday-v2.webp",
+      "width": 224,
+      "height": 480,
+      "bytes": 37298,
+      "sha256": "4769816b35bb8ec89f6991da27e8645c0e47cf84c48c7388e80fc618ea2d0645",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/characters/mara-portraits-anomalies-v2.webp",
+      "width": 256,
+      "height": 384,
+      "bytes": 67212,
+      "sha256": "fa4efbdc9afea6897e98aeb3d404fd5f54bdbb116755bc1319a8826a0a50fcc7",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/characters/mara-portraits-anomaly-pixel-v3.webp",
+      "width": 256,
+      "height": 384,
+      "bytes": 104490,
+      "sha256": "9dac06ad77ab9281b54116fd660e09bee2893082f87e6bd22b729ef4e7d9f87f",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/characters/mara-portraits-intense-pixel-v3.webp",
+      "width": 256,
+      "height": 384,
+      "bytes": 110836,
+      "sha256": "8afba8d072a2652c543e8fffebedf580d66c6fa1e7368702ce8d9f2948b7545e",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/characters/mara-portraits-intense-v2.webp",
+      "width": 256,
+      "height": 384,
+      "bytes": 68720,
+      "sha256": "f2e855dc428cd49efc4e3c026816f8ddfe6f779682f81517ef5e251ff24f480d",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/characters/mara-portraits-jealous-pixel-v3.webp",
+      "width": 256,
+      "height": 384,
+      "bytes": 115334,
+      "sha256": "4d562fe2811c73a9006dbacf9528c39fcc1f4b8a2eb24975c42e945e9cee60ee",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/characters/mara-portraits-jealous-v2.webp",
+      "width": 256,
+      "height": 384,
+      "bytes": 65750,
+      "sha256": "8866c4bd8ac21b590e62e3ee8ef119713d917b0d5dbf671b3d599519236f51a2",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/characters/mara-portraits-romance-pixel-v3.webp",
+      "width": 256,
+      "height": 384,
+      "bytes": 108180,
+      "sha256": "e181da371d23a3e24b97736374faaae3e9e9929c67d91489d8f8ca396f558935",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/characters/mara-portraits-romance-v2.webp",
+      "width": 256,
+      "height": 384,
+      "bytes": 68314,
+      "sha256": "356fe4c1a647f24420863d86948675b55226b26c8b9d505317603544ba9e19cf",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/characters/mara-portraits-vulnerable-pixel-v3.webp",
+      "width": 256,
+      "height": 384,
+      "bytes": 107686,
+      "sha256": "4f1728b5530ec09aa92c788656d9648de33ad327e38be01f14ff94e885164afa",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/characters/mara-portraits-vulnerable-v2.webp",
+      "width": 256,
+      "height": 384,
+      "bytes": 67540,
+      "sha256": "a2359a6611f0eeaa1dcfcb31d4287f52fe6346106295a9cea37aa75e3903a887",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/characters/mara-portraits-warm-pixel-v3.webp",
+      "width": 256,
+      "height": 384,
+      "bytes": 109918,
+      "sha256": "5ade77d2b0b93b0a7a545c6f4bc4233ee2f0212579913f65a88c1b27bf096f7b",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/characters/mara-portraits-warm-v2.webp",
+      "width": 256,
+      "height": 384,
+      "bytes": 67124,
+      "sha256": "35690bcf81c0725ed4bd775b671eaa874f2f2b419e89594d6392d4923f8c74d0",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/characters/mara-walk-pixel-v3.webp",
+      "width": 256,
+      "height": 320,
+      "bytes": 69118,
+      "sha256": "c7055680c40583bc548713f002f342c7e45b65b6811c170b395478c7d0354084",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/characters/mara-walk.webp",
+      "width": 256,
+      "height": 320,
+      "bytes": 54452,
+      "sha256": "e2b6a9d204b0dc4b68a9c6d0f6659f9ac98396298b3b29bea61eaf4b53dfe2b2",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/environment/furniture-atlas.webp",
+      "width": 1402,
+      "height": 1122,
+      "bytes": 1680256,
+      "sha256": "2cc15dd4ce81f7193765bcedac77df8f31d53adb6a4ed12e4baef26a2eb2c17f",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/environment/material-atlas.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 83060,
+      "sha256": "f37d3e930dac54842c6a2a4ce557a140e4ee3b785e99fea9d6ca058220b7c28d",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/environment/outdoor-atlas.webp",
+      "width": 1402,
+      "height": 1122,
+      "bytes": 1437550,
+      "sha256": "f06382b1ffed64c504319a77cc503792d30b00e16125e1f233cf73cdac5cecaf",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/scenes/arcade-v2.webp",
+      "width": 480,
+      "height": 270,
+      "bytes": 49116,
+      "sha256": "8843f806c20b8ebbc4064447243ae741a7228dff9db5a3f138ad935c40d87a2f",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/scenes/archive-annex-v3.webp",
+      "width": 480,
+      "height": 270,
+      "bytes": 21402,
+      "sha256": "b38b9e926dbdcc952f9cdc73e2de7a13aa02170aa61259df256c8b81c427c706",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/scenes/archive-corridor-v3.webp",
+      "width": 480,
+      "height": 270,
+      "bytes": 24726,
+      "sha256": "330a000e52554a2557663f0cecbda652b01694d4b6a8f8f11b139017a2c0e93d",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/scenes/bedroom-shifted-v2.webp",
+      "width": 480,
+      "height": 270,
+      "bytes": 32420,
+      "sha256": "01eeaf256edf57d91d255abfbee207b42c8cf166379d044aa4c453dccde47416",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/scenes/bedroom-v2.webp",
+      "width": 480,
+      "height": 270,
+      "bytes": 35490,
+      "sha256": "de599d42fe9a69e32139ed623c68659e95f396ec5d05bcdac5883a840ba990b4",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/scenes/cafe-shifted-v3.webp",
+      "width": 480,
+      "height": 270,
+      "bytes": 37826,
+      "sha256": "35b1dc8cd7b4eeb5f0f19c8d3ee030e5e9d5ff731b481c6e6fda7fc0ac65e3af",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/scenes/cafe-v2.webp",
+      "width": 480,
+      "height": 270,
+      "bytes": 38070,
+      "sha256": "a393f2ec26e6c805f14aef174b579981ab2d5a16192c4a18185828ab974a638b",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/scenes/cafeteria-v3.webp",
+      "width": 480,
+      "height": 270,
+      "bytes": 38204,
+      "sha256": "c03d62741030869cad6f49524b57c0de6dc04fa67078a159723fd286fe698249",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/scenes/college-hall-shifted-v2.webp",
+      "width": 480,
+      "height": 270,
+      "bytes": 38048,
+      "sha256": "00ef50df77d7bbff9c4c1ca6454519b5a0e2bc4156422c16d3c26bdd4320798a",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/scenes/college-hall-v2.webp",
+      "width": 480,
+      "height": 270,
+      "bytes": 39924,
+      "sha256": "6fe080fe933119c8beca23338201f50b2597638024e3b694b0d33567416b97d3",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/scenes/east-hall-v3.webp",
+      "width": 480,
+      "height": 270,
+      "bytes": 27136,
+      "sha256": "91e95913910b8736921bef61270e2649887867c856e69d9a97b1bbbe0861649c",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/scenes/high-street-rain-v2.webp",
+      "width": 480,
+      "height": 270,
+      "bytes": 43198,
+      "sha256": "197c7f219b25c4dc8ceee7bee35677f0bc77ca4b22761614afef05d3e5b4f721",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/scenes/library-shifted-v3.webp",
+      "width": 480,
+      "height": 270,
+      "bytes": 38848,
+      "sha256": "e8bf55552e99b89e706aaf3a23acc9d063cdde88b3eb2f639da542f215c69153",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/scenes/library-v2.webp",
+      "width": 480,
+      "height": 270,
+      "bytes": 40582,
+      "sha256": "33ff67f1900b91853cf575329d65bfa14e76f54e1718a0a14dc2a5b775c722cc",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/scenes/mallow-street-geometry-v4.webp",
+      "width": 480,
+      "height": 270,
+      "bytes": 49208,
+      "sha256": "1828727b324722ada37d701c770992bb96d8b94a84e901d724e835a3bb94bc6f",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/scenes/music-room-v3.webp",
+      "width": 480,
+      "height": 270,
+      "bytes": 29710,
+      "sha256": "da30d668392f3139b6b1a48e96379affd28e8f1a93866aafc369734642ceff23",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/scenes/park-rain-v2.webp",
+      "width": 480,
+      "height": 270,
+      "bytes": 60262,
+      "sha256": "65508d9c5da09d6801ab7b53f1718d1390c1b304f44ffa4b076b0fe342c2301f",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/scenes/rowan-house-v3.webp",
+      "width": 480,
+      "height": 270,
+      "bytes": 38672,
+      "sha256": "ee6d78ff49ad9c824c94f6d5f26080d2a315aa3fa6be41b56706b3f796aa350b",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/scenes/seminar-room-v3.webp",
+      "width": 480,
+      "height": 270,
+      "bytes": 26980,
+      "sha256": "a96dc25c960f2fc1838d173414254e7ef9b833ee0331b2fcbca25da72d45ec23",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/scenes/station-rain-v2.webp",
+      "width": 480,
+      "height": 270,
+      "bytes": 42128,
+      "sha256": "b4f8c7a18a2e385ab4d11748b1fda3fc8d75712868b691c119d8d89a45b4794d",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/scenes/station-shifted-v3.webp",
+      "width": 480,
+      "height": 270,
+      "bytes": 36232,
+      "sha256": "8ba6c639180aef00339159975ab2c903a4689aa3e9f2b8c481c39ecbfbd0d930",
+      "role": "runtime"
+    },
+    {
+      "path": "assets/web/title/mara-bedroom-v2.webp",
+      "width": 320,
+      "height": 180,
+      "bytes": 22928,
+      "sha256": "110260b7c313014ebc0ec8f43360f1da0ad869a8832f498452e16c746093ac02",
+      "role": "runtime"
+    }
+  ]
+}

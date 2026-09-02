@@ -7,7 +7,9 @@ OUTPUT = ROOT / "outputs" / "MARA-playable-opening.zip"
 files = [ROOT / name for name in (
     "index.html", "styles.css", "README.md", "GAME_DESIGN.md",
     "DEVELOPMENT_STATUS.md", "ORIGINAL_VISION.md", "QA_REPORT.md", "ART_PROMPTS.md",
-    "REFERENCE_NOTES.md", "package.json", "assets/README.md", "scripts/test_game.mjs",
+    "REFERENCE_NOTES.md", "ASSET_SPEC.md", "package.json", "assets/README.md",
+    "scripts/test_game.mjs", "scripts/test_geometry.mjs", "scripts/test_assets.mjs",
+    "assets/web/integrity.json",
 )]
 files += sorted((ROOT / "src").rglob("*.js"))
 files += sorted((ROOT / "src").rglob("*.mjs"))

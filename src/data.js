@@ -1,3 +1,5 @@
+import { installWorldGeometry } from "./geometry-world.js?v=geometry1";
+
 export const PALETTE = {
   ink: "#1b1930", deep: "#10101e", cream: "#fff3da", paper: "#f3dfbe",
   plum: "#4d3554", rose: "#c95f78", blush: "#e9a3a1", rust: "#9b4d4f",
@@ -490,3 +492,5 @@ export const DAY_CARDS = [
   {day:11,title:"THURSDAY",sub:"Mara hates Thursdays."},
   {day:12,title:"FRIDAY",sub:"Some doors remember being opened."}
 ];
+
+installWorldGeometry(MAPS);
