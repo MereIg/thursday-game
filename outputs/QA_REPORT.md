@@ -1,4 +1,6 @@
-# THURSDAY — QA Report
+# MARA — archived QA report
+
+This is the earlier QA snapshot. See the root-level `QA_REPORT.md` for the September pixel-art pass.
 
 Test date: 2 September 2026
 

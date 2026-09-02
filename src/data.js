@@ -362,7 +362,7 @@ export const CHARACTER_TALK = {
 export const MARA_TALKS = [
   {
     condition:s=>!s.flags.metMara,
-    expression:"shy",
+    expression:"awkward",
     text:"Hey—sorry. Are you Alex?",
     choices:[
       {text:"That's me.",reply:"Yeah. I know. Sorry. I'm Mara.",affection:2,flag:"metMara"},
@@ -372,7 +372,7 @@ export const MARA_TALKS = [
   },
   {
     condition:s=>s.flags.metMara && s.relationships.mara.talks<2,
-    expression:"shy",
+    expression:"embarrassed",
     text:"Is the radiator seat free at lunch? I thought maybe we could—it's fine if you're waiting for someone.",
     choices:[
       {text:"How do you know where I sit?",reply:"I saw you yesterday. I wasn't hiding. I just didn't come over.",suspicion:1},
@@ -382,7 +382,7 @@ export const MARA_TALKS = [
   },
   {
     condition:s=>s.flags.maraIrisJealous && !s.flags.jealousTalk,
-    expression:"cry",
+    expression:"quietCry",
     text:"About yesterday... I was weird. I know I was weird.",
     choices:[
       {text:"It's okay.",reply:"No, it isn't. But thank you for saying it.",jealousy:1,flag:"jealousTalk"},
@@ -392,7 +392,7 @@ export const MARA_TALKS = [
   },
   {
     condition:s=>s.day>=4 && s.flags.maraIrisJealous && !s.flags.lateJealousTalk,
-    expression:"jealous",
+    expression:"forcedSmile",
     text:"Iris won't look at me now. I only said hello.",
     choices:[
       {text:"What did you say?",reply:"I told her you come home alone on Tuesdays. She understood.",jealousy:4,fear:2,flag:"lateJealousTalk",expression:"still",demonHint:"horn",demonHintAt:.55},
@@ -402,7 +402,7 @@ export const MARA_TALKS = [
   },
   {
     condition:s=>s.day>=3 && s.relationships.mara.affection>=4 && !s.flags.maraWalk,
-    expression:"shy",
+    expression:"concerned",
     text:"Can I walk with you? Just to Mallow Street. I can be quiet if you want.",
     choices:[
       {text:"I'd like that.",reply:"Okay. Good. Sorry—my hands are shaking.",affection:4,flag:"maraWalk"},
@@ -412,7 +412,7 @@ export const MARA_TALKS = [
   },
   {
     condition:s=>s.day>=4 && !s.flags.thursdayLine,
-    expression:"still",
+    expression:"tooStill",
     text:"You look tired. Thursdays always do this to you.",
     choices:[
       {text:"It's Wednesday.",reply:"...Right. Sorry. I hate Thursdays.",suspicion:2,flag:"thursdayLine"},
@@ -422,6 +422,7 @@ export const MARA_TALKS = [
   },
   {
     condition:s=>true,
+    expression:"happy",
     text:"Hi. I was going to text you, but then you were actually here.",
     choices:[
       {text:"That's sweet.",reply:"I missed you. It was only a few hours. I know.",affection:2},
@@ -432,22 +433,22 @@ export const MARA_TALKS = [
 ];
 
 export const RANDOM_EVENTS = [
-  {id:"ownNumber",minDay:2,weight:2,cooldown:2,places:["bedroom"],text:"A notification appears from your own number: “don't forget the window”. It deletes itself.",flag:"ownNumber"},
-  {id:"cameraFigure",minDay:2,weight:3,cooldown:1,places:["park","street","college"],text:"Your phone camera opens in your pocket. For one frame, someone is standing behind you.",flag:"cameraFigure"},
-  {id:"emptyCorner",minDay:3,weight:2,cooldown:3,places:["classroom"],text:"Everyone is staring at the same empty corner. Nia laughs. Conversation resumes. Nobody explains.",flag:"emptyCorner"},
-  {id:"trainMara",minDay:2,weight:3,cooldown:2,places:["highstreet","station"],text:"A train passes. Mara is visible through one window, looking directly at you. The next carriage is empty.",flag:"trainMara"},
-  {id:"lightOn",minDay:3,weight:4,cooldown:2,places:["street"],text:"Your bedroom light is already on. You are certain you turned it off.",flag:"lightOn"},
-  {id:"wrongSong",minDay:2,weight:4,cooldown:1,places:["cafe","arcade"],text:"The song playing overhead begins halfway through a melody you recognise but cannot name.",flag:"wrongSong",motif:true},
-  {id:"missingDay",minDay:4,weight:1,cooldown:4,places:["college"],text:"Theo is absent all day. Nobody, including his lecturers, remembers his name. Tomorrow he will complain about homework.",flag:"theoMissingDay"},
-  {id:"windowKnock",minDay:3,weight:2,cooldown:3,places:["bedroom"],night:true,text:"Three soft knocks touch the bedroom window. You are on the first floor.",flag:"windowKnock"},
-  {id:"wrongReflection",minDay:3,weight:2,cooldown:3,places:["cafe","cafeteria"],text:"In the dark glass, Mara's reflection is smiling. Mara herself is not there.",flag:"wrongReflection"},
-  {id:"doorInside",minDay:4,weight:1,cooldown:4,places:["bedroom"],night:true,text:"You hear your bedroom door open behind you. You are facing the only door. It remains closed.",flag:"doorInside"}
+  {id:"wrongSong",minDay:3,weight:3,cooldown:2,places:["cafe","arcade"],text:"The song playing overhead begins halfway through a melody you recognise but cannot name.",flag:"wrongSong",motif:true},
+  {id:"ownNumber",minDay:4,weight:2,cooldown:2,places:["bedroom"],text:"A notification appears from your own number: “don't forget the window”. It deletes itself.",flag:"ownNumber"},
+  {id:"cameraFigure",minDay:4,weight:2,cooldown:2,places:["park","street","college"],text:"Your phone camera opens in your pocket. For one frame, someone is standing behind you.",flag:"cameraFigure"},
+  {id:"emptyCorner",minDay:4,weight:2,cooldown:3,places:["classroom"],text:"Everyone is staring at the same empty corner. Nia laughs. Conversation resumes. Nobody explains.",flag:"emptyCorner"},
+  {id:"trainMara",minDay:4,weight:2,cooldown:2,places:["highstreet","station"],text:"A train passes. Mara is visible through one window, looking directly at you. The next carriage is empty.",flag:"trainMara"},
+  {id:"lightOn",minDay:4,weight:3,cooldown:2,places:["street"],text:"Your bedroom light is already on. You are certain you turned it off.",flag:"lightOn"},
+  {id:"wrongReflection",minDay:4,weight:1,cooldown:3,places:["cafe","cafeteria"],text:"In the dark glass, Mara's reflection is smiling. Mara herself is not there.",flag:"wrongReflection"},
+  {id:"missingDay",minDay:5,weight:1,cooldown:4,places:["college"],text:"Theo is absent all day. Nobody, including his lecturers, remembers his name. Tomorrow he will complain about homework.",flag:"theoMissingDay"},
+  {id:"windowKnock",minDay:5,weight:1,cooldown:3,places:["bedroom"],night:true,text:"Three soft knocks touch the bedroom window. You are on the first floor.",flag:"windowKnock"},
+  {id:"doorInside",minDay:5,weight:1,cooldown:4,places:["bedroom"],night:true,text:"You hear your bedroom door open behind you. You are facing the only door. It remains closed.",flag:"doorInside"}
 ];
 
 export const DAY_CARDS = [
   {day:1,title:"MONDAY",sub:"Everybody begins somewhere."},
   {day:2,title:"TUESDAY",sub:"Your routine begins to feel like yours."},
-  {day:3,title:"WEDNESDAY",sub:"The rain knows the way home."},
-  {day:4,title:"THURSDAY",sub:"You have done this before."},
+  {day:3,title:"WEDNESDAY",sub:"Remember an umbrella."},
+  {day:4,title:"THURSDAY",sub:"Something feels slightly out of place."},
   {day:5,title:"FRIDAY",sub:"Follow her. Don't let her see you."}
 ];

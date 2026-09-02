@@ -1,8 +1,8 @@
-# THURSDAY — Game Design Bible
+# MARA — Game Design Bible
 
 ## High concept
 
-**THURSDAY** is a long-form 2D psychological-horror dating/life simulator about routine becoming evidence. It begins as a warm, unusually polished college-life game. The player learns shortcuts, favourite songs, lunch rituals, friends' schedules, and the exact sound of coming home. Those comforts are never discarded when the horror arrives. They are reused against the player.
+**MARA** is a long-form 2D psychological-horror dating/life simulator about routine becoming evidence. It begins as a warm, unusually polished college-life game. The player learns shortcuts, favourite songs, lunch rituals, friends' schedules, and the exact sound of coming home. Those comforts are never discarded when the horror arrives. They are reused against the player.
 
 The campus is Bellwether College, a small post-secondary arts and humanities college in the rain-prone town of Larkspur. All students and romanceable characters are adults aged 18–23. The player character is an adult first-year transfer student whose name and pronouns can be customized in the full release. The vertical slice uses the neutral default name **Alex Rowan**.
 
@@ -213,6 +213,10 @@ No ending permanently kills Mara. No ending transforms Alex into her. Apparent v
 ## Visual direction
 
 The game uses a handcrafted pixel-adjacent look rendered through a fixed logical canvas and scaled cleanly. Cozy scenes use indigo outlines, apricot light, softened greens, lived-in clutter, high-resolution clustered-pixel portraits, and small directional character sheets. Runtime atlases provide sixteen material families, twenty furniture/evidence props and twenty outdoor/architecture assets. Collision rectangles are never treated as visible furniture. Horror rarely swaps to a new visual language. It changes one tile, holds one portrait frame, offsets a shadow, removes a background person, alters eye direction, or expands a room by eight pixels.
+
+Runtime presentation deliberately uses a lower native art resolution than the source masters. Major rooms are reduced to 480×270, the title to 320×180, portraits to 128×128 cells and walking characters to 64×80 cells, then enlarged with nearest-neighbour sampling and restricted palettes. This keeps the playable image clearly pixel-built instead of displaying smooth generated illustration directly.
+
+One Thursday campus event temporarily applies the wrong season, wrong hour and displaced horizontal image slices to a familiar hall. A single render frame replaces the room with an asymmetrical composition containing Mara's subtly incorrect portrait. There is no sting, explanation or replay; the hall remains slightly misregistered for the rest of the day.
 
 Mara belongs visually in the romance game: warm coat, leaf-shaped hair clip, expressive eyebrows, easy smile. Her inhuman frames are scarce enough that players debate them.
 

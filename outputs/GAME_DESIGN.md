@@ -1,8 +1,8 @@
-# THURSDAY — Game Design Bible
+# MARA — Game Design Bible (archived export)
 
 ## High concept
 
-**THURSDAY** is a long-form 2D psychological-horror dating/life simulator about routine becoming evidence. It begins as a warm, unusually polished college-life game. The player learns shortcuts, favourite songs, lunch rituals, friends' schedules, and the exact sound of coming home. Those comforts are never discarded when the horror arrives. They are reused against the player.
+**MARA** is a long-form 2D psychological-horror dating/life simulator about routine becoming evidence. The current canonical plan is the root-level `GAME_DESIGN.md`; this file is retained as an earlier exported snapshot.
 
 The campus is Bellwether College, a small post-secondary arts and humanities college in the rain-prone town of Larkspur. All students and romanceable characters are adults aged 18–23. The player character is an adult first-year transfer student whose name and pronouns can be customized in the full release. The vertical slice uses the neutral default name **Alex Rowan**.
 

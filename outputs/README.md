@@ -1,6 +1,6 @@
-# THURSDAY
+# MARA — archived export notes
 
-**THURSDAY** is an original 2D psychological-horror dating/life-sim vertical slice built with HTML5 Canvas and the Web Audio API. It has no external runtime dependencies and no hotlinked art.
+The current playable package is `MARA-playable-opening.zip`. Canonical instructions and documentation now live in the repository root; this file is retained as an earlier exported snapshot.
 
 ## Play
 

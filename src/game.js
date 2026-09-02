@@ -9,15 +9,41 @@ const ctx = canvas.getContext("2d", {alpha:false, desynchronized:true});
 ctx.imageSmoothingEnabled = false;
 const W=960,H=540,SAVE_KEY="thursday-save-v1";
 const ART={};
+const MARA_PORTRAIT_MAP={
+  neutral:["maraWarm",0],happy:["maraWarm",0],laugh:["maraWarm",1],shy:["maraWarm",2],embarrassed:["maraWarm",2],teasing:["maraWarm",3],affectionate:["maraWarm",4],awkward:["maraWarm",5],
+  concerned:["maraVulnerable",0],tired:["maraVulnerable",1],watery:["maraVulnerable",2],cry:["maraVulnerable",3],quietCry:["maraVulnerable",3],sobbing:["maraVulnerable",4],pleading:["maraVulnerable",5],
+  forcedSmile:["maraJealous",0],jealous:["maraJealous",1],hurt:["maraJealous",2],annoyed:["maraJealous",3],angryCry:["maraJealous",4],panic:["maraJealous",5],
+  shouting:["maraIntense",0],furious:["maraIntense",1],shocked:["maraIntense",2],still:["maraIntense",3],cold:["maraIntense",4],dissociated:["maraIntense",5],
+  excited:["maraRomance",0],proud:["maraRomance",1],flirt:["maraRomance",2],sleepy:["maraRomance",3],surprisedLove:["maraRomance",4],content:["maraRomance",5],
+  clipWrong:["maraAnomalies",0],pupilsWrong:["maraAnomalies",1],tooStill:["maraAnomalies",2],canine:["maraAnomalies",3],hornlike:["maraAnomalies",4],wrongShadow:["maraAnomalies",5]
+};
 const ART_FILES={
-  alexWalk:["../assets/characters/alex-walk.png",true],
-  maraPortraits:["../assets/characters/mara-portraits.png",true],
-  maraWalk:["../assets/characters/mara-walk.png",true],
-  castDirections:["../assets/characters/cast-directions.png",true],
-  castPortraits:["../assets/characters/cast-portraits.png",false],
-  furniture:["../assets/environment/furniture-atlas.png",false],
-  outdoor:["../assets/environment/outdoor-atlas.png",true],
-  materials:["../assets/environment/material-atlas.png",false]
+  titleMara:["../assets/web/title/mara-bedroom-v2.webp",false],
+  alexWalk:["../assets/web/characters/alex-walk.webp",false],
+  maraWalk:["../assets/web/characters/mara-walk.webp",false],
+  castDirections:["../assets/web/characters/cast-directions.webp",false],
+  castPortraits:["../assets/web/characters/cast-portraits.webp",false],
+  castHappy:["../assets/web/characters/cast-portraits-happy-v2.webp",false],
+  castConcerned:["../assets/web/characters/cast-portraits-concerned-v2.webp",false],
+  maraWarm:["../assets/web/characters/mara-portraits-warm-v2.webp",false],
+  maraVulnerable:["../assets/web/characters/mara-portraits-vulnerable-v2.webp",false],
+  maraJealous:["../assets/web/characters/mara-portraits-jealous-v2.webp",false],
+  maraIntense:["../assets/web/characters/mara-portraits-intense-v2.webp",false],
+  maraRomance:["../assets/web/characters/mara-portraits-romance-v2.webp",false],
+  maraAnomalies:["../assets/web/characters/mara-portraits-anomalies-v2.webp",false],
+  furniture:["../assets/web/environment/furniture-atlas.webp",false],
+  outdoor:["../assets/web/environment/outdoor-atlas.webp",false],
+  materials:["../assets/web/environment/material-atlas.webp",false],
+  sceneBedroom:["../assets/web/scenes/bedroom-v2.webp",false],
+  sceneBedroomShifted:["../assets/web/scenes/bedroom-shifted-v2.webp",false],
+  sceneCollege:["../assets/web/scenes/college-hall-v2.webp",false],
+  sceneCollegeShifted:["../assets/web/scenes/college-hall-shifted-v2.webp",false],
+  sceneCafe:["../assets/web/scenes/cafe-v2.webp",false],
+  scenePark:["../assets/web/scenes/park-rain-v2.webp",false],
+  sceneLibrary:["../assets/web/scenes/library-v2.webp",false],
+  sceneArcade:["../assets/web/scenes/arcade-v2.webp",false],
+  sceneStation:["../assets/web/scenes/station-rain-v2.webp",false],
+  sceneTown:["../assets/web/scenes/high-street-rain-v2.webp",false]
 };
 
 function removeConnectedLightBackground(img){
@@ -33,9 +59,13 @@ function removeConnectedLightBackground(img){
   ox.putImageData(frame,0,0);return out;
 }
 
+const ART_LOADS=[];
 for(const [id,[src,clean]] of Object.entries(ART_FILES)){
-  const img=new Image();img.decoding="async";img.onload=()=>{ART[id]=clean?removeConnectedLightBackground(img):img;};img.src=new URL(src,import.meta.url).href;
+  const img=new Image();img.decoding="async";
+  ART_LOADS.push(new Promise(resolve=>{img.onload=()=>{ART[id]=clean?removeConnectedLightBackground(img):img;resolve();};img.onerror=resolve;}));
+  img.src=new URL(src,import.meta.url).href;
 }
+const ART_READY=Promise.all(ART_LOADS);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const lerp=(a,b,t)=>a+(b-a)*t;
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
@@ -77,13 +107,14 @@ class Game {
     this.overlayIndex=0; this.phoneContact=0; this.toast=null; this.toastTimer=0;
     this.fade=1; this.fadeDir=-1; this.transition=null; this.dayCard=null;
     this.nearby=null; this.particles=[]; this.rain=[]; this.screenShake=0;
-    this.mini=null; this.follow=null; this.titlePulse=0; this.autosaveTimer=0;
+    this.mini=null; this.follow=null; this.weatherSlip=null; this.titlePulse=0; this.autosaveTimer=0;
     this.lastMap=""; this.eventCheck=0; this.sceneCaption=null; this.captionTimer=0;
     this.playerMoving=false;this.playerWalkTime=0;this.pointerTarget=null;
     this.perf={frames:0,elapsed:0,fps:60,maxFrame:0};
     this.applyQAMode();
     this.initInput(); this.initTouch(); this.buildRain();
-    setTimeout(()=>document.querySelector("#loading")?.classList.add("hidden"),300);
+    ART_READY.then(()=>document.querySelector("#loading")?.classList.add("hidden"));
+    setTimeout(()=>document.querySelector("#loading")?.classList.add("hidden"),5000);
     requestAnimationFrame(t=>this.loop(t));
   }
 
@@ -111,6 +142,10 @@ class Game {
       if(n&&n.map===scene)s.player={x:clamp(n.x-58,46,914),y:n.y,facing:"right"};
     }
     this.mode="play";this.fade=0;this.fadeDir=0;
+    if(p.get("event")==="weather-slip"){
+      s.day=4;s.map="college";s.weather="rain";s.flags.collegeShifted=true;s.flags.weatherSlip=true;
+      this.weatherSlip={time:.48,frames:Number(p.get("frame"))||8,freeze:p.get("freeze")==="1"};
+    }
   }
 
   initInput() {
@@ -140,7 +175,7 @@ class Game {
   loop(now) {
     const rawDt=(now-this.last)/1000,dt=Math.min(.05,rawDt);this.last=now;this.acc+=dt;
     this.perf.frames++;this.perf.elapsed+=rawDt;this.perf.maxFrame=Math.max(this.perf.maxFrame,rawDt*1000);
-    if(this.perf.elapsed>=1){this.perf.fps=this.perf.frames/this.perf.elapsed;const out=document.querySelector("#qa-status");if(out)out.textContent=JSON.stringify({fps:Number(this.perf.fps.toFixed(1)),maxFrameMs:Number(this.perf.maxFrame.toFixed(1)),mode:this.mode,map:this.state.map,day:this.state.day,time:Math.floor(this.state.time)});this.perf.frames=0;this.perf.elapsed=0;this.perf.maxFrame=0;}
+    if(this.perf.elapsed>=1){this.perf.fps=this.perf.frames/this.perf.elapsed;const out=document.querySelector("#qa-status");if(out)out.textContent=JSON.stringify({fps:Number(this.perf.fps.toFixed(1)),maxFrameMs:Number(this.perf.maxFrame.toFixed(1)),mode:this.mode,map:this.state.map,day:this.state.day,time:Math.floor(this.state.time),weatherSlip:this.weatherSlip?{time:Number(this.weatherSlip.time.toFixed(2)),frames:this.weatherSlip.frames,freeze:this.weatherSlip.freeze}:null});this.perf.frames=0;this.perf.elapsed=0;this.perf.maxFrame=0;}
     while(this.acc>=1/60){this.update(1/60);this.pressed.clear();this.mouse.clicked=false;this.acc-=1/60;}
     this.draw();
     requestAnimationFrame(t=>this.loop(t));
@@ -148,6 +183,10 @@ class Game {
 
   update(dt) {
     this.titlePulse+=dt; if(this.toastTimer>0)this.toastTimer-=dt;if(this.captionTimer>0)this.captionTimer-=dt;
+    if(this.weatherSlip&&!this.weatherSlip.freeze){
+      this.weatherSlip.time+=dt;
+      if(this.weatherSlip.time>=1.28){this.weatherSlip=null;this.lastMap="";this.updateMusic(true);}
+    }
     if(this.fadeDir!==0){this.fade=clamp(this.fade+this.fadeDir*dt*2.4,0,1);if(this.fade===0||this.fade===1)this.fadeDir=0;}
     if(this.mode==="title") this.updateTitle();
     else if(this.mode==="daycard") this.updateDayCard(dt);
@@ -164,21 +203,22 @@ class Game {
   }
 
   updateTitle() {
-    const options=this.hasSave()?["CONTINUE","NEW GAME","ABOUT"]:["NEW GAME","ABOUT"];
+    const options=this.hasSave()?["CONTINUE","NEW GAME","LOAD","SETTINGS","QUIT"]:["NEW GAME","LOAD","SETTINGS","QUIT"];
     if(this.consume("ArrowDown","KeyS"))this.overlayIndex=(this.overlayIndex+1)%options.length;
     if(this.consume("ArrowUp","KeyW"))this.overlayIndex=(this.overlayIndex+options.length-1)%options.length;
     if(this.mouse.clicked){
-      options.forEach((_,i)=>{if(this.mouse.y>292+i*42&&this.mouse.y<330+i*42)this.overlayIndex=i;});
+      options.forEach((_,i)=>{if(this.mouse.y>205+i*43&&this.mouse.y<243+i*43)this.overlayIndex=i;});
     }
     if(this.consume("Enter","Space","KeyE")||this.mouse.clicked){
       const pick=options[this.overlayIndex];
       if(pick==="CONTINUE")this.load();
       if(pick==="NEW GAME")this.startNew();
-      if(pick==="ABOUT")this.startDialogue([
-        {speaker:"",text:"THURSDAY — an original psychological-horror life simulation."},
-        {speaker:"",text:"All students and romantic characters are adults aged 18 or older."},
-        {speaker:"",text:"Headphones recommended. The music is listening too."}
-      ],"title");
+      if(pick==="LOAD"){if(this.hasSave())this.load();else this.startDialogue([{speaker:"",text:"There isn't a saved week yet."}],"title");}
+      if(pick==="SETTINGS")this.startDialogue([{speaker:"SETTINGS",text:"Choose how you want the evening to sound.",choices:[
+        {text:music.muted?"Turn sound on.":"Turn sound off.",reply:"Done.",custom:()=>music.toggleMute()},
+        {text:"Keep it as it is.",reply:"All right."}
+      ]}],"title");
+      if(pick==="QUIT")this.startDialogue([{speaker:"",text:"Come back whenever you like. Larkspur will still be here."}],"title");
     }
     music.setScene("home",{infection:0});
   }
@@ -262,9 +302,13 @@ class Game {
   }
 
   changeMap(exit){
-    this.fade=0;this.fadeDir=1;music.sfx("door");this.advanceTime(8);
+    this.fade=1;this.fadeDir=-1;music.sfx("door");this.advanceTime(8);
     this.state.map=exit.to;this.state.player.x=exit.tx;this.state.player.y=exit.ty;this.state.visited[exit.to]=true;
-    this.sceneCaption=MAPS[exit.to].name;this.captionTimer=2.2;this.tryRandomEvent(.12);this.updateMusic(true);
+    this.sceneCaption=MAPS[exit.to].name;this.captionTimer=2.2;
+    if(this.state.day===4&&MAPS[exit.to].kind==="college"&&!this.state.flags.weatherSlip){
+      this.state.flags.weatherSlip=true;this.state.flags.collegeShifted=true;this.weatherSlip={time:0,frames:0,freeze:false};
+      music.setScene("silence",{abrupt:true});
+    }else{this.tryRandomEvent(.12);this.updateMusic(true);}
   }
 
   talkTo(id){
@@ -409,7 +453,7 @@ class Game {
     const s=this.state;
     if(s.day>=5){s.time=430;s.energy=100;s.talkedToday={};s.flags.fridayLooped=true;this.save(false);this.mode="daycard";this.dayCard={title:"FRIDAY",sub:"The week does not end.",timer:0};music.setScene("morning",{infection:3,weather:s.weather});return;}
     s.day++;s.time=430;s.energy=100;s.talkedToday={};s.weather=s.day===3||s.day===4?"rain":"sun";
-    s.motifInfection=Math.min(3,Math.floor((s.day-1)/2));s.corruption=Math.max(s.corruption,s.day-2);
+    s.motifInfection=Math.min(3,Math.floor((s.day-1)/2));s.corruption=Math.max(s.corruption,s.day-3);
     this.dailyMessages();this.socialSimulation();this.save(false);
     this.mode="daycard";this.dayCard={...(DAY_CARDS.find(d=>d.day===s.day)||{title:"SATURDAY",sub:"The week does not end."}),timer:0};
     music.setScene("morning",{infection:s.motifInfection,weather:s.weather},true);
@@ -505,18 +549,18 @@ class Game {
   boothAction(){
     const s=this.state;
     if(s.flags.juneDate&&s.time>=1140&&!s.flags.juneDateDone){s.flags.juneDateDone=true;s.stats.dates++;s.relationships.june.affection+=4;this.advanceTime(90);
-      this.startDialogue([{speaker:"June",portrait:"june",text:"The chairs are hostile and the noodles are perfect. I promised accurately."},{speaker:"",text:"June drums a rhythm against your wrist while you wait for dessert."},{speaker:"June",portrait:"june",text:"There. Now when it gets stuck in your head, it can be mine instead."}],"play");return;}
+      this.startDialogue([{speaker:"June",portrait:"june",expression:"happy",text:"The chairs are hostile and the noodles are perfect. I promised accurately."},{speaker:"",text:"June drums a rhythm against your wrist while you wait for dessert."},{speaker:"June",portrait:"june",expression:"happy",text:"There. Now when it gets stuck in your head, it can be mine instead."}],"play");return;}
     if(s.flags.irisDate&&s.relationships.iris.affection>=3&&!s.flags.irisDateDone){s.flags.irisDateDone=true;s.stats.dates++;s.relationships.iris.affection+=3;this.advanceTime(75);
-      this.startDialogue([{speaker:"Iris",portrait:"iris",text:"I like this booth. Everyone outside becomes a film with no dialogue."},{speaker:"Alex",text:"What does that make us?"},{speaker:"Iris",portrait:"iris",text:"The people pretending not to hold hands under the table."},{speaker:"",text:"For an hour, the rain is only rain."}],"play");return;}
+      this.startDialogue([{speaker:"Iris",portrait:"iris",expression:"happy",text:"I like this booth. Everyone outside becomes a film with no dialogue."},{speaker:"Alex",text:"What does that make us?"},{speaker:"Iris",portrait:"iris",expression:"happy",text:"The people pretending not to hold hands under the table."},{speaker:"",text:"For an hour, the rain is only rain."}],"play");return;}
     if(s.relationships.mara.affection>=5&&!s.flags.maraCafeDate){s.flags.maraCafeDate=true;s.stats.dates++;s.relationships.mara.affection+=3;this.advanceTime(70);
-      music.setScene("mara",{infection:1});this.startDialogue([{speaker:"Mara",portrait:"mara",text:"I ordered for you. If it's wrong, lie. I want to feel impressive."},{speaker:"Mara",portrait:"mara",text:"This is nice, isn't it? Just us and everybody else being somewhere else."},{speaker:"",text:"She makes you laugh hard enough to spill tea. For a while, nothing about her feels dangerous."}],"play");return;}
+      music.setScene("mara",{infection:1});this.startDialogue([{speaker:"Mara",portrait:"mara",expression:"proud",text:"I ordered for you. If it's wrong, lie. I want to feel impressive."},{speaker:"Mara",portrait:"mara",expression:"affectionate",text:"This is nice, isn't it? Just us and everybody else being somewhere else."},{speaker:"Mara",portrait:"mara",expression:"laugh",text:"That came out sinister. I meant the booth, Alex. I'm losing badly at being charming."},{speaker:"",text:"She makes you laugh hard enough to spill tea. For a while, nothing about her feels dangerous."}],"play");return;}
     this.advanceTime(20);this.state.energy+=5;this.startDialogue([{speaker:"",text:"You watch umbrellas pass. The booth holds a small, temporary peace."}],"play");
   }
 
   arcadeAction(){
     const s=this.state;
     if(s.flags.theoDate&&s.time>=1080&&!s.flags.theoDateDone){s.flags.theoDateDone=true;s.stats.dates++;s.relationships.theo.affection+=4;this.advanceTime(75);
-      this.startDialogue([{speaker:"Theo",portrait:"theo",text:"For clarity, losing on purpose would be patronising. Also impossible for me."},{speaker:"",text:"You lose three games, win two, and split chips under the broken racing cabinet."},{speaker:"Theo",portrait:"theo",text:"This is a date, right? I need to know how nervous to be retroactively."}],"play");return;}
+      this.startDialogue([{speaker:"Theo",portrait:"theo",expression:"happy",text:"For clarity, losing on purpose would be patronising. Also impossible for me."},{speaker:"",text:"You lose three games, win two, and split chips under the broken racing cabinet."},{speaker:"Theo",portrait:"theo",expression:"happy",text:"This is a date, right? I need to know how nervous to be retroactively."}],"play");return;}
     if(s.money<2){this.toastMsg("STARLANCE needs £2.");return;}s.money-=2;this.startMini("arcade");
   }
 
@@ -566,15 +610,15 @@ class Game {
     if(!s.flags.boxSeen||!s.flags.photosSeen){this.startDialogue([{speaker:"",text:"Behind the red paint, something knocks once. It waits for your answer."}],"play");return;}
     s.flags.redDoorSeen=true;
     this.startDialogue([
-      {speaker:"Mara",portrait:"mara",text:"Please don't."},
+      {speaker:"Mara",portrait:"mara",expression:"pleading",text:"Please don't."},
       {speaker:"",text:"She is standing between you and the exit. You did not hear her enter."},
-      {speaker:"Mara",portrait:"mara",text:"I had such a good week with you."},
+      {speaker:"Mara",portrait:"mara",expression:"watery",text:"I had such a good week with you."},
       {speaker:"Alex",text:"What are you?"},
-      {speaker:"Mara",portrait:"mara",text:"Mara."},
+      {speaker:"Mara",portrait:"mara",expression:"cold",text:"Mara."},
       {speaker:"",portrait:"mara",text:"For one frame, her shadow continues upward after the ceiling ends.",demonHint:"shadow"},
-      {speaker:"Mara",portrait:"mara",text:"Can we go home now?"},
+      {speaker:"Mara",portrait:"mara",expression:"forcedSmile",text:"Can we go home now?"},
       {speaker:"Alex",text:"There are photographs of me from before I existed."},
-      {speaker:"Mara",portrait:"mara",text:"Your room looked nicer the first time.",demonHint:"tail"},
+      {speaker:"Mara",portrait:"mara",expression:"tooStill",text:"Your room looked nicer the first time.",demonHint:"tail"},
       {speaker:"",text:"She smiles. It is the same warm smile that made you laugh in the café."}
     ],"play",()=>this.finishChapter());
   }
@@ -643,7 +687,7 @@ class Game {
       {text:"Answer.",reply:"For several seconds there is only breathing and distant rain.",custom:()=>{s.relationships.mara.affection+=1;}},
       {text:"Decline.",reply:"The phone stops. It rings again before the screen goes dark.",custom:()=>{s.relationships.mara.resentment+=2;}},
       {text:"Turn the phone off.",reply:"The screen goes black. Her voice continues through the speaker: “Alex?”",custom:()=>{s.relationships.mara.fear+=2;s.flags.impossibleCall=true;}}
-    ]},{speaker:"Mara",portrait:"mara",text:"I couldn't sleep. I kept thinking you were going somewhere without me."},{speaker:"Mara",portrait:"mara",text:"You aren't, are you?"}],"play");
+    ]},{speaker:"Mara",portrait:"mara",expression:"watery",text:"I couldn't sleep. I kept thinking you were going somewhere without me."},{speaker:"Mara",portrait:"mara",expression:"panic",text:"You aren't, are you?"}],"play");
   }
 
   socialSimulation(){
@@ -728,19 +772,47 @@ class Game {
     else if(this.mode==="daycard")this.drawDayCard();
     else if(this.mode==="follow")this.drawFollow();
     else if(this.mode==="chapter")this.drawChapter();
-    else {this.drawWorld();if(this.mode==="dialogue")this.drawDialogue();if(this.mode==="phone")this.drawPhone();if(this.mode==="journal")this.drawJournal();if(this.mode==="pause")this.drawPause();if(this.mode==="shop")this.drawShop();if(this.mode==="mini")this.drawMini();}
+    else {this.drawWorld();if(this.weatherSlip)this.drawWeatherSlip();if(this.mode==="dialogue")this.drawDialogue();if(this.mode==="phone")this.drawPhone();if(this.mode==="journal")this.drawJournal();if(this.mode==="pause")this.drawPause();if(this.mode==="shop")this.drawShop();if(this.mode==="mini")this.drawMini();}
     if(this.toastTimer>0)this.drawToast();if(this.fade>0){ctx.fillStyle=`rgba(12,10,22,${this.fade})`;ctx.fillRect(0,0,W,H);}ctx.restore();
   }
 
+  drawWeatherSlip(){
+    const e=this.weatherSlip;e.frames++;
+    ctx.save();ctx.imageSmoothingEnabled=false;
+    if(e.freeze){
+      ctx.fillStyle="#f5e9d5";ctx.fillRect(0,0,W,H);
+      ctx.globalAlpha=.94;this.drawArtPortrait("mara",795,258,1.72,"pupilsWrong");ctx.globalAlpha=1;
+      ctx.fillStyle="#261722";ctx.fillRect(0,0,620,H);
+      ctx.fillStyle="#efe0c7";ctx.font='18px "Courier New",monospace';ctx.textAlign="left";ctx.fillText("THURSDAY  08:08",44,48);
+      ctx.restore();return;
+    }
+    const pulse=.18+Math.sin(e.time*29)*.035;
+    ctx.fillStyle=`rgba(213,164,109,${pulse})`;ctx.fillRect(0,52,W,H-52);
+    ctx.fillStyle="#f2e8cf99";
+    for(let i=0;i<34;i++){
+      const x=(i*83+Math.floor(e.time*190))%W,y=68+((i*137+Math.floor(e.time*72))%(H-84));
+      ctx.fillRect(x,y,2+(i%2),2+(i%3));
+    }
+    const split=Math.floor(170+Math.sin(e.time*41)*90);
+    ctx.globalAlpha=.32;ctx.drawImage(canvas,0,split,W,18,7,split,W,18);ctx.globalAlpha=1;
+    if(e.frames===9){
+      ctx.fillStyle="#f5e9d5";ctx.fillRect(0,0,W,H);
+      ctx.globalAlpha=.94;this.drawArtPortrait("mara",795,258,1.72,"pupilsWrong");ctx.globalAlpha=1;
+      ctx.fillStyle="#261722";ctx.fillRect(0,0,620,H);
+      ctx.fillStyle="#efe0c7";ctx.font='18px "Courier New",monospace';ctx.textAlign="left";ctx.fillText("THURSDAY  08:08",44,48);
+    }
+    ctx.restore();
+  }
+
   drawTitle(){
-    const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,"#7f9faf");g.addColorStop(.58,"#efb595");g.addColorStop(1,"#252038");ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
-    this.drawPixelSkyline();
-    ctx.fillStyle="#fff3da";ctx.textAlign="center";ctx.font="52px Georgia";ctx.letterSpacing="12px";ctx.fillText("THURSDAY",480,126);ctx.letterSpacing="0px";
-    ctx.fillStyle="#513849";ctx.font="italic 17px Georgia";ctx.fillText("Everybody begins somewhere.",480,158);
-    this.drawPortrait("mara",735,305,1.45,"happy",true);
-    const opts=this.hasSave()?["CONTINUE","NEW GAME","ABOUT"]:["NEW GAME","ABOUT"];
-    opts.forEach((o,i)=>{const y=292+i*42;ctx.fillStyle=i===this.overlayIndex?"#fff3da":"#e5c1ad";ctx.font=i===this.overlayIndex?"bold 19px Georgia":"17px Georgia";ctx.textAlign="center";ctx.fillText(i===this.overlayIndex?`— ${o} —`:o,390,y+24);});
-    ctx.fillStyle="#f7ddc777";ctx.font="13px Georgia";ctx.fillText("WASD / ARROWS · E / ENTER · P PHONE · J JOURNAL",390,500);
+    if(ART.titleMara){ctx.imageSmoothingEnabled=false;ctx.drawImage(ART.titleMara,0,0,W,H);}
+    else {ctx.fillStyle="#745044";ctx.fillRect(0,0,W,H);}
+    const veil=ctx.createLinearGradient(0,0,570,0);veil.addColorStop(0,"#211722e8");veil.addColorStop(.62,"#211722b8");veil.addColorStop(1,"#21172200");ctx.fillStyle=veil;ctx.fillRect(0,0,610,H);
+    ctx.fillStyle="#fff1d5";ctx.textAlign="center";ctx.font='bold 64px "Trebuchet MS",sans-serif';ctx.letterSpacing="15px";ctx.fillText("MARA",267,118);ctx.letterSpacing="0px";
+    ctx.fillStyle="#e3bda5";ctx.font='italic 17px "Trebuchet MS",sans-serif';ctx.fillText("A new term in Larkspur.",267,150);
+    const opts=this.hasSave()?["CONTINUE","NEW GAME","LOAD","SETTINGS","QUIT"]:["NEW GAME","LOAD","SETTINGS","QUIT"];
+    const firstY=205;opts.forEach((o,i)=>{const y=firstY+i*43,selected=i===this.overlayIndex;ctx.fillStyle=selected?"#fff1d5":"#d6b9a8";ctx.font=selected?'bold 18px "Courier New",monospace':'16px "Courier New",monospace';ctx.textAlign="left";ctx.fillText(selected?`♥  ${o}`:`   ${o}`,145,y+24);});
+    ctx.fillStyle="#f0d7c088";ctx.font='12px "Courier New",monospace';ctx.textAlign="left";ctx.fillText("ARROWS / WASD   ·   ENTER / E",145,488);
   }
 
   drawPixelSkyline(){
@@ -770,28 +842,44 @@ class Game {
   drawOutdoor(index,x,y,w,h,alpha=1){return this.drawAtlasCell(ART.outdoor,5,4,index,x,y,w,h,alpha);}
 
   drawMap(map){
-    const k=map.kind;let floor="#a8a17d",wall="#5d5365";
-    if(["bedroom","home"].includes(k)){floor="#b88468";wall="#6b4b58";}
-    if(["street","town","station"].includes(k)){floor="#718083";wall="#475465";}
-    if(k==="park"){floor="#6f9169";wall="#385a4c";}
-    if(["college","hall","classroom","cafeteria","library","music","archive"].includes(k)){floor="#c0ae89";wall="#5a6072";}
-    if(k==="cafe"){floor="#9b6d58";wall="#553b48";}
-    if(k==="arcade"){floor="#302d50";wall="#19182d";}
-    if(k==="annex"){floor="#423d43";wall="#1c1a24";}
-    ctx.fillStyle=floor;ctx.fillRect(0,0,W,H);
-    const floorTile={bedroom:0,home:2,street:3,town:4,station:13,park:12,college:6,hall:8,classroom:8,cafeteria:8,library:9,music:9,archive:14,cafe:10,arcade:11,annex:15}[k];
-    if(floorTile!==undefined)this.drawMaterial(floorTile,0,0,W,H,k==="annex"?.58:.72);
-    else for(let y=50;y<510;y+=32)for(let x=34;x<926;x+=32){ctx.fillStyle=(x/32+y/32)%2===0?"#ffffff08":"#00000008";ctx.fillRect(x,y,32,32);}
-    const wallTile={bedroom:1,home:1,street:5,town:5,station:5,park:12,college:7,hall:7,classroom:7,cafeteria:7,library:7,music:7,archive:14,cafe:5,arcade:11,annex:15}[k];
-    const furnishedInterior=["bedroom","home","classroom","cafeteria","library","music","cafe","arcade","archive","annex"].includes(k);
-    for(const w of map.walls){
-      const boundary=w.x<=1||w.y<=1||w.x+w.w>=959||w.y+w.h>=539;
-      const visualOnlyCollision=(k==="college"&&w.y>200)||(k==="park"&&!boundary);if((furnishedInterior&&!boundary)||visualOnlyCollision)continue;
-      ctx.fillStyle=wall;ctx.fillRect(w.x,w.y,w.w,w.h);if(wallTile!==undefined)this.drawMaterial(wallTile,w.x,w.y,w.w,w.h,.68);ctx.fillStyle="#fff9df18";ctx.fillRect(w.x,w.y,w.w,4);ctx.fillStyle="#12101b28";ctx.fillRect(w.x,w.y+w.h-5,w.w,5);
+    const k=map.kind,authored=this.drawAuthoredScene(k);
+    if(!authored){
+      let floor="#a8a17d",wall="#5d5365";
+      if(["bedroom","home"].includes(k)){floor="#b88468";wall="#6b4b58";}
+      if(["street","town","station"].includes(k)){floor="#718083";wall="#475465";}
+      if(k==="park"){floor="#6f9169";wall="#385a4c";}
+      if(["college","hall","classroom","cafeteria","library","music","archive"].includes(k)){floor="#c0ae89";wall="#5a6072";}
+      if(k==="cafe"){floor="#9b6d58";wall="#553b48";}
+      if(k==="arcade"){floor="#302d50";wall="#19182d";}
+      if(k==="annex"){floor="#423d43";wall="#1c1a24";}
+      ctx.fillStyle=floor;ctx.fillRect(0,0,W,H);
+      const floorTile={bedroom:0,home:2,street:3,town:4,station:13,park:12,college:6,hall:8,classroom:8,cafeteria:8,library:9,music:9,archive:14,cafe:10,arcade:11,annex:15}[k];
+      if(floorTile!==undefined)this.drawMaterial(floorTile,0,0,W,H,k==="annex"?.58:.72);
+      else for(let y=50;y<510;y+=32)for(let x=34;x<926;x+=32){ctx.fillStyle=(x/32+y/32)%2===0?"#ffffff08":"#00000008";ctx.fillRect(x,y,32,32);}
+      const wallTile={bedroom:1,home:1,street:5,town:5,station:5,park:12,college:7,hall:7,classroom:7,cafeteria:7,library:7,music:7,archive:14,cafe:5,arcade:11,annex:15}[k];
+      const furnishedInterior=["bedroom","home","classroom","cafeteria","library","music","cafe","arcade","archive","annex"].includes(k);
+      for(const w of map.walls){
+        const boundary=w.x<=1||w.y<=1||w.x+w.w>=959||w.y+w.h>=539;
+        const visualOnlyCollision=(k==="college"&&w.y>200)||(k==="park"&&!boundary);if((furnishedInterior&&!boundary)||visualOnlyCollision)continue;
+        ctx.fillStyle=wall;ctx.fillRect(w.x,w.y,w.w,w.h);if(wallTile!==undefined)this.drawMaterial(wallTile,w.x,w.y,w.w,w.h,.68);ctx.fillStyle="#fff9df18";ctx.fillRect(w.x,w.y,w.w,4);ctx.fillStyle="#12101b28";ctx.fillRect(w.x,w.y+w.h-5,w.w,5);
+      }
+      this.drawMapDetails(k,map);
     }
-    this.drawMapDetails(k,map);
     for(const e of map.exits){if(e.requires&&!this.state.flags[e.requires])continue;const near=Math.hypot(this.state.player.x-(e.x+e.w/2),this.state.player.y-(e.y+e.h/2))<92;if(near){ctx.fillStyle="#f3cc8b1c";ctx.fillRect(e.x,e.y,e.w,e.h);ctx.strokeStyle="#fff4dc44";ctx.strokeRect(e.x+.5,e.y+.5,e.w-1,e.h-1);}}
-    for(const p of map.props)this.drawProp(p,k);
+    if(!authored)for(const p of map.props)this.drawProp(p,k);
+  }
+
+  drawAuthoredScene(kind){
+    const shiftedBedroom=this.state.flags.bedroomShifted||this.state.flags.movePillow||this.state.flags.ownNumber;
+    const shiftedCollege=(this.state.flags.collegeShifted&&this.state.day===4)||this.state.flags.room307||this.state.flags.theoMissingDay;
+    const art={
+      bedroom:shiftedBedroom?ART.sceneBedroomShifted:ART.sceneBedroom,
+      college:shiftedCollege?ART.sceneCollegeShifted:ART.sceneCollege,
+      cafe:ART.sceneCafe,park:ART.scenePark,library:ART.sceneLibrary,
+      arcade:ART.sceneArcade,station:ART.sceneStation,town:ART.sceneTown
+    }[kind];
+    if(!art)return false;
+    ctx.save();ctx.imageSmoothingEnabled=false;ctx.drawImage(art,0,0,W,H);ctx.restore();return true;
   }
 
   drawMapDetails(k,map){
@@ -869,16 +957,16 @@ class Game {
     ctx.fillStyle="#17152255";ctx.beginPath();ctx.ellipse(0,19,id==="mara"?18:16,5,0,0,Math.PI*2);ctx.fill();
     if(id==="player"&&ART.alexWalk){
       const img=ART.alexWalk,sw=img.width/4,sh=img.height/4,row={down:0,left:1,right:2,up:3}[facing]??0;
-      ctx.imageSmoothingEnabled=false;ctx.drawImage(img,artFrame*sw,row*sh,sw,sh,-49,-72,98,98);ctx.restore();return true;
+      ctx.imageSmoothingEnabled=false;ctx.drawImage(img,artFrame*sw,row*sh,sw,sh,-32,-60,64,80);ctx.restore();return true;
     }
     if(id==="mara"&&ART.maraWalk){
       const img=ART.maraWalk,sw=img.width/4,sh=img.height/4,row={down:0,left:1,right:2,up:3}[facing]??0,col=artFrame;
-      ctx.imageSmoothingEnabled=false;ctx.drawImage(img,col*sw,row*sh,sw,sh,-44,-66,88,88);ctx.restore();return true;
+      ctx.imageSmoothingEnabled=false;ctx.drawImage(img,col*sw,row*sh,sw,sh,-32,-60,64,80);ctx.restore();return true;
     }
     const rows={iris:0,june:1,theo:2,ren:3,nia:4,sam:5};
     if(rows[id]!==undefined&&ART.castDirections){
       const img=ART.castDirections,sw=img.width/4,sh=img.height/6,col={down:0,left:1,right:2,up:3}[facing]??0;
-      ctx.imageSmoothingEnabled=false;ctx.drawImage(img,col*sw,rows[id]*sh,sw,sh,-48,-69,96,96);ctx.restore();return true;
+      ctx.imageSmoothingEnabled=false;ctx.drawImage(img,col*sw,rows[id]*sh,sw,sh,-32,-60,64,80);ctx.restore();return true;
     }
     ctx.restore();return false;
   }
@@ -946,9 +1034,11 @@ class Game {
     const line=this.dialogue?.[this.dialogueIndex];if(!line)return;
     const boxY=line.choices?250:374;ctx.fillStyle="#161426f2";ctx.fillRect(42,boxY,W-84,H-boxY-28);ctx.strokeStyle=line.portrait==="mara"?"#c97582":"#d6b894";ctx.lineWidth=2;ctx.strokeRect(43,boxY+1,W-86,H-boxY-30);
     const portraitX=line.choices?170:145,portraitY=line.choices?410:290,portraitScale=line.choices?.75:1;
-    const hintStart=line.text.length*(line.demonHintAt??.52),hintEnd=Math.min(line.text.length-.05,hintStart+4.8),hintActive=!!line.demonHint&&this.dialogueReveal>=hintStart&&this.dialogueReveal<hintEnd;
+    const hintStart=line.text.length*(line.demonHintAt??.52),hintEnd=Math.min(line.text.length-.05,hintStart+.72),hintActive=!!line.demonHint&&this.dialogueReveal>=hintStart&&this.dialogueReveal<hintEnd;
     if(line.portrait&&hintActive&&line.demonHint!=="horn")this.drawDemonHint(portraitX,portraitY,portraitScale,line.demonHint);
-    const portraitExpression=line.expression||(line.portrait==="mara"?(line.demonHint?"still":"neutral"):"normal");
+    let portraitExpression=line.expression||(line.portrait==="mara"?(line.demonHint?"still":"neutral"):"normal");
+    if(line.portrait==="mara"&&hintActive&&line.demonHint==="horn")portraitExpression="hornlike";
+    if(line.portrait==="mara"&&hintActive&&line.demonHint==="shadow")portraitExpression="wrongShadow";
     if(line.portrait)this.drawPortrait(line.portrait,portraitX,portraitY,portraitScale,portraitExpression);
     if(line.portrait&&hintActive&&line.demonHint==="horn")this.drawDemonHint(portraitX,portraitY,portraitScale,line.demonHint);
     if(line.speaker){ctx.fillStyle=line.portrait==="mara"?"#f0a2aa":"#e8c792";ctx.font="bold 18px Georgia";ctx.textAlign="left";ctx.fillText(line.speaker,70,boxY+31);}
@@ -958,16 +1048,16 @@ class Game {
   }
 
   drawDemonHint(x,y,scale,type){
-    ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);ctx.globalAlpha=.82;ctx.fillStyle="#2a1728";ctx.strokeStyle="#2a1728";ctx.lineWidth=5;
+    ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);ctx.globalAlpha=.34;ctx.fillStyle="#2a1728";ctx.strokeStyle="#2a1728";ctx.lineWidth=2;
     if(type==="horn"){
-      ctx.beginPath();ctx.moveTo(-36,-51);ctx.quadraticCurveTo(-49,-84,-23,-96);ctx.quadraticCurveTo(-34,-75,-19,-57);ctx.closePath();ctx.fill();
-      ctx.beginPath();ctx.moveTo(34,-53);ctx.quadraticCurveTo(48,-86,23,-98);ctx.quadraticCurveTo(34,-74,18,-58);ctx.closePath();ctx.fill();
+      ctx.beginPath();ctx.moveTo(-19,-71);ctx.lineTo(-24,-82);ctx.lineTo(-14,-73);ctx.closePath();ctx.fill();
+      ctx.beginPath();ctx.moveTo(18,-72);ctx.lineTo(24,-82);ctx.lineTo(13,-73);ctx.closePath();ctx.fill();
     }
     if(type==="tail"){
-      ctx.beginPath();ctx.moveTo(54,45);ctx.bezierCurveTo(104,53,96,-8,119,3);ctx.stroke();ctx.beginPath();ctx.moveTo(113,-5);ctx.lineTo(130,3);ctx.lineTo(115,12);ctx.closePath();ctx.fill();
+      ctx.beginPath();ctx.moveTo(72,45);ctx.bezierCurveTo(91,48,83,29,94,28);ctx.stroke();ctx.beginPath();ctx.moveTo(91,24);ctx.lineTo(100,28);ctx.lineTo(92,33);ctx.closePath();ctx.fill();
     }
     if(type==="shadow"){
-      ctx.globalAlpha=.5;ctx.beginPath();ctx.moveTo(-58,70);ctx.quadraticCurveTo(-74,-55,-28,-103);ctx.lineTo(-12,-72);ctx.lineTo(0,-115);ctx.lineTo(14,-71);ctx.lineTo(31,-102);ctx.quadraticCurveTo(74,-50,58,70);ctx.closePath();ctx.fill();
+      ctx.globalAlpha=.22;ctx.beginPath();ctx.ellipse(7,78,72,17,-.08,0,Math.PI*2);ctx.fill();
     }
     ctx.restore();
   }
@@ -975,12 +1065,14 @@ class Game {
   drawArtPortrait(id,x,y,scale=1,expression="normal"){
     const size=176*scale,dx=x-size/2,dy=y-size/2;
     let img,cols,rows,index;
-    if(id==="mara"&&ART.maraPortraits){img=ART.maraPortraits;cols=2;rows=3;index={neutral:0,happy:0,laugh:1,shy:2,cry:3,jealous:4,still:5}[expression]??0;}
-    else if(ART.castPortraits){const order={iris:0,june:1,theo:2,ren:3,nia:4,sam:5};if(order[id]===undefined)return false;img=ART.castPortraits;cols=3;rows=2;index=order[id];}
+    if(id==="mara"){
+      const resolved=MARA_PORTRAIT_MAP[expression]||MARA_PORTRAIT_MAP.neutral;img=ART[resolved[0]];cols=2;rows=3;index=resolved[1];if(!img)return false;
+    }
+    else if(ART.castPortraits){const order={iris:0,june:1,theo:2,ren:3,nia:4,sam:5};if(order[id]===undefined)return false;img=expression==="happy"?(ART.castHappy||ART.castPortraits):(["concerned","serious","afraid"].includes(expression)?(ART.castConcerned||ART.castPortraits):ART.castPortraits);cols=3;rows=2;index=order[id];}
     else return false;
     const sw=img.width/cols,sh=img.height/rows,sx=(index%cols)*sw,sy=Math.floor(index/cols)*sh;
-    ctx.save();ctx.beginPath();ctx.arc(x,y,size*.49,0,Math.PI*2);ctx.clip();ctx.fillStyle=id==="mara"?"#28202d":"#362b34";ctx.fillRect(dx,dy,size,size);ctx.imageSmoothingEnabled=false;ctx.drawImage(img,sx,sy,sw,sh,dx,dy,size,size);ctx.restore();
-    ctx.save();ctx.strokeStyle=id==="mara"?"#d49887aa":"#d6b89488";ctx.lineWidth=2*scale;ctx.beginPath();ctx.arc(x,y,size*.49,0,Math.PI*2);ctx.stroke();ctx.restore();return true;
+    ctx.save();ctx.beginPath();ctx.rect(dx,dy,size,size);ctx.clip();ctx.fillStyle=id==="mara"?"#211a28":"#2b2630";ctx.fillRect(dx,dy,size,size);ctx.imageSmoothingEnabled=false;ctx.drawImage(img,sx,sy,sw,sh,dx,dy,size,size);ctx.restore();
+    ctx.save();ctx.strokeStyle=id==="mara"?"#d49887cc":"#d6b89499";ctx.lineWidth=2*scale;ctx.strokeRect(dx+.5,dy+.5,size-1,size-1);ctx.restore();return true;
   }
 
   drawPortrait(id,x,y,scale=1,expression="normal",large=false){
